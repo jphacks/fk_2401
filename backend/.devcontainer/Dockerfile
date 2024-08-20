@@ -1,5 +1,9 @@
 FROM mcr.microsoft.com/devcontainers/go:1-1.22-bookworm
 
+WORKDIR /backend
+
+RUN curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.60.1
+
 RUN su vscode -c " \
     go install github.com/air-verse/air@latest && \
     go install github.com/golang/mock/mockgen@v1.6.0 && \
