@@ -1,4 +1,4 @@
-package: controller
+package: generated
 generate:
   gin-server: true
   models: true
