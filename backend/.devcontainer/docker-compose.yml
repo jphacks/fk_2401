@@ -10,3 +10,11 @@ services:
       - ../..:/workspaces:cached
 
     command: sleep infinity
+
+  db:
+    image: mysql:latest
+    restart: unless-stopped
+    volumes:
+      - ./mysql:/var/lib/mysql
+    env_file:
+      - .env
