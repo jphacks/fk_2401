@@ -7,5 +7,7 @@ RUN curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/i
 RUN su vscode -c " \
     go install github.com/air-verse/air@latest && \
     go install github.com/golang/mock/mockgen@v1.6.0 && \
-    go install github.com/oapi-codegen/oapi-codegen/v2/cmd/oapi-codegen@latest \
+    go install github.com/oapi-codegen/oapi-codegen/v2/cmd/oapi-codegen@latest && \
+    go install -tags 'mysql' github.com/golang-migrate/migrate/v4/cmd/migrate@v4.15.2 && \
+    go install github.com/sqlc-dev/sqlc/cmd/sqlc@latest \
     "
