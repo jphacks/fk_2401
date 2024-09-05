@@ -7,19 +7,19 @@ type Device struct {
 	Duration      int
 }
 
-func NewDeviceWithID(id, houseId, climateDataId, duration int) *Device {
+func NewDeviceWithID(id, houseID, climateDataID, duration int) *Device {
 	return &Device{
 		ID:            id,
-		HouseID:       houseId,
-		ClimateDataID: climateDataId,
+		HouseID:       houseID,
+		ClimateDataID: climateDataID,
 		Duration:      duration,
 	}
 }
 
-func NewDevice(houseId, climateDataId, duration int) *Device {
+func NewDevice(houseID, climateDataID, duration int) *Device {
 	return &Device{
-		HouseID:       houseId,
-		ClimateDataID: climateDataId,
+		HouseID:       houseID,
+		ClimateDataID: climateDataID,
 		Duration:      duration,
 	}
 }
