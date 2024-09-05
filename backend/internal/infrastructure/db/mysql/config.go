@@ -28,7 +28,7 @@ func NewConfig() *Config {
 	port := viper.GetString("MYSQL_PORT")
 	user := viper.GetString("MYSQL_USER")
 	password := viper.GetString("MYSQL_PASSWORD")
-	dbName := viper.GetString("MYSQL_DB")
+	dbName := viper.GetString("MYSQL_DATABASE")
 
 	cfg := &Config{
 		Host:     host,
