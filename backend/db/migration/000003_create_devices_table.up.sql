@@ -1,7 +1,7 @@
 CREATE TABLE devices (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    house_id BIGINT NOT NULL,
-    climate_data_id BIGINT NOT NULL,
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    house_id INT NOT NULL,
+    climate_data_id INT NOT NULL,
     duration INT,
     created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
