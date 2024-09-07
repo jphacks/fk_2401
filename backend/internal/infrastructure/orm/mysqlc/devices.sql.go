@@ -17,8 +17,8 @@ VALUES (?, ?, ?)
 `
 
 type CreateDeviceParams struct {
-	HouseID       int64
-	ClimateDataID int64
+	HouseID       int32
+	ClimateDataID int32
 	Duration      sql.NullInt32
 }
 
@@ -40,8 +40,8 @@ WHERE d.house_id = ?
 `
 
 type GetDevicesFromHouseRow struct {
-	ID        int64
-	HouseID   int64
+	ID        int32
+	HouseID   int32
 	Duration  sql.NullInt32
 	CreatedAt time.Time
 	UpdatedAt time.Time
@@ -49,7 +49,7 @@ type GetDevicesFromHouseRow struct {
 	Unit      string
 }
 
-func (q *Queries) GetDevicesFromHouse(ctx context.Context, houseID int64) ([]GetDevicesFromHouseRow, error) {
+func (q *Queries) GetDevicesFromHouse(ctx context.Context, houseID int32) ([]GetDevicesFromHouseRow, error) {
 	rows, err := q.db.QueryContext(ctx, getDevicesFromHouse, houseID)
 	if err != nil {
 		return nil, err

@@ -10,22 +10,22 @@ import (
 )
 
 type ClimateData struct {
-	ID   int64
+	ID   int32
 	Name string
 	Unit string
 }
 
 type Device struct {
-	ID            int64
-	HouseID       int64
-	ClimateDataID int64
+	ID            int32
+	HouseID       int32
+	ClimateDataID int32
 	Duration      sql.NullInt32
 	CreatedAt     time.Time
 	UpdatedAt     time.Time
 }
 
 type House struct {
-	ID        int64
+	ID        int32
 	Name      string
 	CreatedAt time.Time
 	UpdatedAt time.Time
