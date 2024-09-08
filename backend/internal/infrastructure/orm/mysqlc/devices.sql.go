@@ -32,21 +32,22 @@ func (q *Queries) CreateDevice(ctx context.Context, arg CreateDeviceParams) (int
 
 const getDevicesFromHouse = `-- name: GetDevicesFromHouse :many
 SELECT 
-    d.id, d.house_id, d.duration, d.created_at, d.updated_at,
-    c.name, c.unit
+    d.id, d.house_id, d.set_point, d.duration, d.created_at, d.updated_at,
+    c.name AS climate_data_name, c.unit
 FROM devices d
 JOIN climate_datas c ON d.climate_data_id = c.id
 WHERE d.house_id = ?
 `
 
 type GetDevicesFromHouseRow struct {
-	ID        int32
-	HouseID   int32
-	Duration  sql.NullInt32
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	Name      string
-	Unit      string
+	ID              int32
+	HouseID         int32
+	SetPoint        sql.NullInt32
+	Duration        sql.NullInt32
+	CreatedAt       time.Time
+	UpdatedAt       time.Time
+	ClimateDataName string
+	Unit            string
 }
 
 func (q *Queries) GetDevicesFromHouse(ctx context.Context, houseID int32) ([]GetDevicesFromHouseRow, error) {
@@ -61,10 +62,11 @@ func (q *Queries) GetDevicesFromHouse(ctx context.Context, houseID int32) ([]Get
 		if err := rows.Scan(
 			&i.ID,
 			&i.HouseID,
+			&i.SetPoint,
 			&i.Duration,
 			&i.CreatedAt,
 			&i.UpdatedAt,
-			&i.Name,
+			&i.ClimateDataName,
 			&i.Unit,
 		); err != nil {
 			return nil, err
