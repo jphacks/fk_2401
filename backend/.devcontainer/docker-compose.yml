@@ -13,6 +13,8 @@ services:
     networks:
       - uecs-navi-network
     command: sleep infinity
+    ports:
+      - "8080:8080"
 
   uecs-navi-dev-db:
     container_name: uecs-navi-mysql
