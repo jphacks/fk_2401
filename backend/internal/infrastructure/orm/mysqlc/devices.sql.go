@@ -32,22 +32,18 @@ func (q *Queries) CreateDevice(ctx context.Context, arg CreateDeviceParams) (int
 
 const getDevicesFromHouse = `-- name: GetDevicesFromHouse :many
 SELECT 
-    d.id, d.house_id, d.set_point, d.duration, d.created_at, d.updated_at,
-    c.name AS climate_data_name, c.unit
-FROM devices d
-JOIN climate_datas c ON d.climate_data_id = c.id
-WHERE d.house_id = ?
+    id, house_id, set_point, duration, created_at, updated_at
+FROM devices
+WHERE house_id = ?
 `
 
 type GetDevicesFromHouseRow struct {
-	ID              int32
-	HouseID         int32
-	SetPoint        sql.NullInt32
-	Duration        sql.NullInt32
-	CreatedAt       time.Time
-	UpdatedAt       time.Time
-	ClimateDataName string
-	Unit            string
+	ID        int32
+	HouseID   int32
+	SetPoint  sql.NullInt32
+	Duration  sql.NullInt32
+	CreatedAt time.Time
+	UpdatedAt time.Time
 }
 
 func (q *Queries) GetDevicesFromHouse(ctx context.Context, houseID int32) ([]GetDevicesFromHouseRow, error) {
@@ -59,6 +55,56 @@ func (q *Queries) GetDevicesFromHouse(ctx context.Context, houseID int32) ([]Get
 	var items []GetDevicesFromHouseRow
 	for rows.Next() {
 		var i GetDevicesFromHouseRow
+		if err := rows.Scan(
+			&i.ID,
+			&i.HouseID,
+			&i.SetPoint,
+			&i.Duration,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getJoinedDevicesFromHouse = `-- name: GetJoinedDevicesFromHouse :many
+SELECT 
+    d.id, d.house_id, d.set_point, d.duration, d.created_at, d.updated_at,
+    c.name AS climate_data_name, c.unit
+FROM devices d
+JOIN climate_datas c ON d.climate_data_id = c.id
+WHERE d.house_id = ?
+`
+
+type GetJoinedDevicesFromHouseRow struct {
+	ID              int32
+	HouseID         int32
+	SetPoint        sql.NullInt32
+	Duration        sql.NullInt32
+	CreatedAt       time.Time
+	UpdatedAt       time.Time
+	ClimateDataName string
+	Unit            string
+}
+
+func (q *Queries) GetJoinedDevicesFromHouse(ctx context.Context, houseID int32) ([]GetJoinedDevicesFromHouseRow, error) {
+	rows, err := q.db.QueryContext(ctx, getJoinedDevicesFromHouse, houseID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GetJoinedDevicesFromHouseRow
+	for rows.Next() {
+		var i GetJoinedDevicesFromHouseRow
 		if err := rows.Scan(
 			&i.ID,
 			&i.HouseID,
