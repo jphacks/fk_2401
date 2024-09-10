@@ -1,6 +1,6 @@
 -- name: GetDevicesFromHouse :many
 SELECT 
-    id, house_id, set_point, duration, created_at, updated_at
+    id, house_id, climate_data_id, set_point, duration, created_at, updated_at
 FROM devices
 WHERE house_id = ?;
 
