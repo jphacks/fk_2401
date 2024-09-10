@@ -32,32 +32,24 @@ func (q *Queries) CreateDevice(ctx context.Context, arg CreateDeviceParams) (int
 
 const getDevicesFromHouse = `-- name: GetDevicesFromHouse :many
 SELECT 
-    id, house_id, set_point, duration, created_at, updated_at
+    id, house_id, climate_data_id, set_point, duration, created_at, updated_at
 FROM devices
 WHERE house_id = ?
 `
 
-type GetDevicesFromHouseRow struct {
-	ID        int32
-	HouseID   int32
-	SetPoint  sql.NullInt32
-	Duration  sql.NullInt32
-	CreatedAt time.Time
-	UpdatedAt time.Time
-}
-
-func (q *Queries) GetDevicesFromHouse(ctx context.Context, houseID int32) ([]GetDevicesFromHouseRow, error) {
+func (q *Queries) GetDevicesFromHouse(ctx context.Context, houseID int32) ([]Device, error) {
 	rows, err := q.db.QueryContext(ctx, getDevicesFromHouse, houseID)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	var items []GetDevicesFromHouseRow
+	var items []Device
 	for rows.Next() {
-		var i GetDevicesFromHouseRow
+		var i Device
 		if err := rows.Scan(
 			&i.ID,
 			&i.HouseID,
+			&i.ClimateDataID,
 			&i.SetPoint,
 			&i.Duration,
 			&i.CreatedAt,
