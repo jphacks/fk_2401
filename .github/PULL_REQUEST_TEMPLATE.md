@@ -1,6 +1,6 @@
 ### Issue へのリンク
 
-Resolve #xxx
+#xxx
 
 ## 概要
 
