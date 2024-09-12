@@ -9,7 +9,7 @@ type DeviceService struct {
 	deviceRepository DeviceRepositoryInterface
 }
 
-func NewDeviceService(dr *repository.DeviceRepository) *DeviceService {
+func NewDeviceService(dr DeviceRepositoryInterface) *DeviceService {
 	return &DeviceService{
 		deviceRepository: dr,
 	}
