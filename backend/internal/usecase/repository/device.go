@@ -31,6 +31,12 @@ type DeviceRepository struct {
 	queries *mysqlc.Queries
 }
 
+func NewDeviceRepository(queries *mysqlc.Queries) *DeviceRepository {
+	return &DeviceRepository{
+		queries: queries,
+	}
+}
+
 func (dr DeviceRepository) GetDevicesFromHouse(houseID int) ([]*domain.Device, error) {
 	ctx := context.Background()
 
@@ -41,7 +47,13 @@ func (dr DeviceRepository) GetDevicesFromHouse(houseID int) ([]*domain.Device, e
 
 	devices := make([]*domain.Device, len(devicesRow))
 	for i, v := range devicesRow {
-		devices[i] = domain.NewDeviceWithID(int(v.ID), int(v.HouseID), int(v.ClimateDataID), int(v.SetPoint.Int32), int(v.Duration.Int32))
+		devices[i] = domain.NewDeviceWithID(
+			int(v.ID),
+			int(v.HouseID),
+			int(v.ClimateDataID),
+			int(v.SetPoint.Int32),
+			int(v.Duration.Int32),
+		)
 	}
 
 	return devices, nil
@@ -57,7 +69,14 @@ func (dr DeviceRepository) GetJoinedDevicesFromHouse(houseID int) ([]*JoinedDevi
 
 	joinedDevices := make([]*JoinedDevice, len(joinedDevicesRow))
 	for i, v := range joinedDevicesRow {
-		joinedDevices[i] = NewJoinedDevice(int(v.ID), int(v.HouseID), int(v.SetPoint.Int32), int(v.Duration.Int32), v.ClimateDataName, v.Unit)
+		joinedDevices[i] = NewJoinedDevice(
+			int(v.ID),
+			int(v.HouseID),
+			int(v.SetPoint.Int32),
+			int(v.Duration.Int32),
+			v.ClimateDataName,
+			v.Unit,
+		)
 	}
 
 	return joinedDevices, nil

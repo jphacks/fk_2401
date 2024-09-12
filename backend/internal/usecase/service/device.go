@@ -9,6 +9,12 @@ type DeviceService struct {
 	deviceRepository DeviceRepositoryInterface
 }
 
+func NewDeviceService(dr *repository.DeviceRepository) *DeviceService {
+	return &DeviceService{
+		deviceRepository: dr,
+	}
+}
+
 // デバイスのみを取得するメソッド
 func (ds DeviceService) GetDevices(houseID int) ([]*domain.Device, error) {
 	devices, err := ds.deviceRepository.GetDevicesFromHouse(houseID)
