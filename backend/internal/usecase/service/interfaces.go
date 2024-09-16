@@ -12,8 +12,9 @@ type (
 		GetJoinedDevicesFromHouse(houseID int) ([]*repository.JoinedDevice, error)
 	}
 
-	// HouseRepositoryInterface interface {
-	// }
+	HouseRepositoryInterface interface {
+		GetAllHouse() ([]*domain.House, error)
+	}
 
 	// ClimateDataRepositoryInterface interface {
 	// }
