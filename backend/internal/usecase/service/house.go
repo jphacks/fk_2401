@@ -15,7 +15,7 @@ func NewHouseService(hr HouseRepositoryInterface) *HouseService {
 }
 
 func (hr HouseService) GetHouses() ([]*domain.House, error) {
-	houses, err := hr.houseRepository.GetAllHouse()
+	houses, err := hr.houseRepository.GetAllHouses()
 	if err != nil {
 		return nil, err
 	}

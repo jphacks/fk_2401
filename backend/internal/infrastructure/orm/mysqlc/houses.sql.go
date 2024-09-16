@@ -22,12 +22,12 @@ func (q *Queries) CreateHouse(ctx context.Context, name string) (int64, error) {
 	return result.LastInsertId()
 }
 
-const getAllHouse = `-- name: GetAllHouse :many
+const getAllHouses = `-- name: GetAllHouses :many
 SELECT id, name, created_at, updated_at FROM houses
 `
 
-func (q *Queries) GetAllHouse(ctx context.Context) ([]House, error) {
-	rows, err := q.db.QueryContext(ctx, getAllHouse)
+func (q *Queries) GetAllHouses(ctx context.Context) ([]House, error) {
+	rows, err := q.db.QueryContext(ctx, getAllHouses)
 	if err != nil {
 		return nil, err
 	}

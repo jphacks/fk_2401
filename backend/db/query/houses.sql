@@ -1,4 +1,4 @@
--- name: GetAllHouse :many
+-- name: GetAllHouses :many
 SELECT * FROM houses;
 
 -- name: CreateHouse :execlastid
