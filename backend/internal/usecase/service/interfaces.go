@@ -13,7 +13,7 @@ type (
 	}
 
 	HouseRepositoryInterface interface {
-		GetAllHouse() ([]*domain.House, error)
+		GetAllHouses() ([]*domain.House, error)
 	}
 
 	// ClimateDataRepositoryInterface interface {
