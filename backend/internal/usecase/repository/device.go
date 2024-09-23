@@ -37,6 +37,16 @@ func NewDeviceRepository(queries *mysqlc.Queries) *DeviceRepository {
 	}
 }
 
+func (dr DeviceRepository) CreateDevice(arg mysqlc.CreateDeviceParams) (int64, error) {
+	ctx := context.Background()
+
+	id, err := dr.queries.CreateDevice(ctx, arg)
+	if err != nil {
+		return 0, err
+	}
+	return id, err
+}
+
 func (dr DeviceRepository) GetDevicesFromHouse(houseID int) ([]*domain.Device, error) {
 	ctx := context.Background()
 

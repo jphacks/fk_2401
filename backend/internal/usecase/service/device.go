@@ -15,6 +15,15 @@ func NewDeviceService(dr DeviceRepositoryInterface) *DeviceService {
 	}
 }
 
+func (ds DeviceService) CreateDevice(???) (int64, error) {
+	id, err := ds.deviceRepository.CreateDevice()
+	if err != nil {
+		return 0, err
+	}
+
+	return id, nil
+}
+
 // デバイスのみを取得するメソッド
 func (ds DeviceService) GetDevices(houseID int) ([]*domain.Device, error) {
 	devices, err := ds.deviceRepository.GetDevicesFromHouse(houseID)
