@@ -8,7 +8,7 @@ import (
 type (
 	// Repository interfaces
 	DeviceRepositoryInterface interface {
-		CreateDevice(???) (int64, error)
+		CreateDevice(newDevice domain.Device) (int64, error)
 		GetDevicesFromHouse(houseID int) ([]*domain.Device, error)
 		GetJoinedDevicesFromHouse(houseID int) ([]*repository.JoinedDevice, error)
 	}

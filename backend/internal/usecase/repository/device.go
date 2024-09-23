@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"database/sql"
 
 	"github.com/Fumiya-Tahara/uecs-navi.git/internal/domain"
 	"github.com/Fumiya-Tahara/uecs-navi.git/internal/infrastructure/orm/mysqlc"
@@ -37,14 +38,27 @@ func NewDeviceRepository(queries *mysqlc.Queries) *DeviceRepository {
 	}
 }
 
-func (dr DeviceRepository) CreateDevice(arg mysqlc.CreateDeviceParams) (int64, error) {
+func (dr DeviceRepository) CreateDevice(newDevice domain.Device) (int64, error) {
 	ctx := context.Background()
+
+	arg := mysqlc.CreateDeviceParams{
+		HouseID:       int32(newDevice.HouseID),
+		ClimateDataID: int32(newDevice.ClimateDataID),
+		SetPoint: sql.NullInt32{
+			Int32: int32(newDevice.SetPoint),
+			Valid: true,
+		},
+		Duration: sql.NullInt32{
+			Int32: int32(newDevice.Duration),
+			Valid: true,
+		},
+	}
 
 	id, err := dr.queries.CreateDevice(ctx, arg)
 	if err != nil {
 		return 0, err
 	}
-	return id, err
+	return id, nil
 }
 
 func (dr DeviceRepository) GetDevicesFromHouse(houseID int) ([]*domain.Device, error) {

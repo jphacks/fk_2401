@@ -20,7 +20,7 @@ func (hr HouseService) CreateHouse(name string) (int64, error) {
 		return 0, err
 	}
 
-	return id, err
+	return id, nil
 }
 
 func (hr HouseService) GetHouses() ([]*domain.House, error) {
@@ -29,5 +29,5 @@ func (hr HouseService) GetHouses() ([]*domain.House, error) {
 		return nil, err
 	}
 
-	return houses, err
+	return houses, nil
 }

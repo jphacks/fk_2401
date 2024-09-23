@@ -15,8 +15,8 @@ func NewDeviceService(dr DeviceRepositoryInterface) *DeviceService {
 	}
 }
 
-func (ds DeviceService) CreateDevice(???) (int64, error) {
-	id, err := ds.deviceRepository.CreateDevice()
+func (ds DeviceService) CreateDevice(newDevice domain.Device) (int64, error) {
+	id, err := ds.deviceRepository.CreateDevice(newDevice)
 	if err != nil {
 		return 0, err
 	}
