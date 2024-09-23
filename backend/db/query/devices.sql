@@ -13,5 +13,5 @@ JOIN climate_datas c ON d.climate_data_id = c.id
 WHERE d.house_id = ?;
 
 -- name: CreateDevice :execlastid
-INSERT INTO devices (house_id, climate_data_id, duration) 
-VALUES (?, ?, ?);
+INSERT INTO devices (house_id, climate_data_id, set_point, duration) 
+VALUES (?, ?, ?, ?);
