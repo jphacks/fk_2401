@@ -96,7 +96,12 @@ func send_BlockA(IP_ADDR string,
 
 	for i := range 4 {
 		tp := i * 32
-		iht := ihtxt[tp:(tp + 32)]
+		iht := ""
+		if len(ihtxt) < tp+32 {
+			iht = ihtxt[tp:]
+		} else {
+			iht = ihtxt[tp:(tp + 32)]
+		}
 		sz := padding(fmt.Sprintf("%x", len(iht)/2), 2, "0")
 		addr := padding(fmt.Sprintf("%x", address+(tp/2)), 4, "0")
 		ih := ":" + sz + addr + "00" + iht + "FF"
@@ -152,7 +157,12 @@ func send_BlockB(B_ID int,
 	ihtxt := ih_valid + ih_room + ih_region + ih_order + ih_priority + ih_lv + ih_cast + ih_sr + ih_ccmtype + ih_unit + ih_sthr + ih_stmn + ih_edhr + ih_edmn + ih_inmn + ih_dumn + ih_rly_l + ih_rly_h
 	for i := range 3 {
 		tp := i * 32
-		iht := ihtxt[tp:(tp + 32)]
+		iht := ""
+		if len(ihtxt) < tp+32 {
+			iht = ihtxt[tp:]
+		} else {
+			iht = ihtxt[tp:(tp + 32)]
+		}
 		sz := padding(fmt.Sprintf("%x", len(iht)/2), 2, "0")
 		addr := padding(fmt.Sprintf("%x", B_ID*recstep+address+(tp/2)), 4, "0")
 		ih := ":" + sz + addr + "00" + iht + "FF"
@@ -208,7 +218,12 @@ func send_BlockC(C_ID int,
 	ihtxt := ih_valid + ih_room + ih_region + ih_order + ih_priority + ih_lv + ih_cast + ih_sr + ih_ccmtype + ih_unit + ih_sthr + ih_stmn + ih_edhr + ih_edmn + ih_inmn + ih_dumn + ih_rly_l + ih_rly_h
 	for i := range 3 {
 		tp := i * 32
-		iht := ihtxt[tp:(tp + 32)]
+		iht := ""
+		if len(ihtxt) < tp+32 {
+			iht = ihtxt[tp:]
+		} else {
+			iht = ihtxt[tp:(tp + 32)]
+		}
 		sz := padding(fmt.Sprintf("%x", len(iht)/2), 2, "0")
 		addr := padding(fmt.Sprintf("%x", C_ID*recstep+address+(tp/2)), 4, "0")
 		ih := ":" + sz + addr + "00" + iht + "FF"
@@ -244,7 +259,12 @@ func send_BlockD(D_ID int,
 	ihtxt := ih_cope_valid + ih_cope_room + ih_cope_region + ih_cope_order + ih_cope_priority + ih_cope_ccmtype + ih_cope_ope + ih_cope_fval
 	for i := range 2 {
 		tp := i * 32
-		iht := ihtxt[tp:(tp + 32)]
+		iht := ""
+		if len(ihtxt) < tp+32 {
+			iht = ihtxt[tp:]
+		} else {
+			iht = ihtxt[tp:(tp + 32)]
+		}
 		sz := padding(fmt.Sprintf("%x", len(iht)/2), 2, "0")
 		addr := padding(fmt.Sprintf("%x", D_ID*recstep+address+(tp/2)), 4, "0")
 		ih := ":" + sz + addr + "00" + iht + "FF"
