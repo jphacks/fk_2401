@@ -47,7 +47,7 @@ func float32_bin(f float32) string {
 	return hexstr
 }
 
-func send_BlockA( /*IP_ADDR string,*/
+func send_BlockA(IP_ADDR string,
 	LC_UECS_ID string,
 	LC_MAC string,
 	FIX_DHCP_FLAG int,
@@ -101,14 +101,14 @@ func send_BlockA( /*IP_ADDR string,*/
 		addr := padding(fmt.Sprintf("%x", address+(tp/2)), 4, "0")
 		ih := ":" + sz + addr + "00" + iht + "FF"
 		// 送信処理
-		fmt.Println(ih)
-		// url := "http://" + IP_ADDR + "/" + ih
+		url := "http://" + IP_ADDR + "/" + ih
+		fmt.Println(url)
 		// resp, _ := http.Get(url)
 	}
 }
 
 func send_BlockB(B_ID int,
-	// IP_ADDR string,
+	IP_ADDR string,
 	LC_VALID int,
 	LC_ROOM int,
 	LC_REGION int,
@@ -157,14 +157,14 @@ func send_BlockB(B_ID int,
 		addr := padding(fmt.Sprintf("%x", B_ID*recstep+address+(tp/2)), 4, "0")
 		ih := ":" + sz + addr + "00" + iht + "FF"
 		// 送信処理
-		fmt.Println(ih)
-		// url := "http://" + IP_ADDR + "/" + ih
+		url := "http://" + IP_ADDR + "/" + ih
+		fmt.Println(url)
 		// resp, _ := http.Get(url)
 	}
 }
 
 func send_BlockC(C_ID int,
-	// IP_ADDR string,
+	IP_ADDR string,
 	LC_VALID int,
 	LC_ROOM int,
 	LC_REGION int,
@@ -213,14 +213,14 @@ func send_BlockC(C_ID int,
 		addr := padding(fmt.Sprintf("%x", C_ID*recstep+address+(tp/2)), 4, "0")
 		ih := ":" + sz + addr + "00" + iht + "FF"
 		// 送信処理
-		fmt.Println(ih)
-		// url := "http://" + IP_ADDR + "/" + ih
+		url := "http://" + IP_ADDR + "/" + ih
+		fmt.Println(url)
 		// resp, _ := http.Get(url)
 	}
 }
 
 func send_BlockD(D_ID int,
-	// IP_ADDR string,
+	IP_ADDR string,
 	LC_COPE_VALID int,
 	LC_COPE_ROOM int,
 	LC_COPE_REGION int,
@@ -249,22 +249,22 @@ func send_BlockD(D_ID int,
 		addr := padding(fmt.Sprintf("%x", D_ID*recstep+address+(tp/2)), 4, "0")
 		ih := ":" + sz + addr + "00" + iht + "FF"
 		// 送信処理
-		fmt.Println(ih)
-		// url := "http://" + IP_ADDR + "/" + ih
+		url := "http://" + IP_ADDR + "/" + ih
+		fmt.Println(url)
 		// resp, _ := http.Get(url)
 	}
 }
 
 func test_control() {
 	print("A\n")
-	send_BlockA("10100C00000B", "02:A2:73:0B:00:2A", 0, "192.168.38.50", "255.255.255.0", "192.168.11.1", "192.168.11.1", "AMPSD", "TESTA123")
+	send_BlockA("192.168.1.14", "10100C00000B", "02:A2:73:0B:00:2A", 0, "192.168.38.50", "255.255.255.0", "192.168.11.1", "192.168.11.1", "AMPSD", "TESTA123")
 	print("B\n")
-	send_BlockB(0, 1, 1, 1, 1, 15, 3, 0, "R", "InAirHumid", "%", 0, 0, 23, 59, 1, 1, 252, 0)
-	send_BlockB(1, 1, 1, 1, 1, 15, 3, 0, "R", "InAirHumid", "%", 0, 0, 23, 59, 1, 1, 0, 255)
+	send_BlockB(0, "192.168.1.14", 1, 1, 1, 1, 15, 3, 0, "R", "InAirHumid", "%", 0, 0, 23, 59, 1, 1, 252, 0)
+	send_BlockB(1, "192.168.1.14", 1, 1, 1, 1, 15, 3, 0, "R", "InAirHumid", "%", 0, 0, 23, 59, 1, 1, 0, 255)
 	print("C\n")
-	send_BlockC(0, 1, 1, 1, 1, 15, 3, 0, "R", "TEST456", "", 0, 0, 23, 59, 1, 1, 252, 0)
-	send_BlockC(1, 1, 1, 1, 1, 15, 3, 0, "R", "TEST789", "", 0, 0, 12, 00, 1, 1, 0, 255)
+	send_BlockC(0, "192.168.1.14", 1, 1, 1, 1, 15, 3, 0, "R", "TEST456", "", 0, 0, 23, 59, 1, 1, 252, 0)
+	send_BlockC(1, "192.168.1.14", 1, 1, 1, 1, 15, 3, 0, "R", "TEST789", "", 0, 0, 12, 00, 1, 1, 0, 255)
 	print("D\n")
 	var f float32 = 1.500
-	send_BlockD(0, 1, 1, 1, 1, 15, "InAirHumid", 3, f)
+	send_BlockD(0, "192.168.1.14", 1, 1, 1, 1, 15, "InAirHumid", 3, f)
 }
