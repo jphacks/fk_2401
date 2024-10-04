@@ -18,10 +18,10 @@ export function getDevices(houseID: number): JoinedDeviceResponse[] {
         { id: 4, name: "窓開閉装置", houseID: 1, setPoint: 30, duration: 1, climateData: "気温", unit: "℃"},
     ];
     const nasuDevices: JoinedDeviceResponse[] = [
-        { id: 5, name: "ヒーター", houseID: 2, setPoint: 25, duration: 3, climateData: "気温", unit: "℃"},
-        { id: 6, name: "ミスト", houseID: 2, setPoint: 70, duration: 1, climateData: "湿度", unit: "%"},
-        { id: 7, name: "二酸化炭素供給装置", houseID: 2, setPoint: 420, duration: 5, climateData: "二酸化炭素量", unit: "ppm"},
-        { id: 8, name: "窓開閉装置", houseID: 2, setPoint: 30, duration: 1, climateData: "気温", unit: "℃"},
+        { id: 5, name: "ヒーター", houseID: 2, setPoint: 25, duration: undefined, climateData: "気温", unit: "℃"},
+        { id: 6, name: "ミスト", houseID: 2, setPoint: 60, duration: undefined, climateData: "湿度", unit: "%"},
+        { id: 7, name: "二酸化炭素供給装置", houseID: 2, setPoint: undefined, duration: undefined, climateData: "二酸化炭素量", unit: "ppm"},
+        { id: 8, name: "窓開閉装置", houseID: 2, setPoint: undefined, duration: undefined, climateData: "気温", unit: "℃"},
     ];
     const hourensouDevices: JoinedDeviceResponse[] = [
         { id: 9, name: "テストデバイス1", houseID: 3, setPoint: 25, duration: 3, climateData: "気温", unit: "℃"},
