@@ -12,10 +12,8 @@ const drawerWidth = 240;
 
 const SideBar = () => {
   const ListItems: string[] = [
-    "項目1",
-    "項目2",
-    "項目3",
-    "項目4",
+    "ハウス状態",
+    "デバイス設定",
   ]
 
   return (
