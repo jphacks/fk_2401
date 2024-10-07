@@ -74,7 +74,13 @@ export default function SettingDevice() {
               <Grid container spacing={4}>
                 {devicesMap.get(house.id)?.map((device, deviceIndex) => (
                   <Grid size={3} key={deviceIndex}>
-                    <DeviceCard />
+                    <DeviceCard 
+                      name={device.name} 
+                      setPoint={device.setPoint} 
+                      duration={device.duration}
+                      climateData={device.climateData}
+                      unit={device.unit}
+                    />
                   </Grid>
                 ))}
               </Grid>
