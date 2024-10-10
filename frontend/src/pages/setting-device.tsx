@@ -30,8 +30,8 @@ function SettingDeviceTabPanel(props: TabPanelProps) {
 
 function a11yProps(index: number) {
   return {
-    id: `simple-tab-${index}`,
-    'aria-controls': `simple-tabpanel-${index}`,
+    id: `setting-device-tabpanel-${index}`,
+    "aria-controls": `setting-device-tabpanel-${index}`,
   };
 }
 

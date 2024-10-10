@@ -160,7 +160,7 @@ export default function TimerSlider({ duration }: TimerSliderProps) {
     <Box sx={{ width: 300 }}>
       <Slider
         defaultValue={duration !== undefined ? duration : 1}
-        aria-label="Always visible"
+        aria-label="Timer duration"
         getAriaValueText={valuetext}
         min={1}
         max={12}
