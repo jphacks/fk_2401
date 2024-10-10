@@ -32,13 +32,12 @@ func (h Handler) GetHouses(c *gin.Context) {
 }
 
 type CreateHouseController struct {
-	Name string `json:"name" binding:"required,min=1,max=10,alphanum"`
+	Name string `json:"name" binding:"required,min=1,max=12,alphanum"`
 }
 
 func (h Handler) CreateHouse(c *gin.Context) {
 	var json CreateHouseController
 	if err := c.BindJSON(&json); err != nil {
-
 		log.Println(err)
 		c.JSON(http.StatusBadRequest, gin.H{"status": "BadRequest"})
 		return
@@ -67,8 +66,8 @@ func (h Handler) GetDevice(c *gin.Context, houseId int) {
 }
 
 type CreateDeviceController struct {
-	HouseID       int `json:"houseid" binding:"required,number"`
-	ClimateDataID int `json:"climatedataid" binding:"required,number"`
+	HouseID       int `json:"house_id" binding:"required,number"`
+	ClimateDataID int `json:"climate_data_id" binding:"required,number"`
 	SetPoint      int `json:"setpoint" binding:"number"`
 	Duration      int `json:"duration" binding:"number"`
 }
@@ -76,7 +75,6 @@ type CreateDeviceController struct {
 func (h Handler) CreateDevice(c *gin.Context, houseId int) {
 	var json CreateDeviceController
 	if err := c.BindJSON(&json); err != nil {
-
 		log.Println(err)
 		c.JSON(http.StatusBadRequest, gin.H{"status": "BadRequest"})
 		return
