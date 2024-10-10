@@ -50,6 +50,7 @@ func (h Handler) CreateHouse(c *gin.Context) {
 	if err != nil {
 		log.Println(err)
 		c.JSON(http.StatusBadRequest, gin.H{"status": "BadRequest"})
+		return
 	}
 
 	c.JSON(http.StatusOK, id)
@@ -91,6 +92,7 @@ func (h Handler) CreateDevice(c *gin.Context, houseId int) {
 	if err != nil {
 		log.Println(err)
 		c.JSON(http.StatusBadRequest, gin.H{"status": "BadRequest"})
+		return
 	}
 
 	c.JSON(http.StatusOK, id)
