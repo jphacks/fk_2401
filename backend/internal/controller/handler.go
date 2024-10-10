@@ -1,13 +1,12 @@
 package controller
 
 import (
-	"fmt"
+	"log"
 	"net/http"
 
-	"github.com/Fumiya-Tahara/uecs-navi.git/internal/controller/generated"
+	"github.com/Fumiya-Tahara/uecs-navi.git/internal/domain"
 	"github.com/Fumiya-Tahara/uecs-navi.git/internal/usecase/service"
 	"github.com/gin-gonic/gin"
-	"github.com/go-playground/validator/v10"
 )
 
 type Handler struct {
@@ -40,16 +39,8 @@ func (h Handler) CreateHouse(c *gin.Context) {
 	var json CreateHouseController
 	if err := c.BindJSON(&json); err != nil {
 
-		var errorMessages []string
-		if errs, ok := err.(validator.ValidationErrors); ok {
-			for _, e := range errs {
-				errorMessages = append(errorMessages, fmt.Sprintf("Field %s is %s", e.Field(), e.ActualTag()))
-			}
-		} else {
-			errorMessages = append(errorMessages, err.Error())
-		}
-
-		c.JSON(400, gin.H{"error": err.Error()})
+		log.Println(err)
+		c.JSON(http.StatusBadRequest, gin.H{"status": "BadRequest"})
 		return
 	}
 
@@ -57,7 +48,8 @@ func (h Handler) CreateHouse(c *gin.Context) {
 	id, err := h.houseService.CreateHouse(name)
 
 	if err != nil {
-		c.JSON(400, gin.H{"error": err.Error()})
+		log.Println(err)
+		c.JSON(http.StatusBadRequest, gin.H{"status": "BadRequest"})
 	}
 
 	c.JSON(http.StatusOK, id)
@@ -73,6 +65,33 @@ func (h Handler) GetDevice(c *gin.Context, houseId int) {
 	c.JSON(http.StatusOK, devices)
 }
 
-func (h Handler) CreateDevice(c *gin.Context, houseId generated.HouseId) {
+type CreateDeviceController struct {
+	HouseID       int `json:"houseid" binding:"required,number"`
+	ClimateDataID int `json:"climatedataid" binding:"required,number"`
+	SetPoint      int `json:"setpoint" binding:"number"`
+	Duration      int `json:"duration" binding:"number"`
+}
 
+func (h Handler) CreateDevice(c *gin.Context, houseId int) {
+	var json CreateDeviceController
+	if err := c.BindJSON(&json); err != nil {
+
+		log.Println(err)
+		c.JSON(http.StatusBadRequest, gin.H{"status": "BadRequest"})
+		return
+	}
+	device := domain.Device{
+		HouseID:       json.HouseID,
+		ClimateDataID: json.ClimateDataID,
+		SetPoint:      json.SetPoint,
+		Duration:      json.Duration,
+	}
+	id, err := h.deviceService.CreateDevice(device)
+
+	if err != nil {
+		log.Println(err)
+		c.JSON(http.StatusBadRequest, gin.H{"status": "BadRequest"})
+	}
+
+	c.JSON(http.StatusOK, id)
 }
