@@ -1,4 +1,4 @@
-import { 
+import {
   Card,
   CardActions,
   CardContent,
@@ -24,30 +24,32 @@ interface DeviceProps {
 }
 
 export function DeviceCard(props: DeviceProps) {
-  const {name, setPoint, duration, climateData, unit} = props;
+  const { name, setPoint, duration, climateData, unit } = props;
 
   return (
     <Card raised={true} sx={{ minWidth: 275 }}>
       <CardContent>
-        <Typography gutterBottom sx={{ color: 'text.main' }}>
+        <Typography gutterBottom sx={{ color: "text.main" }}>
           {name}
         </Typography>
         <Box>
-          <Typography gutterBottom sx={{mt: 2, color: 'text.secondary' }}>
+          <Typography gutterBottom sx={{ mt: 2, color: "text.secondary" }}>
             設定{climateData}
           </Typography>
           <Box sx={{ display: "flex", justifyContent: "center" }}>
             <Typography variant="h4" component="div">
               {setPoint !== undefined ? `${setPoint}` : `--`}
             </Typography>
-            <Typography sx={{pb: 1, color: "text.secondary", alignSelf: "flex-end" }}>
+            <Typography
+              sx={{ pb: 1, color: "text.secondary", alignSelf: "flex-end" }}
+            >
               {unit}
             </Typography>
           </Box>
         </Box>
         {duration !== undefined && (
           <Box sx={{ mt: 2, display: "flex", alignItems: "center" }}>
-            <Typography component="span" sx={{ color: 'text.secondary' }}>
+            <Typography component="span" sx={{ color: "text.secondary" }}>
               残り動作時間
             </Typography>
             <Typography component="span" sx={{ ml: 3, mr: 1 }}>
@@ -58,34 +60,33 @@ export function DeviceCard(props: DeviceProps) {
             </Typography>
           </Box>
         )}
-        {/* <Typography sx={{mt: 2, color: 'text.secondary', mb: 1.5 }}>動作中</Typography> */}
       </CardContent>
       <CardActions>
         <SettingModalButton
-          name={name} 
-          setPoint={setPoint} 
+          name={name}
+          setPoint={setPoint}
           duration={duration}
           climateData={climateData}
           unit={unit}
         />
       </CardActions>
-  </Card>
-  )
+    </Card>
+  );
 }
 
 const modalStyle = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
   width: 400,
-  bgcolor: 'background.paper',
+  bgcolor: "background.paper",
   boxShadow: 24,
   p: 4,
 };
 
 function SettingModalButton(props: DeviceProps) {
-  const {name, setPoint, duration, climateData, unit} = props;
+  const { name, setPoint, duration, climateData, unit } = props;
   const [modalOpen, setModalOpen] = useState(false);
   const [timerChecked, setTimerChecked] = useState(false);
 
@@ -97,7 +98,9 @@ function SettingModalButton(props: DeviceProps) {
 
   return (
     <div>
-      <Button size="small" onClick={handleOpen}>設定</Button>
+      <Button size="small" onClick={handleOpen}>
+        設定
+      </Button>
       <Modal
         open={modalOpen}
         onClose={handleClose}
@@ -113,26 +116,33 @@ function SettingModalButton(props: DeviceProps) {
               {...(setPoint !== undefined && { defaultValue: setPoint })}
               type="number"
               size="small"
+              inputProps={{ step: "0.1" }}
               label={`設定${climateData}`}
               slotProps={{
                 input: {
-                  endAdornment: <InputAdornment position="end">{unit}</InputAdornment>,
+                  endAdornment: (
+                    <InputAdornment position="end">{unit}</InputAdornment>
+                  ),
                 },
               }}
             />
           </Typography>
           <Typography sx={{ my: 2 }}>
             <FormControlLabel
-              control={<Switch checked={timerChecked} onChange={handleTimerChange} />}
+              control={
+                <Switch checked={timerChecked} onChange={handleTimerChange} />
+              }
               label="タイマー"
             />
             <Collapse in={timerChecked}>
-              <Box sx={{ px: 3, py: 4, display: "flex", justifyContent: "center"}}>
+              <Box
+                sx={{ px: 3, py: 4, display: "flex", justifyContent: "center" }}
+              >
                 <TimerSlider duration={duration} />
               </Box>
             </Collapse>
           </Typography>
-          <Box sx={{mt: 4, display: "flex"}}>
+          <Box sx={{ mt: 4, display: "flex" }}>
             <Button size="small">保存</Button>
             <Button size="small">キャンセル</Button>
           </Box>
@@ -146,14 +156,14 @@ interface TimerSliderProps {
   duration?: number;
 }
 
-export default function TimerSlider({ duration }: TimerSliderProps) {
+function TimerSlider({ duration }: TimerSliderProps) {
   const marks = [
     { value: 1, label: "1時間" },
     { value: 12, label: "12時間" },
   ];
 
   function valuetext(value: number) {
-    return `${value}時間`
+    return `${value}時間`;
   }
 
   return (
