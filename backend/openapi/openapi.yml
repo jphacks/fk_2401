@@ -80,6 +80,8 @@ components:
       properties:
         house-id:
           type: integer
+        device_name:
+          type: string
         climate_data:
           type: string
         unit:
@@ -100,6 +102,8 @@ components:
       properties:
         id:
           type: integer
+        device_name:
+          type: string
         climate_data:
           type: string
         unit:

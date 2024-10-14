@@ -2,6 +2,7 @@ CREATE TABLE devices (
     id INT AUTO_INCREMENT PRIMARY KEY,
     house_id INT NOT NULL,
     climate_data_id INT NOT NULL,
+    device_name VARCHAR(255),
     set_point FLOAT,
     duration INT,
     created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
