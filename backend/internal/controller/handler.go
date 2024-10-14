@@ -66,10 +66,10 @@ func (h Handler) GetDevice(c *gin.Context, houseId int) {
 }
 
 type CreateDeviceController struct {
-	HouseID       int `json:"house_id" binding:"required,number"`
-	ClimateDataID int `json:"climate_data_id" binding:"required,number"`
-	SetPoint      int `json:"setpoint" binding:"number"`
-	Duration      int `json:"duration" binding:"number"`
+	HouseID       int     `json:"house_id" binding:"required,number"`
+	ClimateDataID int     `json:"climate_data_id" binding:"required,number"`
+	SetPoint      float64 `json:"setpoint" binding:"number"`
+	Duration      int     `json:"duration" binding:"number"`
 }
 
 func (h Handler) CreateDevice(c *gin.Context, houseId int) {

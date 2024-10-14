@@ -4,11 +4,11 @@ type Device struct {
 	ID            int
 	HouseID       int
 	ClimateDataID int
-	SetPoint      int
+	SetPoint      float64
 	Duration      int
 }
 
-func NewDeviceWithID(id, houseID, climateDataID, setPoint, duration int) *Device {
+func NewDeviceWithID(id int, houseID int, climateDataID int, setPoint float64, duration int) *Device {
 	return &Device{
 		ID:            id,
 		HouseID:       houseID,
@@ -18,7 +18,7 @@ func NewDeviceWithID(id, houseID, climateDataID, setPoint, duration int) *Device
 	}
 }
 
-func NewDevice(houseID, climateDataID, setPoint, duration int) *Device {
+func NewDevice(houseID int, climateDataID int, setPoint float64, duration int) *Device {
 	return &Device{
 		HouseID:       houseID,
 		ClimateDataID: climateDataID,
@@ -27,7 +27,7 @@ func NewDevice(houseID, climateDataID, setPoint, duration int) *Device {
 	}
 }
 
-func (device *Device) ChangeSetPoint(setPoint int) {
+func (device *Device) ChangeSetPoint(setPoint float64) {
 	device.SetPoint = setPoint
 }
 

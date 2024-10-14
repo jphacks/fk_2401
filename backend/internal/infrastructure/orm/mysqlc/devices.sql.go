@@ -19,7 +19,7 @@ VALUES (?, ?, ?, ?)
 type CreateDeviceParams struct {
 	HouseID       int32
 	ClimateDataID int32
-	SetPoint      sql.NullInt32
+	SetPoint      sql.NullFloat64
 	Duration      sql.NullInt32
 }
 
@@ -86,7 +86,7 @@ WHERE d.house_id = ?
 type GetJoinedDevicesFromHouseRow struct {
 	ID              int32
 	HouseID         int32
-	SetPoint        sql.NullInt32
+	SetPoint        sql.NullFloat64
 	Duration        sql.NullInt32
 	CreatedAt       time.Time
 	UpdatedAt       time.Time
