@@ -14,6 +14,7 @@ import (
 // DeviceRequest defines model for DeviceRequest.
 type DeviceRequest struct {
 	ClimateData *string `json:"climate_data,omitempty"`
+	DeviceName  *string `json:"device_name,omitempty"`
 	Duration    *int    `json:"duration"`
 	HouseId     *int    `json:"house-id,omitempty"`
 	Unit        *string `json:"unit,omitempty"`
@@ -22,6 +23,7 @@ type DeviceRequest struct {
 // DeviceResponse defines model for DeviceResponse.
 type DeviceResponse struct {
 	ClimateData *string `json:"climate_data,omitempty"`
+	DeviceName  *string `json:"device_name,omitempty"`
 	Duration    *int    `json:"duration,omitempty"`
 	Id          *int    `json:"id,omitempty"`
 	Unit        *string `json:"unit,omitempty"`
