@@ -49,6 +49,9 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/DeviceResponse"
+  /houses/{house-id}/devices:
+    parameters:
+      - $ref: "#/components/parameters/house-id"
     post:
       operationId: createDevice
       tags:
@@ -78,14 +81,15 @@ components:
     DeviceRequest:
       type: object
       properties:
-        house-id:
-          type: integer
         device_name:
           type: string
         climate_data:
           type: string
         unit:
           type: string
+        set_point:
+          type: number
+          format: double
         duration:
           type: integer
           nullable: true
@@ -108,5 +112,8 @@ components:
           type: string
         unit:
           type: string
+        set_point:
+          type: number
+          format: double
         duration:
           type: integer

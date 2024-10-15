@@ -13,20 +13,21 @@ import (
 
 // DeviceRequest defines model for DeviceRequest.
 type DeviceRequest struct {
-	ClimateData *string `json:"climate_data,omitempty"`
-	DeviceName  *string `json:"device_name,omitempty"`
-	Duration    *int    `json:"duration"`
-	HouseId     *int    `json:"house-id,omitempty"`
-	Unit        *string `json:"unit,omitempty"`
+	ClimateData *string  `json:"climate_data,omitempty"`
+	DeviceName  *string  `json:"device_name,omitempty"`
+	Duration    *int     `json:"duration"`
+	SetPoint    *float64 `json:"set_point,omitempty"`
+	Unit        *string  `json:"unit,omitempty"`
 }
 
 // DeviceResponse defines model for DeviceResponse.
 type DeviceResponse struct {
-	ClimateData *string `json:"climate_data,omitempty"`
-	DeviceName  *string `json:"device_name,omitempty"`
-	Duration    *int    `json:"duration,omitempty"`
-	Id          *int    `json:"id,omitempty"`
-	Unit        *string `json:"unit,omitempty"`
+	ClimateData *string  `json:"climate_data,omitempty"`
+	DeviceName  *string  `json:"device_name,omitempty"`
+	Duration    *int     `json:"duration,omitempty"`
+	Id          *int     `json:"id,omitempty"`
+	SetPoint    *float64 `json:"set_point,omitempty"`
+	Unit        *string  `json:"unit,omitempty"`
 }
 
 // HousesRequest defines model for HousesRequest.
@@ -59,7 +60,7 @@ type ServerInterface interface {
 	// (GET /houses/{house-id})
 	GetDevice(c *gin.Context, houseId HouseId)
 	// Create device
-	// (POST /houses/{house-id})
+	// (POST /houses/{house-id}/devices)
 	CreateDevice(c *gin.Context, houseId HouseId)
 }
 
@@ -176,5 +177,5 @@ func RegisterHandlersWithOptions(router gin.IRouter, si ServerInterface, options
 	router.GET(options.BaseURL+"/houses", wrapper.GetHouses)
 	router.POST(options.BaseURL+"/houses", wrapper.CreateHouse)
 	router.GET(options.BaseURL+"/houses/:house-id", wrapper.GetDevice)
-	router.POST(options.BaseURL+"/houses/:house-id", wrapper.CreateDevice)
+	router.POST(options.BaseURL+"/houses/:house-id/devices", wrapper.CreateDevice)
 }
