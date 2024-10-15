@@ -31,10 +31,6 @@ func (h Handler) GetHouses(c *gin.Context) {
 	c.JSON(http.StatusOK, houses)
 }
 
-type CreateHouseController struct {
-	Name string `json:"name" binding:"required,min=1,max=12,alphanum"`
-}
-
 func (h Handler) CreateHouse(c *gin.Context) {
 	var json CreateHouseController
 	if err := c.BindJSON(&json); err != nil {
