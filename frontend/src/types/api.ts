@@ -18,3 +18,14 @@ export interface ClimateDataResponse {
   climateData: string;
   unit: string;
 }
+
+export interface CreateDeviceRequest {
+  name: string;
+  climateDataID: number;
+  setPoint?: number;
+  duration?: number;
+}
+
+export interface CreateHouseRequest {
+  name: string;
+}
