@@ -12,6 +12,7 @@ import {
   FormControlLabel,
   Switch,
   Collapse,
+  Divider,
 } from "@mui/material";
 import { useState } from "react";
 
@@ -25,6 +26,8 @@ interface DeviceProps {
 
 export function DeviceCard(props: DeviceProps) {
   const { name, setPoint, duration, climateData, unit } = props;
+
+  // API呼び出し（create）
 
   return (
     <Card raised={true} sx={{ minWidth: 275 }}>
@@ -111,6 +114,7 @@ function SettingModalButton(props: DeviceProps) {
           <Typography id="modal-modal-title" variant="h6" component="h2">
             {name}
           </Typography>
+          <Divider />
           <Typography sx={{ my: 2 }}>
             <TextField
               {...(setPoint !== undefined && { defaultValue: setPoint })}
@@ -142,7 +146,8 @@ function SettingModalButton(props: DeviceProps) {
               </Box>
             </Collapse>
           </Typography>
-          <Box sx={{ mt: 4, display: "flex" }}>
+          <Divider />
+          <Box sx={{ mt: 1, display: "flex" }}>
             <Button size="small">保存</Button>
             <Button size="small">キャンセル</Button>
           </Box>
