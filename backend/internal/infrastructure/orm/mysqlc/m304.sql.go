@@ -10,6 +10,57 @@ import (
 	"database/sql"
 )
 
+const createM304 = `-- name: CreateM304 :execlastid
+INSERT INTO m304 (uecs_id, mac_addr, dhcp_flg, ip_addr, net_mask, defgw, dns, vender_name, node_name, ` + "`" + `rly_0` + "`" + `, ` + "`" + `rly_1` + "`" + `, ` + "`" + `rly_2` + "`" + `, ` + "`" + `rly_3` + "`" + `, ` + "`" + `rly_4` + "`" + `, ` + "`" + `rly_5` + "`" + `, ` + "`" + `rly_6` + "`" + `, ` + "`" + `rly_7` + "`" + `)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+`
+
+type CreateM304Params struct {
+	UecsID     sql.NullString
+	MacAddr    sql.NullString
+	DhcpFlg    sql.NullBool
+	IpAddr     sql.NullString
+	NetMask    sql.NullString
+	Defgw      sql.NullString
+	Dns        sql.NullString
+	VenderName sql.NullString
+	NodeName   sql.NullString
+	Rly0       sql.NullInt32
+	Rly1       sql.NullInt32
+	Rly2       sql.NullInt32
+	Rly3       sql.NullInt32
+	Rly4       sql.NullInt32
+	Rly5       sql.NullInt32
+	Rly6       sql.NullInt32
+	Rly7       sql.NullInt32
+}
+
+func (q *Queries) CreateM304(ctx context.Context, arg CreateM304Params) (int64, error) {
+	result, err := q.db.ExecContext(ctx, createM304,
+		arg.UecsID,
+		arg.MacAddr,
+		arg.DhcpFlg,
+		arg.IpAddr,
+		arg.NetMask,
+		arg.Defgw,
+		arg.Dns,
+		arg.VenderName,
+		arg.NodeName,
+		arg.Rly0,
+		arg.Rly1,
+		arg.Rly2,
+		arg.Rly3,
+		arg.Rly4,
+		arg.Rly5,
+		arg.Rly6,
+		arg.Rly7,
+	)
+	if err != nil {
+		return 0, err
+	}
+	return result.LastInsertId()
+}
+
 const getM304FromUecsDevice = `-- name: GetM304FromUecsDevice :many
 SELECT id, uecs_id, mac_addr, dhcp_flg, ip_addr, net_mask, defgw, dns, vender_name, node_name, ` + "`" + `rly_0` + "`" + `, ` + "`" + `rly_1` + "`" + `, ` + "`" + `rly_2` + "`" + `, ` + "`" + `rly_3` + "`" + `, ` + "`" + `rly_4` + "`" + `, ` + "`" + `rly_5` + "`" + `, ` + "`" + `rly_6` + "`" + `, ` + "`" + `rly_7` + "`" + `
 FROM m304
