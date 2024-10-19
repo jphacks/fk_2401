@@ -58,11 +58,11 @@ type M304 struct {
 
 type UecsDevice struct {
 	ID        int32
-	Ccmtype   sql.NullString
-	Room      sql.NullInt32
-	Region    sql.NullInt32
-	Order     sql.NullInt32
-	Priority  sql.NullInt32
+	Ccmtype   string
+	Room      int32
+	Region    int32
+	Order     int32
+	Priority  int32
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }
