@@ -10,14 +10,16 @@ import (
 )
 
 type Handler struct {
-	deviceService *service.DeviceService
-	houseService  *service.HouseService
+	deviceService      *service.DeviceService
+	houseService       *service.HouseService
+	climateDataService *service.ClimateDataService
 }
 
-func NewHandler(ds *service.DeviceService, hs *service.HouseService) *Handler {
+func NewHandler(ds *service.DeviceService, hs *service.HouseService, cds *service.ClimateDataService) *Handler {
 	return &Handler{
-		deviceService: ds,
-		houseService:  hs,
+		deviceService:      ds,
+		houseService:       hs,
+		climateDataService: cds,
 	}
 }
 
@@ -84,4 +86,14 @@ func (h Handler) CreateDevice(c *gin.Context, houseId int) {
 	}
 
 	c.JSON(http.StatusOK, id)
+}
+
+func (h Handler) GetClimateData(c *gin.Context) {
+	climateData, err := h.climateDataService.GetClimateData()
+	if err != nil {
+		log.Println(err)
+		c.JSON(http.StatusInternalServerError, gin.H{"status": "InternalSeverError"})
+	}
+
+	c.JSON(http.StatusOK, climateData)
 }

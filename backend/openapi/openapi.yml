@@ -3,6 +3,21 @@ info:
   title: "UECS Navi API"
   version: "1.0.0"
 paths:
+  /climate-datas:
+    get:
+      operationId: getClimateData
+      tags:
+        - private
+      summary: Get climate data list
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ClimateDatasResponse"
   /houses:
     get:
       operationId: getHouses
@@ -94,6 +109,15 @@ components:
           type: integer
           nullable: true
 
+    ClimateDatasResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        climate_data:
+          type: string
+        unit:
+          type: string
     HousesResponse:
       type: object
       properties:

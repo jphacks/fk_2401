@@ -10,3 +10,9 @@ type CreateDeviceController struct {
 	SetPoint      float64 `json:"set_point" binding:"number"`
 	Duration      int     `json:"duration" binding:"number"`
 }
+
+type ClimateDatasResponse struct {
+	ClimateData *string `json:"climate_data,omitempty"`
+	Id          *int    `json:"id,omitempty"`
+	Unit        *string `json:"unit,omitempty"`
+}

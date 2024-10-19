@@ -103,3 +103,7 @@ func (dr MockDeviceRepository) GetDevicesFromHouse(houseID int) ([]*domain.Devic
 func (dr MockDeviceRepository) GetJoinedDevicesFromHouse(houseID int) ([]*repository.JoinedDevice, error) {
 	return dr.JoinedDeviceTable[houseID], nil
 }
+
+func (dr MockDeviceRepository) CreateDevice(newDevice domain.Device) (int64, error) {
+	return 0, nil
+}
