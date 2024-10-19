@@ -18,7 +18,7 @@ VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 type CreateM304Params struct {
 	UecsID     sql.NullString
 	MacAddr    sql.NullString
-	DhcpFlg    sql.NullBool
+	DhcpFlg    bool
 	IpAddr     sql.NullString
 	NetMask    sql.NullString
 	Defgw      sql.NullString
@@ -71,7 +71,7 @@ type GetM304FromUecsDeviceRow struct {
 	ID         int32
 	UecsID     sql.NullString
 	MacAddr    sql.NullString
-	DhcpFlg    sql.NullBool
+	DhcpFlg    bool
 	IpAddr     sql.NullString
 	NetMask    sql.NullString
 	Defgw      sql.NullString

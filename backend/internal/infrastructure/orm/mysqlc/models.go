@@ -37,7 +37,7 @@ type M304 struct {
 	ID         int32
 	UecsID     sql.NullString
 	MacAddr    sql.NullString
-	DhcpFlg    sql.NullBool
+	DhcpFlg    bool
 	IpAddr     sql.NullString
 	NetMask    sql.NullString
 	Defgw      sql.NullString

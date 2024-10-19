@@ -2,7 +2,7 @@ CREATE TABLE m304 (
     id INT AUTO_INCREMENT PRIMARY KEY,
     uecs_id VARCHAR(255),
     mac_addr VARCHAR(255),
-    dhcp_flg BOOLEAN,
+    dhcp_flg BOOLEAN NOT NULL,
     ip_addr VARCHAR(255),
     net_mask VARCHAR(255),
     defgw VARCHAR(255),
