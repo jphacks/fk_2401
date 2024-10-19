@@ -32,3 +32,37 @@ type House struct {
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }
+
+type M304 struct {
+	ID         int32
+	UecsID     sql.NullString
+	MacAddr    sql.NullString
+	DhcpFlg    sql.NullBool
+	IpAddr     sql.NullString
+	NetMask    sql.NullString
+	Defgw      sql.NullString
+	Dns        sql.NullString
+	VenderName sql.NullString
+	NodeName   sql.NullString
+	Rly0       sql.NullInt32
+	Rly1       sql.NullInt32
+	Rly2       sql.NullInt32
+	Rly3       sql.NullInt32
+	Rly4       sql.NullInt32
+	Rly5       sql.NullInt32
+	Rly6       sql.NullInt32
+	Rly7       sql.NullInt32
+	CreatedAt  time.Time
+	UpdatedAt  time.Time
+}
+
+type UecsDevice struct {
+	ID        int32
+	Ccmtype   sql.NullString
+	Room      sql.NullInt32
+	Region    sql.NullInt32
+	Order     sql.NullInt32
+	Priority  sql.NullInt32
+	CreatedAt time.Time
+	UpdatedAt time.Time
+}
