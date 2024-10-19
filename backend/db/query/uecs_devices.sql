@@ -7,6 +7,6 @@ SELECT id, ccmtype, room, region, `order`, `priority`
 FROM uecs_devices
 WHERE id = ?;
 
--- name: CreateUecsDevie :execlastid
+-- name: CreateUecsDevice :execlastid
 INSERT INTO uecs_devices (ccmtype, room, region, `order`, `priority`)
 VALUES (?, ?, ?, ?, ?);

@@ -10,12 +10,12 @@ import (
 	"database/sql"
 )
 
-const createUecsDevie = `-- name: CreateUecsDevie :execlastid
+const createUecsDevice = `-- name: CreateUecsDevice :execlastid
 INSERT INTO uecs_devices (ccmtype, room, region, ` + "`" + `order` + "`" + `, ` + "`" + `priority` + "`" + `)
 VALUES (?, ?, ?, ?, ?)
 `
 
-type CreateUecsDevieParams struct {
+type CreateUecsDeviceParams struct {
 	Ccmtype  sql.NullString
 	Room     sql.NullInt32
 	Region   sql.NullInt32
@@ -23,8 +23,8 @@ type CreateUecsDevieParams struct {
 	Priority sql.NullInt32
 }
 
-func (q *Queries) CreateUecsDevie(ctx context.Context, arg CreateUecsDevieParams) (int64, error) {
-	result, err := q.db.ExecContext(ctx, createUecsDevie,
+func (q *Queries) CreateUecsDevice(ctx context.Context, arg CreateUecsDeviceParams) (int64, error) {
+	result, err := q.db.ExecContext(ctx, createUecsDevice,
 		arg.Ccmtype,
 		arg.Room,
 		arg.Region,
