@@ -34,3 +34,7 @@ func NewMockHouseRepository() *MockHouseRepository {
 func (hr MockHouseRepository) GetAllHouses() ([]*domain.House, error) {
 	return hr.HousesList, nil
 }
+
+func (hr MockHouseRepository) CreateHouse(name string) (int64, error) {
+	return 0, nil
+}
