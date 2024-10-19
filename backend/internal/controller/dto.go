@@ -12,7 +12,7 @@ type CreateDeviceController struct {
 }
 
 type ClimateDatasResponse struct {
-	ClimateData *string `json:"climate_data,omitempty"`
-	Id          *int    `json:"id,omitempty"`
-	Unit        *string `json:"unit,omitempty"`
+	ClimateData string `json:"climate_data,omitempty"`
+	Id          int    `json:"id,omitempty"`
+	Unit        string `json:"unit,omitempty"`
 }
