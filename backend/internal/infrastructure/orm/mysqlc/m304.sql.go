@@ -11,28 +11,10 @@ import (
 )
 
 const getM304FromUecsDevice = `-- name: GetM304FromUecsDevice :many
-SELECT id, uecs_id, mac_addr, dhcp_flg, ip_addr, net_mask, defgw, dns, vender_name, node_name, rly_0, rly_1, rly_2, rly_3, rly_4, rly_5, rly_6, rly_7
+SELECT id, uecs_id, mac_addr, dhcp_flg, ip_addr, net_mask, defgw, dns, vender_name, node_name, ` + "`" + `rly_0` + "`" + `, ` + "`" + `rly_1` + "`" + `, ` + "`" + `rly_2` + "`" + `, ` + "`" + `rly_3` + "`" + `, ` + "`" + `rly_4` + "`" + `, ` + "`" + `rly_5` + "`" + `, ` + "`" + `rly_6` + "`" + `, ` + "`" + `rly_7` + "`" + `
 FROM m304
-WHERE ` + "`" + `rly_0` + "`" + ` = ?
-OR ` + "`" + `rly_1` + "`" + ` = ?
-OR ` + "`" + `rly_2` + "`" + ` = ?
-OR ` + "`" + `rly_3` + "`" + ` = ?
-OR ` + "`" + `rly_4` + "`" + ` = ?
-OR ` + "`" + `rly_5` + "`" + ` = ?
-OR ` + "`" + `rly_6` + "`" + ` = ?
-OR ` + "`" + `rly_7` + "`" + ` = ?
+WHERE ? IN (` + "`" + `rly_0` + "`" + `, ` + "`" + `rly_1` + "`" + `, ` + "`" + `rly_2` + "`" + `, ` + "`" + `rly_3` + "`" + `, ` + "`" + `rly_4` + "`" + `, ` + "`" + `rly_5` + "`" + `, ` + "`" + `rly_6` + "`" + `, ` + "`" + `rly_7` + "`" + `)
 `
-
-type GetM304FromUecsDeviceParams struct {
-	Rly0 sql.NullInt32
-	Rly1 sql.NullInt32
-	Rly2 sql.NullInt32
-	Rly3 sql.NullInt32
-	Rly4 sql.NullInt32
-	Rly5 sql.NullInt32
-	Rly6 sql.NullInt32
-	Rly7 sql.NullInt32
-}
 
 type GetM304FromUecsDeviceRow struct {
 	ID         int32
@@ -55,17 +37,8 @@ type GetM304FromUecsDeviceRow struct {
 	Rly7       sql.NullInt32
 }
 
-func (q *Queries) GetM304FromUecsDevice(ctx context.Context, arg GetM304FromUecsDeviceParams) ([]GetM304FromUecsDeviceRow, error) {
-	rows, err := q.db.QueryContext(ctx, getM304FromUecsDevice,
-		arg.Rly0,
-		arg.Rly1,
-		arg.Rly2,
-		arg.Rly3,
-		arg.Rly4,
-		arg.Rly5,
-		arg.Rly6,
-		arg.Rly7,
-	)
+func (q *Queries) GetM304FromUecsDevice(ctx context.Context, rly0 sql.NullInt32) ([]GetM304FromUecsDeviceRow, error) {
+	rows, err := q.db.QueryContext(ctx, getM304FromUecsDevice, rly0)
 	if err != nil {
 		return nil, err
 	}
