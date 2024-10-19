@@ -27,8 +27,6 @@ interface DeviceProps {
 export function DeviceCard(props: DeviceProps) {
   const { name, setPoint, duration, climateData, unit } = props;
 
-  // API呼び出し（create）
-
   return (
     <Card raised={true} sx={{ minWidth: 275 }}>
       <CardContent>
@@ -115,7 +113,7 @@ function SettingModalButton(props: DeviceProps) {
             {name}
           </Typography>
           <Divider />
-          <Typography sx={{ my: 2 }}>
+          <Box sx={{ my: 2 }}>
             <TextField
               {...(setPoint !== undefined && { defaultValue: setPoint })}
               type="number"
@@ -130,8 +128,8 @@ function SettingModalButton(props: DeviceProps) {
                 },
               }}
             />
-          </Typography>
-          <Typography sx={{ my: 2 }}>
+          </Box>
+          <Box sx={{ my: 2 }}>
             <FormControlLabel
               control={
                 <Switch checked={timerChecked} onChange={handleTimerChange} />
@@ -145,7 +143,7 @@ function SettingModalButton(props: DeviceProps) {
                 <TimerSlider duration={duration} />
               </Box>
             </Collapse>
-          </Typography>
+          </Box>
           <Divider />
           <Box sx={{ mt: 1, display: "flex" }}>
             <Button size="small">保存</Button>

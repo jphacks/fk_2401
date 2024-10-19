@@ -19,45 +19,120 @@ import {
 import { useState, useEffect } from "react";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import { SelectChangeEvent } from "@mui/material";
-import { ClimateDataResponse } from "../../types/api";
-import { getClimateDatas } from "../../mocks/setting_device_api";
+import { ClimateDataResponse, CreateDeviceRequest } from "../../types/api";
+import { getClimateDatas } from "@/mocks/setting_device_api";
+// import { getClimateDatas } from "@/features/api/climate-data/get-climate-data";
+import { createDevice } from "@/features/api/device/create-device";
 
 export function CreateDeviceButton() {
-  const [modalOpen, setModalOpen] = useState(false);
-  const [climateData, setClimateData] = useState("");
-  const [setPointChecked, setSetPointChecked] = useState(false);
-  const [timerChecked, setTimerChecked] = useState(false);
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [setPointChecked, setSetPointChecked] = useState<boolean>(false);
+  const [timerChecked, setTimerChecked] = useState<boolean>(false);
   const [fetchedClimateDatas, setFetchedClimateDatas] = useState<
     ClimateDataResponse[]
   >([]);
+  const [selectedClimateData, setSelectedClimateData] = useState<string>("");
+
+  // States for device creation form inputs
+  const [deviceNameInput, setDeviceNameInput] = useState<string>("");
+  const [climateDataInput, setClimateDataInput] = useState<number>(0);
+  const [setPointInput, setSetPointInput] = useState<number>(0);
+  const [durationInput, setDurationInput] = useState<number>(0);
+
+  const formReset = () => {
+    setSetPointChecked(false);
+    setTimerChecked(false);
+    setDeviceNameInput("");
+    setSelectedClimateData("");
+    setClimateDataInput(0);
+    setSetPointInput(0);
+    setDurationInput(0);
+  };
 
   useEffect(() => {
-    const climateDataRes: ClimateDataResponse[] = getClimateDatas();
+    const fetchClimateDatas = async () => {
+      const climateDataRes: ClimateDataResponse[] = getClimateDatas();
+      setFetchedClimateDatas(climateDataRes);
+    };
 
-    setFetchedClimateDatas(climateDataRes);
+    fetchClimateDatas();
   }, []);
 
-  const handleClimateDataChange = (event: SelectChangeEvent) => {
-    setClimateData(event.target.value as string);
+  // Handlers for device creation form inputs
+  const handleDeviceNameChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const deviceName: string = event.target.value as string;
+    setDeviceNameInput(deviceName);
   };
-  const handleSetPointChange = () => {
+  const handleClimateDataChange = (event: SelectChangeEvent) => {
+    const climateData = event.target.value;
+
+    const climateDataRec = fetchedClimateDatas.find(
+      (data) => data.climateData === climateData
+    );
+
+    setSelectedClimateData(climateData);
+
+    if (climateDataRec) {
+      setClimateDataInput(climateDataRec.id);
+    }
+  };
+  const handleSetPointSwitchChange = () => {
     setSetPointChecked((prev) => !prev);
   };
-  const handleTimerChange = () => {
+  const handleSetPointChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const setPoint: number = parseFloat(event.target.value);
+    setSetPointInput(setPoint);
+  };
+  const handleTimerSwitchChange = () => {
     setTimerChecked((prev) => !prev);
   };
+  const handleDurationChange = (
+    _event: Event,
+    newDurationInput: number | number[]
+  ) => {
+    setDurationInput(newDurationInput as number);
+  };
 
-  const handleOpen = () => setModalOpen(true);
-  const handleClose = () => setModalOpen(false);
+  const handleModalOpen = () => setModalOpen(true);
+  const handleModalClose = () => setModalOpen(false);
+
+  const handleSendForm = async () => {
+    const req: CreateDeviceRequest = {
+      name: deviceNameInput,
+      climateDataID: climateDataInput,
+      setPoint: setPointInput,
+      duration: durationInput,
+    };
+
+    console.log(req);
+
+    formReset();
+
+    try {
+      await createDevice(req);
+      handleModalClose();
+    } catch (error) {
+      console.error("Error creating device:", error);
+    }
+
+    handleModalClose();
+  };
+
+  const handleCancel = () => {
+    formReset();
+    handleModalClose();
+  };
 
   return (
     <>
-      <IconButton size="large" color="primary" onClick={handleOpen}>
+      <IconButton size="large" color="primary" onClick={handleModalOpen}>
         <AddCircleOutlineIcon fontSize="large" />
       </IconButton>
       <Modal
         open={modalOpen}
-        onClose={handleClose}
+        onClose={handleModalClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
@@ -66,10 +141,15 @@ export function CreateDeviceButton() {
             デバイス追加
           </Typography>
           <Divider />
-          <Typography sx={{ my: 2 }}>
-            <TextField label="デバイス名" size="small" />
-          </Typography>
-          <Typography>
+          <Box sx={{ my: 2 }}>
+            <TextField
+              label="デバイス名"
+              size="small"
+              value={deviceNameInput}
+              onChange={handleDeviceNameChange}
+            />
+          </Box>
+          <Box>
             <FormControl fullWidth>
               <InputLabel id="demo-simple-select-label" size="small">
                 気象データ
@@ -77,35 +157,39 @@ export function CreateDeviceButton() {
               <Select
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
-                value={climateData}
+                value={selectedClimateData}
                 label="気象データ"
                 onChange={handleClimateDataChange}
                 size="small"
               >
                 {fetchedClimateDatas.map((data) => (
-                  <MenuItem value={data.climateData}>
+                  <MenuItem key={data.id} value={data.climateData}>
                     {data.climateData}
                   </MenuItem>
                 ))}
               </Select>
             </FormControl>
-          </Typography>
-          <Typography sx={{ my: 2 }}>
+          </Box>
+          <Box sx={{ my: 2 }}>
             <FormControlLabel
               control={
                 <Switch
                   checked={setPointChecked}
-                  onChange={handleSetPointChange}
+                  onChange={handleSetPointSwitchChange}
                 />
               }
-              label={climateData ? `設定${climateData}` : "設定気象データ"}
-              disabled={climateData == ""}
+              label={
+                selectedClimateData
+                  ? `設定${selectedClimateData}`
+                  : "設定気象データ"
+              }
+              disabled={selectedClimateData == ""}
             />
             <Collapse in={setPointChecked}>
               <TextField
                 type="number"
                 size="small"
-                label={`設定${climateData}`}
+                label={`設定${selectedClimateData}`}
                 inputProps={{ step: "0.1" }}
                 slotProps={{
                   input: {
@@ -114,29 +198,41 @@ export function CreateDeviceButton() {
                     ),
                   },
                 }}
+                value={setPointInput}
+                onChange={handleSetPointChange}
               />
             </Collapse>
-          </Typography>
-          <Typography sx={{ my: 2 }}>
+          </Box>
+          <Box sx={{ my: 2 }}>
             <FormControlLabel
               control={
-                <Switch checked={timerChecked} onChange={handleTimerChange} />
+                <Switch
+                  checked={timerChecked}
+                  onChange={handleTimerSwitchChange}
+                />
               }
               label="タイマー"
-              disabled={climateData == ""}
+              disabled={selectedClimateData == ""}
             />
             <Collapse in={timerChecked}>
               <Box
                 sx={{ px: 3, py: 4, display: "flex", justifyContent: "center" }}
               >
-                <TimerSlider duration={1} />
+                <TimerSlider
+                  durationInput={durationInput}
+                  handleDurationChange={handleDurationChange}
+                />
               </Box>
             </Collapse>
-          </Typography>
+          </Box>
           <Divider />
           <Box sx={{ mt: 1, display: "flex" }}>
-            <Button size="small">保存</Button>
-            <Button size="small">キャンセル</Button>
+            <Button size="small" onClick={handleSendForm}>
+              保存
+            </Button>
+            <Button size="small" onClick={handleCancel}>
+              キャンセル
+            </Button>
           </Box>
         </Box>
       </Modal>
@@ -156,29 +252,35 @@ const modalStyle = {
 };
 
 interface TimerSliderProps {
-  duration?: number;
+  durationInput?: number;
+  handleDurationChange: (event: Event, value: number | number[]) => void;
 }
 
-function TimerSlider({ duration }: TimerSliderProps) {
+function TimerSlider({
+  durationInput,
+  handleDurationChange,
+}: TimerSliderProps) {
   const marks = [
     { value: 1, label: "1時間" },
     { value: 12, label: "12時間" },
   ];
 
-  function valuetext(value: number) {
+  const valuetext = (value: number) => {
     return `${value}時間`;
-  }
+  };
 
   return (
     <Box sx={{ width: 300 }}>
       <Slider
-        defaultValue={duration !== undefined ? duration : 1}
+        defaultValue={durationInput !== undefined ? durationInput : 1}
         aria-label="Timer duration"
         getAriaValueText={valuetext}
         min={1}
         max={12}
         marks={marks}
         valueLabelDisplay="on"
+        value={durationInput}
+        onChange={handleDurationChange}
       />
     </Box>
   );

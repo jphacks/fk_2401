@@ -6,6 +6,8 @@ import Grid from "@mui/material/Grid2";
 import { useState, useEffect } from "react";
 import { HouseResponse, JoinedDeviceResponse } from "../types/api";
 import { getDevices, getHouses } from "../mocks/setting_device_api";
+// import { getDevices } from "@/features/api/device/get-device";
+// import { getHouses } from "@/features/api/house/get-house";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -45,20 +47,22 @@ export default function SettingDevice() {
   const [value, setValue] = useState(0);
 
   useEffect(() => {
-    const housesRes: HouseResponse[] = getHouses();
+    const fetchHouseAndDevices = async () => {
+      const housesRes: HouseResponse[] = getHouses();
+      const devicesMap: Map<number, JoinedDeviceResponse[]> = new Map();
+      housesRes.forEach((house) => {
+        const devicesRes: JoinedDeviceResponse[] = getDevices(house.id);
+        devicesMap.set(house.id, devicesRes);
+      });
 
-    // 複数のハウスIDから同時にdeviceを取得するAPIを用意するべき
-    const devicesMap: Map<number, JoinedDeviceResponse[]> = new Map();
-    housesRes.forEach((house) => {
-      const devicesRes: JoinedDeviceResponse[] = getDevices(house.id);
-      devicesMap.set(house.id, devicesRes);
-    });
+      setHouses(housesRes);
+      setDevicesMap(devicesMap);
+    };
 
-    setHouses(housesRes);
-    setDevicesMap(devicesMap);
+    fetchHouseAndDevices();
   }, []);
 
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
 
@@ -67,7 +71,7 @@ export default function SettingDevice() {
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
         <Tabs
           value={value}
-          onChange={handleChange}
+          onChange={handleTabChange}
           aria-label="basic tabs example"
         >
           {houses.map((house, index) => (

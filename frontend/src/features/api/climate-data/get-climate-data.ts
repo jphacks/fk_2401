@@ -1,5 +1,5 @@
-import { ClimateDataResponse } from "../../../types/api";
-import { api } from "../../../lib/api-client";
+import { ClimateDataResponse } from "@/types/api";
+import { api } from "@/lib/api-client";
 
 export async function getClimateDatas(): Promise<ClimateDataResponse[]> {
   try {
