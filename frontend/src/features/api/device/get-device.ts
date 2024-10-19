@@ -1,5 +1,5 @@
-import { JoinedDeviceResponse } from "../../../types/api";
-import { api } from "../../../lib/api-client";
+import { JoinedDeviceResponse } from "@/types/api";
+import { api } from "@/lib/api-client";
 
 export async function getDevices(
   houseID: number

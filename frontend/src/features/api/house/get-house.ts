@@ -1,5 +1,5 @@
-import { HouseResponse } from "../../../types/api";
-import { api } from "../../../lib/api-client";
+import { HouseResponse } from "@/types/api";
+import { api } from "@/lib/api-client";
 
 export async function getHouses(): Promise<HouseResponse[]> {
   try {

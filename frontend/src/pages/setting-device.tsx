@@ -1,11 +1,11 @@
-import { DeviceCard } from "../components/setting-device/device-card";
-import { CreateDeviceButton } from "../components/setting-device/create-button";
-import { Navigation } from "../layouts/navigation";
+import { DeviceCard } from "@/components/setting-device/device-card";
+import { CreateDeviceButton } from "@/components/setting-device/create-button";
+import { Navigation } from "@/layouts/navigation";
 import { Box, Tabs, Tab } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import { useState, useEffect } from "react";
-import { HouseResponse, JoinedDeviceResponse } from "../types/api";
-import { getDevices, getHouses } from "../mocks/setting_device_api";
+import { HouseResponse, JoinedDeviceResponse } from "@/types/api";
+import { getDevices, getHouses } from "@/mocks/setting_device_api";
 // import { getDevices } from "@/features/api/device/get-device";
 // import { getHouses } from "@/features/api/house/get-house";
 

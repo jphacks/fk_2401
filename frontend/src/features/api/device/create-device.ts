@@ -1,5 +1,5 @@
-import { CreateDeviceRequest } from "../../../types/api";
-import { api } from "../../../lib/api-client";
+import { CreateDeviceRequest } from "@/types/api";
+import { api } from "@/lib/api-client";
 
 // 戻り値は作成したレコードのID
 export async function createDevice(data: CreateDeviceRequest): Promise<number> {

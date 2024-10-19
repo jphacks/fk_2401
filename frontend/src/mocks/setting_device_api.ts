@@ -2,7 +2,7 @@ import {
   ClimateDataResponse,
   HouseResponse,
   JoinedDeviceResponse,
-} from "../types/api";
+} from "@/types/api";
 
 export function getHouses(): HouseResponse[] {
   const houses: HouseResponse[] = [

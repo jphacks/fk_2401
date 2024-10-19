@@ -19,7 +19,7 @@ import {
 import { useState, useEffect } from "react";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import { SelectChangeEvent } from "@mui/material";
-import { ClimateDataResponse, CreateDeviceRequest } from "../../types/api";
+import { ClimateDataResponse, CreateDeviceRequest } from "@/types/api";
 import { getClimateDatas } from "@/mocks/setting_device_api";
 // import { getClimateDatas } from "@/features/api/climate-data/get-climate-data";
 import { createDevice } from "@/features/api/device/create-device";
