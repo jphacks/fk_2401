@@ -14,5 +14,5 @@ INSERT INTO devices (house_id, climate_data_id, device_name, set_point, duration
 (2, 1, "テストデバイス5", NULL, NULL),
 (2, 2, "テストデバイス6", NULL, NULL),
 (2, 3, "テストデバイス7", NULL, NULL),
-(2, 4, "テストデバイス8", NULL, NULL);
+(2, 4, "テストデバイス8", NULL, NULL),
 (3, 1, "加温器", 20, 4);
