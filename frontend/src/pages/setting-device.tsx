@@ -86,9 +86,9 @@ export default function SettingDevice() {
               <Grid size={3} key={deviceIndex}>
                 <DeviceCard
                   name={device.name}
-                  setPoint={device.setPoint}
+                  setPoint={device.set_point}
                   duration={device.duration}
-                  climateData={device.climateData}
+                  climateData={device.climate_data}
                   unit={device.unit}
                 />
               </Grid>
