@@ -43,6 +43,13 @@ func NewDeviceRepository(queries *mysqlc.Queries) *DeviceRepository {
 func (dr DeviceRepository) CreateDevice(newDevice domain.Device) (int64, error) {
 	ctx := context.Background()
 
+	devicename := sql.NullString{
+		String: newDevice.DeviceName,
+		Valid:  false,
+	}
+	if newDevice.DeviceName != "" {
+		devicename.Valid = true
+	}
 	setpoint := sql.NullFloat64{
 		Float64: newDevice.SetPoint,
 		Valid:   false,
@@ -61,12 +68,9 @@ func (dr DeviceRepository) CreateDevice(newDevice domain.Device) (int64, error) 
 	arg := mysqlc.CreateDeviceParams{
 		HouseID:       int32(newDevice.HouseID),
 		ClimateDataID: int32(newDevice.ClimateDataID),
-		DeviceName: sql.NullString{
-			String: newDevice.DeviceName,
-			Valid:  true,
-		},
-		SetPoint: setpoint,
-		Duration: duration,
+		DeviceName:    devicename,
+		SetPoint:      setpoint,
+		Duration:      duration,
 	}
 
 	id, err := dr.queries.CreateDevice(ctx, arg)
@@ -86,6 +90,10 @@ func (dr DeviceRepository) GetDevicesFromHouse(houseID int) ([]*domain.Device, e
 
 	devices := make([]*domain.Device, len(devicesRow))
 	for i, v := range devicesRow {
+		devicename := ""
+		if v.DeviceName.Valid {
+			devicename = v.DeviceName.String
+		}
 		setpoint := float64(0)
 		if v.SetPoint.Valid {
 			setpoint = v.SetPoint.Float64
@@ -98,7 +106,7 @@ func (dr DeviceRepository) GetDevicesFromHouse(houseID int) ([]*domain.Device, e
 			int(v.ID),
 			int(v.HouseID),
 			int(v.ClimateDataID),
-			v.DeviceName.String,
+			devicename,
 			setpoint,
 			duration,
 		)
@@ -117,6 +125,10 @@ func (dr DeviceRepository) GetJoinedDevicesFromHouse(houseID int) ([]*JoinedDevi
 
 	joinedDevices := make([]*JoinedDevice, len(joinedDevicesRow))
 	for i, v := range joinedDevicesRow {
+		devicename := ""
+		if v.DeviceName.Valid {
+			devicename = v.DeviceName.String
+		}
 		setpoint := float64(0)
 		if v.SetPoint.Valid {
 			setpoint = v.SetPoint.Float64
@@ -128,7 +140,7 @@ func (dr DeviceRepository) GetJoinedDevicesFromHouse(houseID int) ([]*JoinedDevi
 		joinedDevices[i] = NewJoinedDevice(
 			int(v.ID),
 			int(v.HouseID),
-			v.DeviceName.String,
+			devicename,
 			setpoint,
 			duration,
 			v.ClimateDataName,
