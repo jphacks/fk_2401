@@ -43,6 +43,21 @@ func NewDeviceRepository(queries *mysqlc.Queries) *DeviceRepository {
 func (dr DeviceRepository) CreateDevice(newDevice domain.Device) (int64, error) {
 	ctx := context.Background()
 
+	setpoint := sql.NullFloat64{
+		Float64: newDevice.SetPoint,
+		Valid:   false,
+	}
+	if newDevice.SetPoint != 0 {
+		setpoint.Valid = true
+	}
+	duration := sql.NullInt32{
+		Int32: int32(newDevice.Duration),
+		Valid: false,
+	}
+	if newDevice.Duration != 0 {
+		duration.Valid = true
+	}
+
 	arg := mysqlc.CreateDeviceParams{
 		HouseID:       int32(newDevice.HouseID),
 		ClimateDataID: int32(newDevice.ClimateDataID),
@@ -50,14 +65,8 @@ func (dr DeviceRepository) CreateDevice(newDevice domain.Device) (int64, error) 
 			String: newDevice.DeviceName,
 			Valid:  true,
 		},
-		SetPoint: sql.NullFloat64{
-			Float64: float64(newDevice.SetPoint),
-			Valid:   true,
-		},
-		Duration: sql.NullInt32{
-			Int32: int32(newDevice.Duration),
-			Valid: true,
-		},
+		SetPoint: setpoint,
+		Duration: duration,
 	}
 
 	id, err := dr.queries.CreateDevice(ctx, arg)
@@ -77,13 +86,21 @@ func (dr DeviceRepository) GetDevicesFromHouse(houseID int) ([]*domain.Device, e
 
 	devices := make([]*domain.Device, len(devicesRow))
 	for i, v := range devicesRow {
+		setpoint := float64(0)
+		if v.SetPoint.Valid {
+			setpoint = v.SetPoint.Float64
+		}
+		duration := 0
+		if v.Duration.Valid {
+			duration = int(v.Duration.Int32)
+		}
 		devices[i] = domain.NewDeviceWithID(
 			int(v.ID),
 			int(v.HouseID),
 			int(v.ClimateDataID),
 			v.DeviceName.String,
-			float64(v.SetPoint.Float64),
-			int(v.Duration.Int32),
+			setpoint,
+			duration,
 		)
 	}
 
@@ -100,12 +117,20 @@ func (dr DeviceRepository) GetJoinedDevicesFromHouse(houseID int) ([]*JoinedDevi
 
 	joinedDevices := make([]*JoinedDevice, len(joinedDevicesRow))
 	for i, v := range joinedDevicesRow {
+		setpoint := float64(0)
+		if v.SetPoint.Valid {
+			setpoint = v.SetPoint.Float64
+		}
+		duration := 0
+		if v.Duration.Valid {
+			duration = int(v.Duration.Int32)
+		}
 		joinedDevices[i] = NewJoinedDevice(
 			int(v.ID),
 			int(v.HouseID),
 			v.DeviceName.String,
-			float64(v.SetPoint.Float64),
-			int(v.Duration.Int32),
+			setpoint,
+			duration,
 			v.ClimateDataName,
 			v.Unit,
 		)
