@@ -44,7 +44,7 @@ export default function SettingDevice() {
     Map<number, JoinedDeviceResponse[]>
   >(new Map());
 
-  const [value, setValue] = useState(0);
+  const [selectedHouse, setSelectedHouse] = useState(0);
 
   useEffect(() => {
     const fetchHouseAndDevices = async () => {
@@ -63,14 +63,14 @@ export default function SettingDevice() {
   }, []);
 
   const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
-    setValue(newValue);
+    setSelectedHouse(newValue);
   };
 
   return (
     <Navigation>
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
         <Tabs
-          value={value}
+          value={selectedHouse}
           onChange={handleTabChange}
           aria-label="basic tabs example"
         >
@@ -80,7 +80,7 @@ export default function SettingDevice() {
         </Tabs>
       </Box>
       {houses.map((house, index) => (
-        <SettingDeviceTabPanel key={index} index={index} value={value}>
+        <SettingDeviceTabPanel key={index} index={index} value={selectedHouse}>
           <Grid container spacing={4}>
             {devicesMap.get(house.id)?.map((device, deviceIndex) => (
               <Grid size={3} key={deviceIndex}>
