@@ -18,6 +18,7 @@ type (
 		GetAllHouses() ([]*domain.House, error)
 	}
 
-	// ClimateDataRepositoryInterface interface {
-	// }
+	ClimateDataRepositoryInterface interface {
+		GetAllClimateData() ([]*domain.ClimateData, error)
+	}
 )

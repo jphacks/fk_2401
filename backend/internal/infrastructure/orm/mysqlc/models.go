@@ -19,7 +19,8 @@ type Device struct {
 	ID            int32
 	HouseID       int32
 	ClimateDataID int32
-	SetPoint      sql.NullInt32
+	DeviceName    sql.NullString
+	SetPoint      sql.NullFloat64
 	Duration      sql.NullInt32
 	CreatedAt     time.Time
 	UpdatedAt     time.Time

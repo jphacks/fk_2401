@@ -12,14 +12,15 @@ import (
 )
 
 const createDevice = `-- name: CreateDevice :execlastid
-INSERT INTO devices (house_id, climate_data_id, set_point, duration) 
-VALUES (?, ?, ?, ?)
+INSERT INTO devices (house_id, climate_data_id, device_name, set_point, duration) 
+VALUES (?, ?, ?, ?, ?)
 `
 
 type CreateDeviceParams struct {
 	HouseID       int32
 	ClimateDataID int32
-	SetPoint      sql.NullInt32
+	DeviceName    sql.NullString
+	SetPoint      sql.NullFloat64
 	Duration      sql.NullInt32
 }
 
@@ -27,6 +28,7 @@ func (q *Queries) CreateDevice(ctx context.Context, arg CreateDeviceParams) (int
 	result, err := q.db.ExecContext(ctx, createDevice,
 		arg.HouseID,
 		arg.ClimateDataID,
+		arg.DeviceName,
 		arg.SetPoint,
 		arg.Duration,
 	)
@@ -38,7 +40,7 @@ func (q *Queries) CreateDevice(ctx context.Context, arg CreateDeviceParams) (int
 
 const getDevicesFromHouse = `-- name: GetDevicesFromHouse :many
 SELECT 
-    id, house_id, climate_data_id, set_point, duration, created_at, updated_at
+    id, house_id, climate_data_id, device_name, set_point, duration, created_at, updated_at
 FROM devices
 WHERE house_id = ?
 `
@@ -56,6 +58,7 @@ func (q *Queries) GetDevicesFromHouse(ctx context.Context, houseID int32) ([]Dev
 			&i.ID,
 			&i.HouseID,
 			&i.ClimateDataID,
+			&i.DeviceName,
 			&i.SetPoint,
 			&i.Duration,
 			&i.CreatedAt,
@@ -76,7 +79,7 @@ func (q *Queries) GetDevicesFromHouse(ctx context.Context, houseID int32) ([]Dev
 
 const getJoinedDevicesFromHouse = `-- name: GetJoinedDevicesFromHouse :many
 SELECT 
-    d.id, d.house_id, d.set_point, d.duration, d.created_at, d.updated_at,
+    d.id, d.house_id, d.device_name, d.set_point, d.duration, d.created_at, d.updated_at,
     c.name AS climate_data_name, c.unit
 FROM devices d
 JOIN climate_datas c ON d.climate_data_id = c.id
@@ -86,7 +89,8 @@ WHERE d.house_id = ?
 type GetJoinedDevicesFromHouseRow struct {
 	ID              int32
 	HouseID         int32
-	SetPoint        sql.NullInt32
+	DeviceName      sql.NullString
+	SetPoint        sql.NullFloat64
 	Duration        sql.NullInt32
 	CreatedAt       time.Time
 	UpdatedAt       time.Time
@@ -106,6 +110,7 @@ func (q *Queries) GetJoinedDevicesFromHouse(ctx context.Context, houseID int32) 
 		if err := rows.Scan(
 			&i.ID,
 			&i.HouseID,
+			&i.DeviceName,
 			&i.SetPoint,
 			&i.Duration,
 			&i.CreatedAt,

@@ -17,6 +17,7 @@ func NewMockDeviceRepository() *MockDeviceRepository {
 		ID:            1,
 		HouseID:       1,
 		ClimateDataID: 1,
+		DeviceName:    "加温器",
 		SetPoint:      22,
 		Duration:      1,
 	}
@@ -24,6 +25,7 @@ func NewMockDeviceRepository() *MockDeviceRepository {
 		ID:            2,
 		HouseID:       2,
 		ClimateDataID: 2,
+		DeviceName:    "加湿器",
 		SetPoint:      60,
 		Duration:      2,
 	}
@@ -31,6 +33,7 @@ func NewMockDeviceRepository() *MockDeviceRepository {
 		ID:            3,
 		HouseID:       2,
 		ClimateDataID: 3,
+		DeviceName:    "CO2濃度センサ",
 		SetPoint:      420,
 		Duration:      3,
 	}
@@ -38,6 +41,7 @@ func NewMockDeviceRepository() *MockDeviceRepository {
 		ID:            4,
 		HouseID:       3,
 		ClimateDataID: 3,
+		DeviceName:    "CO2濃度センサ",
 		SetPoint:      420,
 		Duration:      4,
 	}
@@ -98,4 +102,8 @@ func (dr MockDeviceRepository) GetDevicesFromHouse(houseID int) ([]*domain.Devic
 
 func (dr MockDeviceRepository) GetJoinedDevicesFromHouse(houseID int) ([]*repository.JoinedDevice, error) {
 	return dr.JoinedDeviceTable[houseID], nil
+}
+
+func (dr MockDeviceRepository) CreateDevice(newDevice domain.Device) (int64, error) {
+	return 0, nil
 }

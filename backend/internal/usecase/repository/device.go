@@ -11,16 +11,18 @@ import (
 type JoinedDevice struct {
 	ID          int
 	HouseID     int
-	SetPoint    int
+	DeviceName  string
+	SetPoint    float64
 	Duration    int
 	ClimateData string
 	Unit        string
 }
 
-func NewJoinedDevice(id, houseID, setPoint, duration int, climateData, unit string) *JoinedDevice {
+func NewJoinedDevice(id int, houseID int, deviceName string, setPoint float64, duration int, climateData, unit string) *JoinedDevice {
 	return &JoinedDevice{
 		ID:          id,
 		HouseID:     houseID,
+		DeviceName:  deviceName,
 		SetPoint:    setPoint,
 		Duration:    duration,
 		ClimateData: climateData,
@@ -44,9 +46,13 @@ func (dr DeviceRepository) CreateDevice(newDevice domain.Device) (int64, error) 
 	arg := mysqlc.CreateDeviceParams{
 		HouseID:       int32(newDevice.HouseID),
 		ClimateDataID: int32(newDevice.ClimateDataID),
-		SetPoint: sql.NullInt32{
-			Int32: int32(newDevice.SetPoint),
-			Valid: true,
+		DeviceName: sql.NullString{
+			String: newDevice.DeviceName,
+			Valid:  true,
+		},
+		SetPoint: sql.NullFloat64{
+			Float64: float64(newDevice.SetPoint),
+			Valid:   true,
 		},
 		Duration: sql.NullInt32{
 			Int32: int32(newDevice.Duration),
@@ -75,7 +81,8 @@ func (dr DeviceRepository) GetDevicesFromHouse(houseID int) ([]*domain.Device, e
 			int(v.ID),
 			int(v.HouseID),
 			int(v.ClimateDataID),
-			int(v.SetPoint.Int32),
+			v.DeviceName.String,
+			float64(v.SetPoint.Float64),
 			int(v.Duration.Int32),
 		)
 	}
@@ -96,7 +103,8 @@ func (dr DeviceRepository) GetJoinedDevicesFromHouse(houseID int) ([]*JoinedDevi
 		joinedDevices[i] = NewJoinedDevice(
 			int(v.ID),
 			int(v.HouseID),
-			int(v.SetPoint.Int32),
+			v.DeviceName.String,
+			float64(v.SetPoint.Float64),
 			int(v.Duration.Int32),
 			v.ClimateDataName,
 			v.Unit,
