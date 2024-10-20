@@ -10,6 +10,19 @@ import (
 	"strings"
 )
 
+const (
+	addressBaseBlockA    = 0x0000
+	addressBaseBlockB    = 0x1000
+	addressBaseBlockC    = 0x3000
+	addressBaseBlockD    = 0x5000
+	recordStepBlockBC    = 0x40
+	recordStepBlockD     = 0x20
+	blockSize            = 32
+	responseCountBlockA  = 4
+	responseCountBlockBC = 3
+	responseCountBlockD  = 2
+)
+
 // 文字列を指定長に変換する(右埋め)
 // s: 元の文字列, out_len: 出力文字列長, padchar: paddingに使う文字
 func Padding(s string, out_len int, padchar string) string {
@@ -57,7 +70,7 @@ func SendBlockA(IP_ADDR string,
 	FIXED_DNS string,
 	VENDER_NAME string,
 	NODE_NAME string) ([]*http.Response, error) {
-	address := 0x0000
+	address := addressBaseBlockA
 	ih_uecs_id := Padding(LC_UECS_ID, 12, "0")
 	ih_mac := strings.Replace(LC_MAC, ":", "", -1)
 	ih_dhcpflg := ByteArrange(FIX_DHCP_FLAG)
@@ -93,14 +106,14 @@ func SendBlockA(IP_ADDR string,
 	ih_node_name := StringArrange(NODE_NAME, 32)
 
 	ihtxt := ih_uecs_id + ih_mac + ih_dhcpflg + ih_ip_addr + ih_netmask + ih_defgw + ih_dns + ih_vender_name + ih_node_name
-	resps := make([]*http.Response, 4)
-	for i := range 4 {
-		tp := i * 32
+	resps := make([]*http.Response, responseCountBlockA)
+	for i := 0; i < responseCountBlockA; i++ {
+		tp := i * blockSize
 		iht := ""
-		if len(ihtxt) < tp+32 {
+		if len(ihtxt) < tp+blockSize {
 			iht = ihtxt[tp:]
 		} else {
-			iht = ihtxt[tp:(tp + 32)]
+			iht = ihtxt[tp:(tp + blockSize)]
 		}
 		sz := Padding(fmt.Sprintf("%x", len(iht)/2), 2, "0")
 		addr := Padding(fmt.Sprintf("%x", address+(tp/2)), 4, "0")
@@ -114,7 +127,7 @@ func SendBlockA(IP_ADDR string,
 			return resps, err
 		}
 		resps[i] = resp
-		defer resp.Body.Close()
+		resp.Body.Close()
 	}
 	return resps, nil
 }
@@ -139,8 +152,8 @@ func SendBlockB(B_ID int,
 	LC_DUMN int,
 	LC_RLY_L int,
 	LC_RLY_H int) ([]*http.Response, error) {
-	address := 0x1000
-	recstep := 0x40
+	address := addressBaseBlockB
+	recstep := recordStepBlockBC
 	ih_valid := ByteArrange(LC_VALID)
 	ih_room := ByteArrange(LC_ROOM)
 	ih_region := ByteArrange(LC_REGION)
@@ -162,14 +175,14 @@ func SendBlockB(B_ID int,
 	ih_rly_h := ByteArrange(LC_RLY_H)
 
 	ihtxt := ih_valid + ih_room + ih_region + ih_order + ih_priority + ih_lv + ih_cast + ih_sr + ih_ccmtype + ih_unit + ih_sthr + ih_stmn + ih_edhr + ih_edmn + ih_inmn + ih_dumn + ih_rly_l + ih_rly_h
-	resps := make([]*http.Response, 3)
-	for i := range 3 {
-		tp := i * 32
+	resps := make([]*http.Response, responseCountBlockBC)
+	for i := 0; i < responseCountBlockBC; i++ {
+		tp := i * blockSize
 		iht := ""
-		if len(ihtxt) < tp+32 {
+		if len(ihtxt) < tp+blockSize {
 			iht = ihtxt[tp:]
 		} else {
-			iht = ihtxt[tp:(tp + 32)]
+			iht = ihtxt[tp:(tp + blockSize)]
 		}
 		sz := Padding(fmt.Sprintf("%x", len(iht)/2), 2, "0")
 		addr := Padding(fmt.Sprintf("%x", B_ID*recstep+address+(tp/2)), 4, "0")
@@ -183,7 +196,7 @@ func SendBlockB(B_ID int,
 			return resps, err
 		}
 		resps[i] = resp
-		defer resp.Body.Close()
+		resp.Body.Close()
 	}
 	return resps, nil
 }
@@ -208,8 +221,8 @@ func SendBlockC(C_ID int,
 	LC_DUMN int,
 	LC_RLY_L int,
 	LC_RLY_H int) ([]*http.Response, error) {
-	address := 0x3000
-	recstep := 0x40
+	address := addressBaseBlockC
+	recstep := recordStepBlockBC
 	ih_valid := ByteArrange(LC_VALID)
 	ih_room := ByteArrange(LC_ROOM)
 	ih_region := ByteArrange(LC_REGION)
@@ -231,14 +244,14 @@ func SendBlockC(C_ID int,
 	ih_rly_h := ByteArrange(LC_RLY_H)
 
 	ihtxt := ih_valid + ih_room + ih_region + ih_order + ih_priority + ih_lv + ih_cast + ih_sr + ih_ccmtype + ih_unit + ih_sthr + ih_stmn + ih_edhr + ih_edmn + ih_inmn + ih_dumn + ih_rly_l + ih_rly_h
-	resps := make([]*http.Response, 3)
-	for i := range 3 {
-		tp := i * 32
+	resps := make([]*http.Response, responseCountBlockBC)
+	for i := 0; i < responseCountBlockBC; i++ {
+		tp := i * blockSize
 		iht := ""
-		if len(ihtxt) < tp+32 {
+		if len(ihtxt) < tp+blockSize {
 			iht = ihtxt[tp:]
 		} else {
-			iht = ihtxt[tp:(tp + 32)]
+			iht = ihtxt[tp:(tp + blockSize)]
 		}
 		sz := Padding(fmt.Sprintf("%x", len(iht)/2), 2, "0")
 		addr := Padding(fmt.Sprintf("%x", C_ID*recstep+address+(tp/2)), 4, "0")
@@ -252,7 +265,7 @@ func SendBlockC(C_ID int,
 			return resps, err
 		}
 		resps[i] = resp
-		defer resp.Body.Close()
+		resp.Body.Close()
 	}
 	return resps, nil
 }
@@ -267,8 +280,8 @@ func SendBlockD(D_ID int,
 	LC_COPE_CCMTYPE string,
 	LC_COPE_OPE int,
 	LC_COPE_FVAL float32) ([]*http.Response, error) {
-	address := 0x5000
-	recstep := 0x20
+	address := addressBaseBlockD
+	recstep := recordStepBlockD
 	ih_cope_valid := ByteArrange(LC_COPE_VALID)
 	ih_cope_room := ByteArrange(LC_COPE_ROOM)
 	ih_cope_region := ByteArrange(LC_COPE_REGION)
@@ -280,14 +293,14 @@ func SendBlockD(D_ID int,
 	ih_cope_fval := Float32Bin(LC_COPE_FVAL)
 
 	ihtxt := ih_cope_valid + ih_cope_room + ih_cope_region + ih_cope_order + ih_cope_priority + ih_cope_ccmtype + ih_cope_ope + ih_cope_fval
-	resps := make([]*http.Response, 2)
-	for i := range 2 {
-		tp := i * 32
+	resps := make([]*http.Response, responseCountBlockD)
+	for i := 0; i < responseCountBlockD; i++ {
+		tp := i * blockSize
 		iht := ""
-		if len(ihtxt) < tp+32 {
+		if len(ihtxt) < tp+blockSize {
 			iht = ihtxt[tp:]
 		} else {
-			iht = ihtxt[tp:(tp + 32)]
+			iht = ihtxt[tp:(tp + blockSize)]
 		}
 		sz := Padding(fmt.Sprintf("%x", len(iht)/2), 2, "0")
 		addr := Padding(fmt.Sprintf("%x", D_ID*recstep+address+(tp/2)), 4, "0")
@@ -301,7 +314,7 @@ func SendBlockD(D_ID int,
 			return resps, err
 		}
 		resps[i] = resp
-		defer resp.Body.Close()
+		resp.Body.Close()
 	}
 	return resps, nil
 }
