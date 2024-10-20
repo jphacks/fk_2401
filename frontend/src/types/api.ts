@@ -6,23 +6,23 @@ export interface HouseResponse {
 export interface JoinedDeviceResponse {
   id: number;
   name: string;
-  houseID: number;
-  setPoint?: number;
+  house_id: number;
+  set_point?: number;
   duration?: number;
-  climateData: string;
+  climate_data: string;
   unit: string;
 }
 
 export interface ClimateDataResponse {
   id: number;
-  climateData: string;
+  climate_data: string;
   unit: string;
 }
 
 export interface CreateDeviceRequest {
   name: string;
-  climateDataID: number;
-  setPoint?: number;
+  climate_data_id: number;
+  set_point?: number;
   duration?: number;
 }
 
