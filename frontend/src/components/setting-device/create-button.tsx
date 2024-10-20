@@ -58,8 +58,6 @@ export function CreateDeviceButton() {
     fetchClimateDatas();
   }, []);
 
-  console.log(fetchedClimateDatas);
-
   // Handlers for device creation form inputs
   const handleDeviceNameChange = (
     event: React.ChangeEvent<HTMLInputElement>

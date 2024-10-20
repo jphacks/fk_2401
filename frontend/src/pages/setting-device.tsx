@@ -5,9 +5,9 @@ import { Box, Tabs, Tab } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import { useState, useEffect } from "react";
 import { HouseResponse, JoinedDeviceResponse } from "@/types/api";
-import { getDevices, getHouses } from "@/mocks/setting_device_api";
-// import { getDevices } from "@/features/api/device/get-device";
-// import { getHouses } from "@/features/api/house/get-house";
+// import { getDevices, getHouses } from "@/mocks/setting_device_api";
+import { getDevices } from "@/features/api/device/get-device";
+import { getHouses } from "@/features/api/house/get-house";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -48,12 +48,12 @@ export default function SettingDevice() {
 
   useEffect(() => {
     const fetchHouseAndDevices = async () => {
-      const housesRes: HouseResponse[] = getHouses();
+      const housesRes: HouseResponse[] = await getHouses();
       const devicesMap: Map<number, JoinedDeviceResponse[]> = new Map();
-      housesRes.forEach((house) => {
-        const devicesRes: JoinedDeviceResponse[] = getDevices(house.id);
+      for (const house of housesRes) {
+        const devicesRes: JoinedDeviceResponse[] = await getDevices(house.id);
         devicesMap.set(house.id, devicesRes);
-      });
+      }
 
       setHouses(housesRes);
       setDevicesMap(devicesMap);
