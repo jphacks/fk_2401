@@ -6,11 +6,17 @@ import (
 	"github.com/Fumiya-Tahara/uecs-navi.git/internal/controller/generated"
 	"github.com/Fumiya-Tahara/uecs-navi.git/internal/usecase/repository/mocks"
 	"github.com/Fumiya-Tahara/uecs-navi.git/internal/usecase/service"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
 func StartServer() {
 	r := gin.Default()
+
+	r.Use(cors.New(cors.Config{
+		AllowOrigins: []string{"*"},
+	}))
+
 	dr := mocks.NewMockDeviceRepository()
 	hr := mocks.NewMockHouseRepository()
 	cdr := mocks.NewMockClimateDataRepository()
