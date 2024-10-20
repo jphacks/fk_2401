@@ -3,6 +3,7 @@ package m304
 import (
 	"fmt"
 	"math"
+	"net/http"
 
 	// "net/http"
 	"strconv"
@@ -30,8 +31,7 @@ func ByteArrange(n int) string {
 // 文字列を指定長の2桁16進数asciiコードの文字列に変換する
 func StringArrange(s string, length int) string {
 	rt := ""
-	runes := []rune(s)
-	for _, r := range runes {
+	for _, r := range s {
 		rt += Padding(fmt.Sprintf("%x", r), 2, "0")
 	}
 	for len(rt) < length {
@@ -56,7 +56,7 @@ func SendBlockA(IP_ADDR string,
 	FIXED_DEFGW string,
 	FIXED_DNS string,
 	VENDER_NAME string,
-	NODE_NAME string) {
+	NODE_NAME string) ([]*http.Response, error) {
 	address := 0x0000
 	ih_uecs_id := Padding(LC_UECS_ID, 12, "0")
 	ih_mac := strings.Replace(LC_MAC, ":", "", -1)
@@ -93,7 +93,7 @@ func SendBlockA(IP_ADDR string,
 	ih_node_name := StringArrange(NODE_NAME, 32)
 
 	ihtxt := ih_uecs_id + ih_mac + ih_dhcpflg + ih_ip_addr + ih_netmask + ih_defgw + ih_dns + ih_vender_name + ih_node_name
-
+	resps := make([]*http.Response, 4)
 	for i := range 4 {
 		tp := i * 32
 		iht := ""
@@ -107,9 +107,16 @@ func SendBlockA(IP_ADDR string,
 		ih := ":" + sz + addr + "00" + iht + "FF"
 		// 送信処理
 		url := "http://" + IP_ADDR + "/" + ih
-		fmt.Println(url)
-		// resp, _ := http.Get(url)
+		// fmt.Println(url)
+		resp, err := http.Get(url)
+		if err != nil {
+			resps[i] = nil
+			return resps, err
+		}
+		resps[i] = resp
+		defer resp.Body.Close()
 	}
+	return resps, nil
 }
 
 func SendBlockB(B_ID int,
@@ -131,7 +138,7 @@ func SendBlockB(B_ID int,
 	LC_INMN int,
 	LC_DUMN int,
 	LC_RLY_L int,
-	LC_RLY_H int) {
+	LC_RLY_H int) ([]*http.Response, error) {
 	address := 0x1000
 	recstep := 0x40
 	ih_valid := ByteArrange(LC_VALID)
@@ -155,6 +162,7 @@ func SendBlockB(B_ID int,
 	ih_rly_h := ByteArrange(LC_RLY_H)
 
 	ihtxt := ih_valid + ih_room + ih_region + ih_order + ih_priority + ih_lv + ih_cast + ih_sr + ih_ccmtype + ih_unit + ih_sthr + ih_stmn + ih_edhr + ih_edmn + ih_inmn + ih_dumn + ih_rly_l + ih_rly_h
+	resps := make([]*http.Response, 3)
 	for i := range 3 {
 		tp := i * 32
 		iht := ""
@@ -168,9 +176,16 @@ func SendBlockB(B_ID int,
 		ih := ":" + sz + addr + "00" + iht + "FF"
 		// 送信処理
 		url := "http://" + IP_ADDR + "/" + ih
-		fmt.Println(url)
-		// resp, _ := http.Get(url)
+		// fmt.Println(url)
+		resp, err := http.Get(url)
+		if err != nil {
+			resps[i] = nil
+			return resps, err
+		}
+		resps[i] = resp
+		defer resp.Body.Close()
 	}
+	return resps, nil
 }
 
 func SendBlockC(C_ID int,
@@ -192,7 +207,7 @@ func SendBlockC(C_ID int,
 	LC_INMN int,
 	LC_DUMN int,
 	LC_RLY_L int,
-	LC_RLY_H int) {
+	LC_RLY_H int) ([]*http.Response, error) {
 	address := 0x3000
 	recstep := 0x40
 	ih_valid := ByteArrange(LC_VALID)
@@ -216,6 +231,7 @@ func SendBlockC(C_ID int,
 	ih_rly_h := ByteArrange(LC_RLY_H)
 
 	ihtxt := ih_valid + ih_room + ih_region + ih_order + ih_priority + ih_lv + ih_cast + ih_sr + ih_ccmtype + ih_unit + ih_sthr + ih_stmn + ih_edhr + ih_edmn + ih_inmn + ih_dumn + ih_rly_l + ih_rly_h
+	resps := make([]*http.Response, 3)
 	for i := range 3 {
 		tp := i * 32
 		iht := ""
@@ -229,9 +245,16 @@ func SendBlockC(C_ID int,
 		ih := ":" + sz + addr + "00" + iht + "FF"
 		// 送信処理
 		url := "http://" + IP_ADDR + "/" + ih
-		fmt.Println(url)
-		// resp, _ := http.Get(url)
+		// fmt.Println(url)
+		resp, err := http.Get(url)
+		if err != nil {
+			resps[i] = nil
+			return resps, err
+		}
+		resps[i] = resp
+		defer resp.Body.Close()
 	}
+	return resps, nil
 }
 
 func SendBlockD(D_ID int,
@@ -243,7 +266,7 @@ func SendBlockD(D_ID int,
 	LC_COPE_PRIORITY int,
 	LC_COPE_CCMTYPE string,
 	LC_COPE_OPE int,
-	LC_COPE_FVAL float32) {
+	LC_COPE_FVAL float32) ([]*http.Response, error) {
 	address := 0x5000
 	recstep := 0x20
 	ih_cope_valid := ByteArrange(LC_COPE_VALID)
@@ -257,6 +280,7 @@ func SendBlockD(D_ID int,
 	ih_cope_fval := Float32Bin(LC_COPE_FVAL)
 
 	ihtxt := ih_cope_valid + ih_cope_room + ih_cope_region + ih_cope_order + ih_cope_priority + ih_cope_ccmtype + ih_cope_ope + ih_cope_fval
+	resps := make([]*http.Response, 2)
 	for i := range 2 {
 		tp := i * 32
 		iht := ""
@@ -270,9 +294,16 @@ func SendBlockD(D_ID int,
 		ih := ":" + sz + addr + "00" + iht + "FF"
 		// 送信処理
 		url := "http://" + IP_ADDR + "/" + ih
-		fmt.Println(url)
-		// resp, _ := http.Get(url)
+		// fmt.Println(url)
+		resp, err := http.Get(url)
+		if err != nil {
+			resps[i] = nil
+			return resps, err
+		}
+		resps[i] = resp
+		defer resp.Body.Close()
 	}
+	return resps, nil
 }
 
 func TestControl() {
