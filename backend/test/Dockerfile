@@ -16,4 +16,4 @@ RUN go install -tags 'mysql' github.com/golang-migrate/migrate/v4/cmd/migrate@v4
 
 EXPOSE 8080
 
-CMD [ "go", "run", "cmd/main.go" ]
+CMD [ "go", "run", "cmd/server/main.go" ]

@@ -14,7 +14,7 @@ services:
       - uecs-navi-network
     depends_on:
       - uecs_navi_test_db
-    command: sh -c "go run cmd/main.go"
+    command: sh -c "go run cmd/server/main.go"
 
   uecs_navi_test_node:
     image: node:22-alpine
