@@ -19,7 +19,7 @@ type HouseResponse struct {
 type DeviceResponse struct {
 	ID          int     `json:"id,omitempty"`
 	HouseID     int     `json:"house_id,omitempty"`
-	DeviceName  string  `json:"device_name,omitempty"`
+	Name        string  `json:"name,omitempty"`
 	SetPoint    float64 `json:"set_point,omitempty"`
 	Duration    int     `json:"duration,omitempty"`
 	ClimateData string  `json:"climate_data,omitempty"`
@@ -51,7 +51,7 @@ func NewDeviceResponse(
 	return &DeviceResponse{
 		ID:          id,
 		HouseID:     houseID,
-		DeviceName:  deviceName,
+		Name:        deviceName,
 		SetPoint:    setPoint,
 		Duration:    duration,
 		ClimateData: climateData,

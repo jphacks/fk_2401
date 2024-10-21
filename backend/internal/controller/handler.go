@@ -66,6 +66,8 @@ func (h Handler) GetDevice(c *gin.Context, houseId int) {
 		return
 	}
 
+	log.Println(devices)
+
 	devicesRes := make([]*DeviceResponse, len(devices))
 	for i, v := range devices {
 		devicesRes[i] = NewDeviceResponse(
