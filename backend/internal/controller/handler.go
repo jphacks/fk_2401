@@ -26,6 +26,7 @@ func NewHandler(ds *service.DeviceService, hs *service.HouseService, cds *servic
 func (h Handler) GetHouses(c *gin.Context) {
 	houses, err := h.houseService.GetHouses()
 	if err != nil {
+		log.Println(err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
@@ -107,7 +108,7 @@ func (h Handler) CreateDevice(c *gin.Context, houseId int) {
 }
 
 func (h Handler) GetClimateData(c *gin.Context) {
-	climateData, err := h.climateDataService.GetClimateData()
+	climateData, err := h.climateDataService.GetAllClimateData()
 	if err != nil {
 		log.Println(err)
 		c.JSON(http.StatusInternalServerError, gin.H{"status": "InternalSeverError"})
