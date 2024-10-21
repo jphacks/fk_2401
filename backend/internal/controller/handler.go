@@ -73,9 +73,9 @@ func (h Handler) CreateDevice(c *gin.Context, houseId int) {
 	device := domain.Device{
 		HouseID:       houseId,
 		ClimateDataID: json.ClimateDataID,
-		DeviceName:    json.DeviceName,
-		SetPoint:      json.SetPoint,
-		Duration:      json.Duration,
+		DeviceName:    &json.DeviceName,
+		SetPoint:      &json.SetPoint,
+		Duration:      &json.Duration,
 	}
 	id, err := h.deviceService.CreateDevice(device)
 

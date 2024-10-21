@@ -11,14 +11,14 @@ import (
 type JoinedDevice struct {
 	ID          int
 	HouseID     int
-	DeviceName  string
-	SetPoint    float64
-	Duration    int
+	DeviceName  *string
+	SetPoint    *float64
+	Duration    *int
 	ClimateData string
 	Unit        string
 }
 
-func NewJoinedDevice(id int, houseID int, deviceName string, setPoint float64, duration int, climateData, unit string) *JoinedDevice {
+func NewJoinedDevice(id int, houseID int, deviceName *string, setPoint *float64, duration *int, climateData, unit string) *JoinedDevice {
 	return &JoinedDevice{
 		ID:          id,
 		HouseID:     houseID,
@@ -43,34 +43,21 @@ func NewDeviceRepository(queries *mysqlc.Queries) *DeviceRepository {
 func (dr DeviceRepository) CreateDevice(newDevice domain.Device) (int64, error) {
 	ctx := context.Background()
 
-	devicename := sql.NullString{
-		String: newDevice.DeviceName,
-		Valid:  false,
-	}
-	if newDevice.DeviceName != "" {
-		devicename.Valid = true
-	}
-	setpoint := sql.NullFloat64{
-		Float64: newDevice.SetPoint,
-		Valid:   false,
-	}
-	if newDevice.SetPoint != 0 {
-		setpoint.Valid = true
-	}
-	duration := sql.NullInt32{
-		Int32: int32(newDevice.Duration),
-		Valid: false,
-	}
-	if newDevice.Duration != 0 {
-		duration.Valid = true
-	}
-
 	arg := mysqlc.CreateDeviceParams{
 		HouseID:       int32(newDevice.HouseID),
 		ClimateDataID: int32(newDevice.ClimateDataID),
-		DeviceName:    devicename,
-		SetPoint:      setpoint,
-		Duration:      duration,
+		DeviceName: sql.NullString{
+			String: *newDevice.DeviceName,
+			Valid:  newDevice.DeviceName != nil,
+		},
+		SetPoint: sql.NullFloat64{
+			Float64: *newDevice.SetPoint,
+			Valid:   newDevice.SetPoint != nil,
+		},
+		Duration: sql.NullInt32{
+			Int32: int32(*newDevice.Duration),
+			Valid: newDevice.Duration != nil,
+		},
 	}
 
 	id, err := dr.queries.CreateDevice(ctx, arg)
@@ -90,24 +77,25 @@ func (dr DeviceRepository) GetDevicesFromHouse(houseID int) ([]*domain.Device, e
 
 	devices := make([]*domain.Device, len(devicesRow))
 	for i, v := range devicesRow {
-		devicename := ""
+		var deviceName *string
 		if v.DeviceName.Valid {
-			devicename = v.DeviceName.String
+			deviceName = &v.DeviceName.String
 		}
-		setpoint := float64(0)
+		var setPoint *float64
 		if v.SetPoint.Valid {
-			setpoint = v.SetPoint.Float64
+			setPoint = &v.SetPoint.Float64
 		}
-		duration := 0
+		var duration *int
 		if v.Duration.Valid {
-			duration = int(v.Duration.Int32)
+			temp := int(v.Duration.Int32)
+			duration = &temp
 		}
 		devices[i] = domain.NewDeviceWithID(
 			int(v.ID),
 			int(v.HouseID),
 			int(v.ClimateDataID),
-			devicename,
-			setpoint,
+			deviceName,
+			setPoint,
 			duration,
 		)
 	}
@@ -125,23 +113,24 @@ func (dr DeviceRepository) GetJoinedDevicesFromHouse(houseID int) ([]*JoinedDevi
 
 	joinedDevices := make([]*JoinedDevice, len(joinedDevicesRow))
 	for i, v := range joinedDevicesRow {
-		devicename := ""
+		var deviceName *string
 		if v.DeviceName.Valid {
-			devicename = v.DeviceName.String
+			deviceName = &v.DeviceName.String
 		}
-		setpoint := float64(0)
+		var setPoint *float64
 		if v.SetPoint.Valid {
-			setpoint = v.SetPoint.Float64
+			setPoint = &v.SetPoint.Float64
 		}
-		duration := 0
+		var duration *int
 		if v.Duration.Valid {
-			duration = int(v.Duration.Int32)
+			temp := int(v.Duration.Int32)
+			duration = &temp
 		}
 		joinedDevices[i] = NewJoinedDevice(
 			int(v.ID),
 			int(v.HouseID),
-			devicename,
-			setpoint,
+			deviceName,
+			setPoint,
 			duration,
 			v.ClimateDataName,
 			v.Unit,
