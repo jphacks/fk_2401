@@ -5,9 +5,9 @@ import { Box, Tabs, Tab } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import { useState, useEffect } from "react";
 import { HouseResponse, JoinedDeviceResponse } from "@/types/api";
-import { getDevices, getHouses } from "@/mocks/setting_device_api";
-// import { getDevices } from "@/features/api/device/get-device";
-// import { getHouses } from "@/features/api/house/get-house";
+// import { getDevices, getHouses } from "@/mocks/setting_device_api";
+import { getDevices } from "@/features/api/device/get-device";
+import { getHouses } from "@/features/api/house/get-house";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -44,33 +44,38 @@ export default function SettingDevice() {
     Map<number, JoinedDeviceResponse[]>
   >(new Map());
 
-  const [value, setValue] = useState(0);
+  const [selectedTab, setSelectedTab] = useState(0);
+  const [selectedHouseID, setSelectedHouseID] = useState(0);
 
   useEffect(() => {
     const fetchHouseAndDevices = async () => {
-      const housesRes: HouseResponse[] = getHouses();
+      const housesRes: HouseResponse[] = await getHouses();
       const devicesMap: Map<number, JoinedDeviceResponse[]> = new Map();
-      housesRes.forEach((house) => {
-        const devicesRes: JoinedDeviceResponse[] = getDevices(house.id);
+      for (const house of housesRes) {
+        const devicesRes: JoinedDeviceResponse[] = await getDevices(house.id);
         devicesMap.set(house.id, devicesRes);
-      });
+      }
 
       setHouses(housesRes);
       setDevicesMap(devicesMap);
+      setSelectedHouseID(housesRes[0].id);
     };
 
     fetchHouseAndDevices();
   }, []);
 
   const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
-    setValue(newValue);
+    const selectedHouseID: number = houses[newValue].id;
+
+    setSelectedTab(newValue);
+    setSelectedHouseID(selectedHouseID);
   };
 
   return (
     <Navigation>
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
         <Tabs
-          value={value}
+          value={selectedTab}
           onChange={handleTabChange}
           aria-label="basic tabs example"
         >
@@ -80,15 +85,15 @@ export default function SettingDevice() {
         </Tabs>
       </Box>
       {houses.map((house, index) => (
-        <SettingDeviceTabPanel key={index} index={index} value={value}>
+        <SettingDeviceTabPanel key={index} index={index} value={selectedTab}>
           <Grid container spacing={4}>
             {devicesMap.get(house.id)?.map((device, deviceIndex) => (
               <Grid size={3} key={deviceIndex}>
                 <DeviceCard
                   name={device.name}
-                  setPoint={device.setPoint}
+                  setPoint={device.set_point}
                   duration={device.duration}
-                  climateData={device.climateData}
+                  climateData={device.climate_data}
                   unit={device.unit}
                 />
               </Grid>
@@ -97,7 +102,7 @@ export default function SettingDevice() {
         </SettingDeviceTabPanel>
       ))}
       <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
-        <CreateDeviceButton />
+        <CreateDeviceButton houseID={selectedHouseID} />
       </Box>
     </Navigation>
   );

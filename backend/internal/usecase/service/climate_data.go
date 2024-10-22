@@ -12,7 +12,7 @@ func NewClimateDataService(cdr ClimateDataRepositoryInterface) *ClimateDataServi
 	}
 }
 
-func (cds ClimateDataService) GetClimateData() ([]*domain.ClimateData, error) {
+func (cds ClimateDataService) GetAllClimateData() ([]*domain.ClimateData, error) {
 	climateData, err := cds.climateDataRepository.GetAllClimateData()
 	if err != nil {
 		return nil, err
