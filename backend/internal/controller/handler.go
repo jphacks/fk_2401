@@ -26,11 +26,17 @@ func NewHandler(ds *service.DeviceService, hs *service.HouseService, cds *servic
 func (h Handler) GetHouses(c *gin.Context) {
 	houses, err := h.houseService.GetHouses()
 	if err != nil {
+		log.Println(err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, houses)
+	housesRes := make([]*HouseResponse, len(houses))
+	for i, v := range houses {
+		housesRes[i] = NewHouseResponse(v.ID, v.Name)
+	}
+
+	c.JSON(http.StatusOK, housesRes)
 }
 
 func (h Handler) CreateHouse(c *gin.Context) {
@@ -54,13 +60,26 @@ func (h Handler) CreateHouse(c *gin.Context) {
 }
 
 func (h Handler) GetDevice(c *gin.Context, houseId int) {
-	devices, err := h.deviceService.GetDevices(houseId)
+	devices, err := h.deviceService.GetJoinedDevices(houseId)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, devices)
+	devicesRes := make([]*DeviceResponse, len(devices))
+	for i, v := range devices {
+		devicesRes[i] = NewDeviceResponse(
+			v.ID,
+			v.HouseID,
+			v.DeviceName,
+			v.SetPoint,
+			v.Duration,
+			v.ClimateData,
+			v.Unit,
+		)
+	}
+
+	c.JSON(http.StatusOK, devicesRes)
 }
 
 func (h Handler) CreateDevice(c *gin.Context, houseId int) {
@@ -89,11 +108,16 @@ func (h Handler) CreateDevice(c *gin.Context, houseId int) {
 }
 
 func (h Handler) GetClimateData(c *gin.Context) {
-	climateData, err := h.climateDataService.GetClimateData()
+	climateData, err := h.climateDataService.GetAllClimateData()
 	if err != nil {
 		log.Println(err)
 		c.JSON(http.StatusInternalServerError, gin.H{"status": "InternalSeverError"})
 	}
 
-	c.JSON(http.StatusOK, climateData)
+	climateDataRes := make([]*ClimateDataResponse, len(climateData))
+	for i, v := range climateData {
+		climateDataRes[i] = NewClimateDataResponse(v.ID, v.ClimateData, v.Unit)
+	}
+
+	c.JSON(http.StatusOK, climateDataRes)
 }

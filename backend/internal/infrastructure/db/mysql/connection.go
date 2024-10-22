@@ -12,7 +12,7 @@ import (
 func ConnectDB() (*sql.DB, error) {
 	cfg := NewConfig()
 
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s",
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true",
 		cfg.User,
 		cfg.Password,
 		cfg.Host,
