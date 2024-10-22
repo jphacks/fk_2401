@@ -47,15 +47,30 @@ func (dr DeviceRepository) CreateDevice(newDevice domain.Device) (int64, error) 
 		HouseID:       int32(newDevice.HouseID),
 		ClimateDataID: int32(newDevice.ClimateDataID),
 		DeviceName: sql.NullString{
-			String: *newDevice.DeviceName,
-			Valid:  newDevice.DeviceName != nil,
+			String: func() string {
+				if newDevice.DeviceName != nil {
+					return *newDevice.DeviceName
+				}
+				return ""
+			}(),
+			Valid: newDevice.DeviceName != nil,
 		},
 		SetPoint: sql.NullFloat64{
-			Float64: *newDevice.SetPoint,
-			Valid:   newDevice.SetPoint != nil,
+			Float64: func() float64 {
+				if newDevice.SetPoint != nil {
+					return *newDevice.SetPoint
+				}
+				return 0
+			}(),
+			Valid: newDevice.SetPoint != nil,
 		},
 		Duration: sql.NullInt32{
-			Int32: int32(*newDevice.Duration),
+			Int32: func() int32 {
+				if newDevice.Duration != nil {
+					return int32(*newDevice.Duration)
+				}
+				return 0
+			}(),
 			Valid: newDevice.Duration != nil,
 		},
 	}
