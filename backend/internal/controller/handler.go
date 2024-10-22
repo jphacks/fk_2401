@@ -62,6 +62,7 @@ func (h Handler) CreateHouse(c *gin.Context) {
 func (h Handler) GetDevice(c *gin.Context, houseId int) {
 	devices, err := h.deviceService.GetJoinedDevices(houseId)
 	if err != nil {
+		log.Println(err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
@@ -71,9 +72,9 @@ func (h Handler) GetDevice(c *gin.Context, houseId int) {
 		devicesRes[i] = NewDeviceResponse(
 			v.ID,
 			v.HouseID,
-			v.DeviceName,
-			v.SetPoint,
-			v.Duration,
+			*v.DeviceName,
+			*v.SetPoint,
+			*v.Duration,
 			v.ClimateData,
 			v.Unit,
 		)
@@ -92,9 +93,9 @@ func (h Handler) CreateDevice(c *gin.Context, houseId int) {
 	device := domain.Device{
 		HouseID:       houseId,
 		ClimateDataID: json.ClimateDataID,
-		DeviceName:    json.DeviceName,
-		SetPoint:      json.SetPoint,
-		Duration:      json.Duration,
+		DeviceName:    &json.DeviceName,
+		SetPoint:      &json.SetPoint,
+		Duration:      &json.Duration,
 	}
 	id, err := h.deviceService.CreateDevice(device)
 
@@ -112,6 +113,7 @@ func (h Handler) GetClimateData(c *gin.Context) {
 	if err != nil {
 		log.Println(err)
 		c.JSON(http.StatusInternalServerError, gin.H{"status": "InternalSeverError"})
+		return
 	}
 
 	climateDataRes := make([]*ClimateDataResponse, len(climateData))
