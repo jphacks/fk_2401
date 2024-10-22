@@ -94,16 +94,18 @@ func (dr DeviceRepository) GetDevicesFromHouse(houseID int) ([]*domain.Device, e
 	for i, v := range devicesRow {
 		var deviceName *string
 		if v.DeviceName.Valid {
-			deviceName = &v.DeviceName.String
+			dN := v.DeviceName.String
+			deviceName = &dN
 		}
 		var setPoint *float64
 		if v.SetPoint.Valid {
-			setPoint = &v.SetPoint.Float64
+			sP := v.SetPoint.Float64
+			setPoint = &sP
 		}
 		var duration *int
 		if v.Duration.Valid {
-			temp := int(v.Duration.Int32)
-			duration = &temp
+			du := int(v.Duration.Int32)
+			duration = &du
 		}
 		devices[i] = domain.NewDeviceWithID(
 			int(v.ID),
@@ -130,16 +132,18 @@ func (dr DeviceRepository) GetJoinedDevicesFromHouse(houseID int) ([]*JoinedDevi
 	for i, v := range joinedDevicesRow {
 		var deviceName *string
 		if v.DeviceName.Valid {
-			deviceName = &v.DeviceName.String
+			dN := v.DeviceName.String
+			deviceName = &dN
 		}
 		var setPoint *float64
 		if v.SetPoint.Valid {
-			setPoint = &v.SetPoint.Float64
+			sP := v.SetPoint.Float64
+			setPoint = &sP
 		}
 		var duration *int
 		if v.Duration.Valid {
-			temp := int(v.Duration.Int32)
-			duration = &temp
+			du := int(v.Duration.Int32)
+			duration = &du
 		}
 		joinedDevices[i] = NewJoinedDevice(
 			int(v.ID),
