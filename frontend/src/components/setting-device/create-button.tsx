@@ -20,11 +20,17 @@ import { useState, useEffect } from "react";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import { SelectChangeEvent } from "@mui/material";
 import { ClimateDataResponse, CreateDeviceRequest } from "@/types/api";
-import { getClimateDatas } from "@/mocks/setting_device_api";
-// import { getClimateDatas } from "@/features/api/climate-data/get-climate-data";
+// import { getClimateDatas } from "@/mocks/setting_device_api";
+import { getClimateDatas } from "@/features/api/climate-data/get-climate-data";
 import { createDevice } from "@/features/api/device/create-device";
 
-export function CreateDeviceButton() {
+interface CreateDeviceButtonProps {
+  houseID: number;
+}
+
+export function CreateDeviceButton(props: CreateDeviceButtonProps) {
+  const { houseID } = props;
+
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [setPointChecked, setSetPointChecked] = useState<boolean>(false);
   const [timerChecked, setTimerChecked] = useState<boolean>(false);
@@ -51,7 +57,7 @@ export function CreateDeviceButton() {
 
   useEffect(() => {
     const fetchClimateDatas = async () => {
-      const climateDataRes: ClimateDataResponse[] = getClimateDatas();
+      const climateDataRes: ClimateDataResponse[] = await getClimateDatas();
       setFetchedClimateDatas(climateDataRes);
     };
 
@@ -69,7 +75,7 @@ export function CreateDeviceButton() {
     const climateData = event.target.value;
 
     const climateDataRec = fetchedClimateDatas.find(
-      (data) => data.climateData === climateData
+      (data) => data.climate_data === climateData
     );
 
     setSelectedClimateData(climateData);
@@ -100,9 +106,9 @@ export function CreateDeviceButton() {
 
   const handleSendForm = async () => {
     const req: CreateDeviceRequest = {
-      name: deviceNameInput,
-      climateDataID: climateDataInput,
-      setPoint: setPointInput,
+      device_name: deviceNameInput,
+      climate_data_id: climateDataInput,
+      set_point: setPointInput,
       duration: durationInput,
     };
 
@@ -111,7 +117,7 @@ export function CreateDeviceButton() {
     formReset();
 
     try {
-      await createDevice(req);
+      await createDevice(houseID, req);
       handleModalClose();
     } catch (error) {
       console.error("Error creating device:", error);
@@ -163,8 +169,8 @@ export function CreateDeviceButton() {
                 size="small"
               >
                 {fetchedClimateDatas.map((data) => (
-                  <MenuItem key={data.id} value={data.climateData}>
-                    {data.climateData}
+                  <MenuItem key={data.id} value={data.climate_data}>
+                    {data.climate_data}
                   </MenuItem>
                 ))}
               </Select>

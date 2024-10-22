@@ -11,8 +11,8 @@ type ClimateDataRepository struct {
 	queries *mysqlc.Queries
 }
 
-func NewClimateDataRepository(queries *mysqlc.Queries) *HouseRepository {
-	return &HouseRepository{
+func NewClimateDataRepository(queries *mysqlc.Queries) *ClimateDataRepository {
+	return &ClimateDataRepository{
 		queries: queries,
 	}
 }
