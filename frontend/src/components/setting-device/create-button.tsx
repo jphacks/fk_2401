@@ -22,9 +22,15 @@ import { SelectChangeEvent } from "@mui/material";
 import { ClimateDataResponse, CreateDeviceRequest } from "@/types/api";
 // import { getClimateDatas } from "@/mocks/setting_device_api";
 import { getClimateDatas } from "@/features/api/climate-data/get-climate-data";
-// import { createDevice } from "@/features/api/device/create-device";
+import { createDevice } from "@/features/api/device/create-device";
 
-export function CreateDeviceButton() {
+interface CreateDeviceButtonProps {
+  houseID: number;
+}
+
+export function CreateDeviceButton(props: CreateDeviceButtonProps) {
+  const { houseID } = props;
+
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [setPointChecked, setSetPointChecked] = useState<boolean>(false);
   const [timerChecked, setTimerChecked] = useState<boolean>(false);
@@ -100,7 +106,7 @@ export function CreateDeviceButton() {
 
   const handleSendForm = async () => {
     const req: CreateDeviceRequest = {
-      name: deviceNameInput,
+      device_name: deviceNameInput,
       climate_data_id: climateDataInput,
       set_point: setPointInput,
       duration: durationInput,
@@ -110,12 +116,12 @@ export function CreateDeviceButton() {
 
     formReset();
 
-    // try {
-    //   await createDevice(req);
-    //   handleModalClose();
-    // } catch (error) {
-    //   console.error("Error creating device:", error);
-    // }
+    try {
+      await createDevice(houseID, req);
+      handleModalClose();
+    } catch (error) {
+      console.error("Error creating device:", error);
+    }
 
     handleModalClose();
   };

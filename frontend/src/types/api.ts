@@ -20,7 +20,7 @@ export interface ClimateDataResponse {
 }
 
 export interface CreateDeviceRequest {
-  name: string;
+  device_name: string;
   climate_data_id: number;
   set_point?: number;
   duration?: number;
