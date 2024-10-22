@@ -6,7 +6,7 @@ type CreateHouseController struct {
 
 type CreateDeviceController struct {
 	ClimateDataID int     `json:"climate_data_id" binding:"required,number"`
-	DeviceName    string  `json:"device_name" binding:"min=1,max=12"`
+	DeviceName    string  `json:"device_name" binding:"required,min=1,max=12"`
 	SetPoint      float64 `json:"set_point" binding:"number"`
 	Duration      int     `json:"duration" binding:"number"`
 }
