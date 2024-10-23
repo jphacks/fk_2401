@@ -16,14 +16,14 @@ VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 `
 
 type CreateM304Params struct {
-	UecsID     sql.NullString
-	MacAddr    sql.NullString
+	UecsID     string
+	MacAddr    string
 	DhcpFlg    bool
 	IpAddr     sql.NullString
 	NetMask    sql.NullString
 	Defgw      sql.NullString
 	Dns        sql.NullString
-	VenderName sql.NullString
+	VenderName string
 	NodeName   sql.NullString
 	Rly0       sql.NullInt32
 	Rly1       sql.NullInt32
@@ -69,14 +69,14 @@ WHERE ? IN (` + "`" + `rly_0` + "`" + `, ` + "`" + `rly_1` + "`" + `, ` + "`" + 
 
 type GetM304FromUecsDeviceRow struct {
 	ID         int32
-	UecsID     sql.NullString
-	MacAddr    sql.NullString
+	UecsID     string
+	MacAddr    string
 	DhcpFlg    bool
 	IpAddr     sql.NullString
 	NetMask    sql.NullString
 	Defgw      sql.NullString
 	Dns        sql.NullString
-	VenderName sql.NullString
+	VenderName string
 	NodeName   sql.NullString
 	Rly0       sql.NullInt32
 	Rly1       sql.NullInt32

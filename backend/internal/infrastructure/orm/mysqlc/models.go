@@ -35,14 +35,14 @@ type House struct {
 
 type M304 struct {
 	ID         int32
-	UecsID     sql.NullString
-	MacAddr    sql.NullString
+	UecsID     string
+	MacAddr    string
 	DhcpFlg    bool
 	IpAddr     sql.NullString
 	NetMask    sql.NullString
 	Defgw      sql.NullString
 	Dns        sql.NullString
-	VenderName sql.NullString
+	VenderName string
 	NodeName   sql.NullString
 	Rly0       sql.NullInt32
 	Rly1       sql.NullInt32
