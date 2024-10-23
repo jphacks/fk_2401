@@ -21,4 +21,15 @@ type (
 	ClimateDataRepositoryInterface interface {
 		GetAllClimateData() ([]*domain.ClimateData, error)
 	}
+
+	UecsDeviceRepositoryInterface interface {
+		CreateUecsDevice(newUecsDevice domain.UecsDevice) (int64, error)
+		GetAllUecsDevice() ([]*domain.UecsDevice, error)
+		GetUecsDeviceFromID(ID int) (*domain.UecsDevice, error)
+	}
+
+	M304RepositoryInterface interface {
+		CreateM304(newM304 domain.M304) (int64, error)
+		GetM304FromUecsDevice(uecsDeviceID int) ([]*domain.M304, error)
+	}
 )
