@@ -8,165 +8,79 @@ import (
 	"github.com/Fumiya-Tahara/uecs-navi.git/internal/infrastructure/orm/mysqlc"
 )
 
-type M304Repositoty struct {
+type M304Repository struct {
 	queries *mysqlc.Queries
 }
 
-func NewM304Repository(queries *mysqlc.Queries) *M304Repositoty {
-	return &M304Repositoty{
+func NewM304Repository(queries *mysqlc.Queries) *M304Repository {
+	return &M304Repository{
 		queries: queries,
 	}
 }
 
-func (mr M304Repositoty) CreateM304(newM304 domain.M304) (int64, error) {
+func PointerToNullString(str *string) sql.NullString {
+	ns := sql.NullString{}
+	if str != nil {
+		ns.String = *str
+		ns.Valid = true
+		return ns
+	}
+	ns.String = ""
+	ns.Valid = false
+	return ns
+}
+
+func PointerToNullInt32(n *int) sql.NullInt32 {
+	ni := sql.NullInt32{}
+	if n != nil {
+		ni.Int32 = int32(*n)
+		ni.Valid = true
+		return ni
+	}
+	ni.Int32 = int32(0)
+	ni.Valid = false
+	return ni
+}
+
+func NullStringToPointer(ns sql.NullString) *string {
+	var ps *string
+	if ns.Valid {
+		s := ns.String
+		ps = &s
+	}
+	return ps
+}
+
+func NullInt32ToPointer(ni sql.NullInt32) *int {
+	var pi *int
+	if ni.Valid {
+		n := int(ni.Int32)
+		pi = &n
+	}
+	return pi
+}
+
+func (mr M304Repository) CreateM304(newM304 domain.M304) (int64, error) {
 	ctx := context.Background()
 
-	uecsid := sql.NullString{
-		String: newM304.UecsID,
-		Valid:  false,
-	}
-	if newM304.UecsID != "" {
-		uecsid.Valid = true
-	}
-
-	mac_addr := sql.NullString{
-		String: newM304.MacAddr,
-		Valid:  false,
-	}
-	if newM304.MacAddr != "" {
-		mac_addr.Valid = true
-	}
-
-	ip_addr := sql.NullString{
-		String: newM304.IpAddr,
-		Valid:  false,
-	}
-	if newM304.IpAddr != "" {
-		ip_addr.Valid = true
-	}
-
-	net_mask := sql.NullString{
-		String: newM304.NetMask,
-		Valid:  false,
-	}
-	if newM304.NetMask != "" {
-		net_mask.Valid = true
-	}
-
-	defgw := sql.NullString{
-		String: newM304.Defgw,
-		Valid:  false,
-	}
-	if newM304.Defgw != "" {
-		defgw.Valid = true
-	}
-
-	dns := sql.NullString{
-		String: newM304.Dns,
-		Valid:  false,
-	}
-	if newM304.Dns != "" {
-		dns.Valid = true
-	}
-
-	vender_name := sql.NullString{
-		String: newM304.VenderName,
-		Valid:  false,
-	}
-	if newM304.VenderName != "" {
-		vender_name.Valid = true
-	}
-
-	node_name := sql.NullString{
-		String: newM304.NodeName,
-		Valid:  false,
-	}
-	if newM304.NodeName != "" {
-		node_name.Valid = true
-	}
-
-	rly0 := sql.NullInt32{
-		Int32: int32(newM304.Rly0),
-		Valid: false,
-	}
-	if newM304.Rly0 != 0 {
-		rly0.Valid = true
-	}
-
-	rly1 := sql.NullInt32{
-		Int32: int32(newM304.Rly1),
-		Valid: false,
-	}
-	if newM304.Rly1 != 0 {
-		rly1.Valid = true
-	}
-
-	rly2 := sql.NullInt32{
-		Int32: int32(newM304.Rly2),
-		Valid: false,
-	}
-	if newM304.Rly2 != 0 {
-		rly2.Valid = true
-	}
-
-	rly3 := sql.NullInt32{
-		Int32: int32(newM304.Rly3),
-		Valid: false,
-	}
-	if newM304.Rly3 != 0 {
-		rly3.Valid = true
-	}
-
-	rly4 := sql.NullInt32{
-		Int32: int32(newM304.Rly4),
-		Valid: false,
-	}
-	if newM304.Rly4 != 0 {
-		rly4.Valid = true
-	}
-
-	rly5 := sql.NullInt32{
-		Int32: int32(newM304.Rly5),
-		Valid: false,
-	}
-	if newM304.Rly5 != 0 {
-		rly5.Valid = true
-	}
-
-	rly6 := sql.NullInt32{
-		Int32: int32(newM304.Rly6),
-		Valid: false,
-	}
-	if newM304.Rly6 != 0 {
-		rly6.Valid = true
-	}
-
-	rly7 := sql.NullInt32{
-		Int32: int32(newM304.Rly7),
-		Valid: false,
-	}
-	if newM304.Rly7 != 0 {
-		rly7.Valid = true
-	}
-
 	arg := mysqlc.CreateM304Params{
-		UecsID:     uecsid,
-		MacAddr:    mac_addr,
+		UecsID:     newM304.UecsID,
+		MacAddr:    newM304.MacAddr,
 		DhcpFlg:    newM304.DhcpFlg,
-		IpAddr:     ip_addr,
-		NetMask:    net_mask,
-		Defgw:      defgw,
-		Dns:        dns,
-		VenderName: vender_name,
-		NodeName:   node_name,
-		Rly0:       rly0,
-		Rly1:       rly1,
-		Rly2:       rly2,
-		Rly3:       rly3,
-		Rly4:       rly4,
-		Rly5:       rly5,
-		Rly6:       rly6,
-		Rly7:       rly7,
+		IpAddr:     PointerToNullString(newM304.IpAddr),
+		NetMask:    PointerToNullString(newM304.NetMask),
+		Defgw:      PointerToNullString(newM304.Defgw),
+		Dns:        PointerToNullString(newM304.Dns),
+		VenderName: newM304.VenderName,
+		NodeName:   PointerToNullString(newM304.NodeName),
+		Rly0:       PointerToNullInt32(newM304.Rly0),
+		Rly1:       PointerToNullInt32(newM304.Rly1),
+		Rly2:       PointerToNullInt32(newM304.Rly2),
+		Rly3:       PointerToNullInt32(newM304.Rly3),
+		Rly4:       PointerToNullInt32(newM304.Rly4),
+		Rly5:       PointerToNullInt32(newM304.Rly5),
+		Rly6:       PointerToNullInt32(newM304.Rly6),
+		Rly7:       PointerToNullInt32(newM304.Rly7),
 	}
 
 	id, err := mr.queries.CreateM304(ctx, arg)
@@ -176,7 +90,7 @@ func (mr M304Repositoty) CreateM304(newM304 domain.M304) (int64, error) {
 	return id, nil
 }
 
-func (mr M304Repositoty) GetM304FromUecsDevice(uecsDeviceID int) ([]*domain.M304, error) {
+func (mr M304Repository) GetM304FromUecsDevice(uecsDeviceID int) ([]*domain.M304, error) {
 	ctx := context.Background()
 
 	rly := sql.NullInt32{
@@ -190,89 +104,25 @@ func (mr M304Repositoty) GetM304FromUecsDevice(uecsDeviceID int) ([]*domain.M304
 
 	m304s := make([]*domain.M304, len(m304sRow))
 	for i, v := range m304sRow {
-		uecsid := ""
-		if v.UecsID.Valid {
-			uecsid = v.UecsID.String
-		}
-		mac_addr := ""
-		if v.MacAddr.Valid {
-			mac_addr = v.MacAddr.String
-		}
-		ip_addr := ""
-		if v.IpAddr.Valid {
-			ip_addr = v.IpAddr.String
-		}
-		net_mask := ""
-		if v.NetMask.Valid {
-			net_mask = v.NetMask.String
-		}
-		defgw := ""
-		if v.Defgw.Valid {
-			defgw = v.Defgw.String
-		}
-		dns := ""
-		if v.Dns.Valid {
-			dns = v.Dns.String
-		}
-		vender_name := ""
-		if v.VenderName.Valid {
-			vender_name = v.VenderName.String
-		}
-		node_name := ""
-		if v.NodeName.Valid {
-			node_name = v.NodeName.String
-		}
-		rly0 := 0
-		if v.Rly0.Valid {
-			rly0 = int(v.Rly0.Int32)
-		}
-		rly1 := 0
-		if v.Rly1.Valid {
-			rly1 = int(v.Rly1.Int32)
-		}
-		rly2 := 0
-		if v.Rly2.Valid {
-			rly2 = int(v.Rly2.Int32)
-		}
-		rly3 := 0
-		if v.Rly3.Valid {
-			rly3 = int(v.Rly3.Int32)
-		}
-		rly4 := 0
-		if v.Rly4.Valid {
-			rly4 = int(v.Rly4.Int32)
-		}
-		rly5 := 0
-		if v.Rly5.Valid {
-			rly5 = int(v.Rly5.Int32)
-		}
-		rly6 := 0
-		if v.Rly6.Valid {
-			rly6 = int(v.Rly6.Int32)
-		}
-		rly7 := 0
-		if v.Rly7.Valid {
-			rly7 = int(v.Rly7.Int32)
-		}
 		m304s[i] = domain.NewM304WithID(
 			int(v.ID),
-			uecsid,
-			mac_addr,
+			v.UecsID,
+			v.MacAddr,
 			v.DhcpFlg,
-			ip_addr,
-			net_mask,
-			defgw,
-			dns,
-			vender_name,
-			node_name,
-			rly0,
-			rly1,
-			rly2,
-			rly3,
-			rly4,
-			rly5,
-			rly6,
-			rly7,
+			NullStringToPointer(v.IpAddr),
+			NullStringToPointer(v.NetMask),
+			NullStringToPointer(v.Defgw),
+			NullStringToPointer(v.Dns),
+			v.VenderName,
+			NullStringToPointer(v.NodeName),
+			NullInt32ToPointer(v.Rly0),
+			NullInt32ToPointer(v.Rly1),
+			NullInt32ToPointer(v.Rly2),
+			NullInt32ToPointer(v.Rly3),
+			NullInt32ToPointer(v.Rly4),
+			NullInt32ToPointer(v.Rly5),
+			NullInt32ToPointer(v.Rly6),
+			NullInt32ToPointer(v.Rly7),
 		)
 	}
 
