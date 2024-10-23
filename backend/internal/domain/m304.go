@@ -2,14 +2,14 @@ package domain
 
 type M304 struct {
 	ID         int
-	UecsID     *string
-	MacAddr    *string
+	UecsID     string
+	MacAddr    string
 	DhcpFlg    bool
 	IpAddr     *string
 	NetMask    *string
 	Defgw      *string
 	Dns        *string
-	VenderName *string
+	VenderName string
 	NodeName   *string
 	Rly0       *int
 	Rly1       *int
@@ -21,7 +21,7 @@ type M304 struct {
 	Rly7       *int
 }
 
-func NewM304(uecsID *string, macAddr *string, dhcpFlg bool, ipAddr *string, netMask *string, defgw *string, dns *string, venderName *string, nodeName *string, rly0 *int, rly1 *int, rly2 *int, rly3 *int, rly4 *int, rly5 *int, rly6 *int, rly7 *int) *M304 {
+func NewM304(uecsID string, macAddr string, dhcpFlg bool, ipAddr *string, netMask *string, defgw *string, dns *string, venderName string, nodeName *string, rly0 *int, rly1 *int, rly2 *int, rly3 *int, rly4 *int, rly5 *int, rly6 *int, rly7 *int) *M304 {
 	return &M304{
 		UecsID:     uecsID,
 		MacAddr:    macAddr,
@@ -43,7 +43,7 @@ func NewM304(uecsID *string, macAddr *string, dhcpFlg bool, ipAddr *string, netM
 	}
 }
 
-func NewM304WithID(id int, uecsID *string, macAddr *string, dhcpFlg bool, ipAddr *string, netMask *string, defgw *string, dns *string, venderName *string, nodeName *string, rly0 *int, rly1 *int, rly2 *int, rly3 *int, rly4 *int, rly5 *int, rly6 *int, rly7 *int) *M304 {
+func NewM304WithID(id int, uecsID string, macAddr string, dhcpFlg bool, ipAddr *string, netMask *string, defgw *string, dns *string, venderName string, nodeName *string, rly0 *int, rly1 *int, rly2 *int, rly3 *int, rly4 *int, rly5 *int, rly6 *int, rly7 *int) *M304 {
 	return &M304{
 		ID:         id,
 		UecsID:     uecsID,
