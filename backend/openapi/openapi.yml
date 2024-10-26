@@ -98,8 +98,8 @@ components:
       properties:
         device_name:
           type: string
-        climate_data:
-          type: string
+        climate_data_id:
+          type: integer
         unit:
           type: string
         set_point:
