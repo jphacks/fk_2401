@@ -82,28 +82,40 @@ func SendBlockA(blockAData BlockA) ([]*http.Response, error) {
 	sp_ip_addr := strings.Split(blockAData.FIXED_IPADDRESS, ".")
 	ih_ip_addr := ""
 	for _, v := range sp_ip_addr {
-		addrInt, _ := strconv.Atoi(v)
+		addrInt, err := strconv.Atoi(v)
+		if err != nil {
+			return nil, err
+		}
 		ih_ip_addr += ByteArrange(addrInt)
 	}
 
 	sp_netmask := strings.Split(blockAData.FIXED_NETMASK, ".")
 	ih_netmask := ""
 	for _, v := range sp_netmask {
-		netmaskInt, _ := strconv.Atoi(v)
+		netmaskInt, err := strconv.Atoi(v)
+		if err != nil {
+			return nil, err
+		}
 		ih_netmask += ByteArrange(netmaskInt)
 	}
 
 	sp_defgw := strings.Split(blockAData.FIXED_DEFGW, ".")
 	ih_defgw := ""
 	for _, v := range sp_defgw {
-		defgwInt, _ := strconv.Atoi(v)
+		defgwInt, err := strconv.Atoi(v)
+		if err != nil {
+			return nil, err
+		}
 		ih_defgw += ByteArrange(defgwInt)
 	}
 
 	sp_dns := strings.Split(blockAData.FIXED_DNS, ".")
 	ih_dns := ""
 	for _, v := range sp_dns {
-		dnsInt, _ := strconv.Atoi(v)
+		dnsInt, err := strconv.Atoi(v)
+		if err != nil {
+			return nil, err
+		}
 		ih_dns += ByteArrange(dnsInt)
 	}
 
