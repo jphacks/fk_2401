@@ -59,6 +59,17 @@ type M304 struct {
 	UpdatedAt  time.Time
 }
 
+type M304Record struct {
+	ID        int32
+	M304ID    int32
+	DeviceID  int32
+	Block     string
+	Valid     bool
+	Position  int32
+	CreatedAt time.Time
+	UpdatedAt time.Time
+}
+
 type UecsDevice struct {
 	ID        int32
 	Ccmtype   string

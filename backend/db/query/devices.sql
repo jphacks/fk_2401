@@ -15,3 +15,8 @@ WHERE d.house_id = ?;
 -- name: CreateDevice :execlastid
 INSERT INTO devices (house_id, climate_data_id, uecs_device_id, device_name, valid, set_point, duration, operator) 
 VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+
+-- name: GetDeviceFromID :one
+SELECT id, house_id, climate_data_id, uecs_device_id, device_name, valid, set_point, duration, operator
+FROM devices
+WHERE id = ?;

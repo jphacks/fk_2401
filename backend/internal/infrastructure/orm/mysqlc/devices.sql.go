@@ -44,6 +44,41 @@ func (q *Queries) CreateDevice(ctx context.Context, arg CreateDeviceParams) (int
 	return result.LastInsertId()
 }
 
+const getDeviceFromID = `-- name: GetDeviceFromID :one
+SELECT id, house_id, climate_data_id, uecs_device_id, device_name, valid, set_point, duration, operator
+FROM devices
+WHERE id = ?
+`
+
+type GetDeviceFromIDRow struct {
+	ID            int32
+	HouseID       int32
+	ClimateDataID int32
+	UecsDeviceID  int32
+	DeviceName    sql.NullString
+	Valid         sql.NullBool
+	SetPoint      sql.NullFloat64
+	Duration      sql.NullInt32
+	Operator      sql.NullInt32
+}
+
+func (q *Queries) GetDeviceFromID(ctx context.Context, id int32) (GetDeviceFromIDRow, error) {
+	row := q.db.QueryRowContext(ctx, getDeviceFromID, id)
+	var i GetDeviceFromIDRow
+	err := row.Scan(
+		&i.ID,
+		&i.HouseID,
+		&i.ClimateDataID,
+		&i.UecsDeviceID,
+		&i.DeviceName,
+		&i.Valid,
+		&i.SetPoint,
+		&i.Duration,
+		&i.Operator,
+	)
+	return i, err
+}
+
 const getDevicesFromHouse = `-- name: GetDevicesFromHouse :many
 SELECT 
     id, house_id, climate_data_id, uecs_device_id, device_name, valid, set_point, duration, operator, created_at, updated_at
