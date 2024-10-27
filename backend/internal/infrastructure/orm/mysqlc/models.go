@@ -19,9 +19,12 @@ type Device struct {
 	ID            int32
 	HouseID       int32
 	ClimateDataID int32
+	UecsDeviceID  int32
 	DeviceName    sql.NullString
+	Valid         sql.NullBool
 	SetPoint      sql.NullFloat64
 	Duration      sql.NullInt32
+	Operator      sql.NullInt32
 	CreatedAt     time.Time
 	UpdatedAt     time.Time
 }
@@ -54,6 +57,17 @@ type M304 struct {
 	Rly7       sql.NullInt32
 	CreatedAt  time.Time
 	UpdatedAt  time.Time
+}
+
+type M304Record struct {
+	ID        int32
+	M304ID    int32
+	DeviceID  int32
+	Block     string
+	Valid     bool
+	Position  int32
+	CreatedAt time.Time
+	UpdatedAt time.Time
 }
 
 type UecsDevice struct {
