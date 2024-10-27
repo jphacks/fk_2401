@@ -1,0 +1,34 @@
+version: "3.8"
+
+services:
+  uecs-navi-dev:
+    container_name: uecs-navi-backend
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ../..:/workspaces
+    depends_on:
+      - uecs-navi-dev-db
+    networks:
+      - uecs-navi-network
+    command: sleep infinity
+    ports:
+      - "8080:8080"
+
+  uecs-navi-dev-db:
+    container_name: uecs-navi-mysql
+    image: mysql:latest
+    restart: unless-stopped
+    volumes:
+      - ./mysql:/var/lib/mysql
+    env_file:
+      - ../.env
+    networks:
+      - uecs-navi-network
+    ports:
+      - "3306:3306"
+
+networks:
+  uecs-navi-network:
+    driver: bridge

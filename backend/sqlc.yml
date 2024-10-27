@@ -1,0 +1,9 @@
+version: "2"
+sql:
+  - engine: "mysql"
+    queries: "db/query"
+    schema: "db/migration"
+    gen:
+      go:
+        package: "mysqlc"
+        out: "internal/infrastructure/orm/mysqlc"

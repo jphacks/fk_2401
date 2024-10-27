@@ -1,0 +1,143 @@
+openapi: 3.0.3
+info:
+  title: "UECS Navi API"
+  version: "1.0.0"
+paths:
+  /climate-datas:
+    get:
+      operationId: getClimateData
+      tags:
+        - private
+      summary: Get climate data list
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ClimateDatasResponse"
+  /houses:
+    get:
+      operationId: getHouses
+      tags:
+        - private
+      summary: Get houses list
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/HousesResponse"
+    post:
+      operationId: createHouse
+      tags:
+        - private
+      summary: Create a house
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/HousesRequest"
+      responses:
+        "200":
+          description: OK
+
+  /houses/{house-id}:
+    parameters:
+      - $ref: "#/components/parameters/house-id"
+    get:
+      operationId: getDevice
+      tags:
+        - private
+      summary: Get devices list
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/DeviceResponse"
+  /houses/{house-id}/devices:
+    parameters:
+      - $ref: "#/components/parameters/house-id"
+    post:
+      operationId: createDevice
+      tags:
+        - private
+      summary: Create device
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DeviceRequest"
+      responses:
+        "200":
+          description: OK
+
+components:
+  parameters:
+    house-id:
+      name: house-id
+      in: path
+      required: true
+      schema:
+        type: integer
+
+  schemas:
+    HousesRequest:
+      type: string
+    DeviceRequest:
+      type: object
+      properties:
+        device_name:
+          type: string
+        climate_data_id:
+          type: integer
+        unit:
+          type: string
+        set_point:
+          type: number
+          format: double
+        duration:
+          type: integer
+          nullable: true
+
+    ClimateDatasResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        climate_data:
+          type: string
+        unit:
+          type: string
+    HousesResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+    DeviceResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        device_name:
+          type: string
+        climate_data:
+          type: string
+        unit:
+          type: string
+        set_point:
+          type: number
+          format: double
+        duration:
+          type: integer
