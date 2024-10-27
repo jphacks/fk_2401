@@ -14,7 +14,8 @@ const SideBar = () => {
   const ListItems: string[] = [
     "ハウス状態",
     "デバイス設定",
-  ]
+    "デバイスプログラム",
+  ];
 
   return (
     <Drawer
@@ -39,13 +40,13 @@ const SideBar = () => {
                   {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
                 </ListItemIcon> */}
                 <Link
-                  href="/" 
-                  underline="none" 
+                  href="/"
+                  underline="none"
                   color="inherit"
                   sx={{
                     color: "#000",
                     "&:hover": {
-                      color: "#000", 
+                      color: "#000",
                     },
                   }}
                 >
