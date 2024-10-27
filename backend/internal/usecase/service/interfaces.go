@@ -11,6 +11,7 @@ type (
 		CreateDevice(newDevice domain.Device) (int64, error)
 		GetDevicesFromHouse(houseID int) ([]*domain.Device, error)
 		GetJoinedDevicesFromHouse(houseID int) ([]*repository.JoinedDevice, error)
+		GetDeviceFromID(deviceID int) (*domain.Device, error)
 	}
 
 	HouseRepositoryInterface interface {
@@ -31,5 +32,10 @@ type (
 	M304RepositoryInterface interface {
 		CreateM304(newM304 domain.M304) (int64, error)
 		GetM304FromUecsDevice(uecsDeviceID int) ([]*domain.M304, error)
+	}
+
+	M304RecordRepositoryInterface interface {
+		CreateM304Record(NewM304Record domain.M304Record) (int64, error)
+		GetM304RecordFromM304ID(m304ID int) ([]*domain.M304Record, error)
 	}
 )

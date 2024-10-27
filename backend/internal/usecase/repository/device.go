@@ -209,3 +209,51 @@ func (dr DeviceRepository) GetJoinedDevicesFromHouse(houseID int) ([]*JoinedDevi
 
 	return joinedDevices, nil
 }
+
+func (dr DeviceRepository) GetDeviceFromID(ID int) (*domain.Device, error) {
+	ctx := context.Background()
+
+	device, err := dr.queries.GetDeviceFromID(ctx, int32(ID))
+	if err != nil {
+		return nil, err
+	}
+
+	var deviceName *string
+	if device.DeviceName.Valid {
+		dN := device.DeviceName.String
+		deviceName = &dN
+	}
+	var valid *bool
+	if device.Valid.Valid {
+		vl := device.Valid.Bool
+		valid = &vl
+	}
+	var setPoint *float64
+	if device.SetPoint.Valid {
+		sP := device.SetPoint.Float64
+		setPoint = &sP
+	}
+	var duration *int
+	if device.Duration.Valid {
+		du := int(device.Duration.Int32)
+		duration = &du
+	}
+	var operator *int
+	if device.Operator.Valid {
+		ope := int(device.Operator.Int32)
+		operator = &ope
+	}
+	getDevice := domain.NewDeviceWithID(
+		int(device.ID),
+		int(device.HouseID),
+		int(device.ClimateDataID),
+		int(device.UecsDeviceID),
+		deviceName,
+		valid,
+		setPoint,
+		duration,
+		operator,
+	)
+
+	return getDevice, nil
+}
