@@ -8,6 +8,7 @@ import (
 type MockDeviceRepository struct {
 	DeviceTable       map[int][]*domain.Device
 	JoinedDeviceTable map[int][]*repository.JoinedDevice
+	Device            *domain.Device
 }
 
 func NewMockDeviceRepository() *MockDeviceRepository {
@@ -206,4 +207,8 @@ func (dr MockDeviceRepository) GetJoinedDevicesFromHouse(houseID int) ([]*reposi
 
 func (dr MockDeviceRepository) CreateDevice(newDevice domain.Device) (int64, error) {
 	return 0, nil
+}
+
+func (dr MockDeviceRepository) GetDeviceFromID(ID int) (*domain.Device, error) {
+	return dr.Device, nil
 }
