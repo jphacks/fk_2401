@@ -78,6 +78,7 @@ func SendBlockA(blockAData BlockA) ([]*http.Response, error) {
 	ih_uecs_id := Padding(blockAData.LC_UECS_ID, 12, "0")
 	ih_mac := strings.Replace(blockAData.LC_MAC, ":", "", -1)
 	ih_dhcpflg := ByteArrange(blockAData.FIX_DHCP_FLAG)
+	ih_non := Padding("", 6, "0")
 	sp_ip_addr := strings.Split(blockAData.FIXED_IPADDRESS, ".")
 	ih_ip_addr := ""
 	for _, v := range sp_ip_addr {
@@ -109,7 +110,7 @@ func SendBlockA(blockAData BlockA) ([]*http.Response, error) {
 	ih_vender_name := StringArrange(blockAData.VENDER_NAME, 32)
 	ih_node_name := StringArrange(blockAData.NODE_NAME, 32)
 
-	ihtxt := ih_uecs_id + ih_mac + ih_dhcpflg + ih_ip_addr + ih_netmask + ih_defgw + ih_dns + ih_vender_name + ih_node_name
+	ihtxt := ih_uecs_id + ih_mac + ih_dhcpflg + ih_non + ih_ip_addr + ih_netmask + ih_defgw + ih_dns + ih_vender_name + ih_node_name
 	resps := make([]*http.Response, responseCountBlockA)
 	for i := 0; i < responseCountBlockA; i++ {
 		tp := i * blockSize
