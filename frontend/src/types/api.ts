@@ -29,3 +29,14 @@ export interface CreateDeviceRequest {
 export interface CreateHouseRequest {
   name: string;
 }
+
+export interface WorkflowRequest {
+  device_id: number;
+  house_id: number;
+  climate_data_id: number;
+  uecs_device_id: number;
+  valid: boolean;
+  set_point: number;
+  duration: number;
+  operator: number;
+}
