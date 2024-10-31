@@ -11,13 +11,13 @@ export default function Header() {
     >
       <Toolbar>
         <Typography variant="h6" noWrap component="div">
-          <Link 
+          <Link
             href="/"
             underline="none"
             sx={{
               color: "primary.contrastText",
               "&:hover": {
-                color: "primary.contrastText", 
+                color: "primary.contrastText",
               },
             }}
           >

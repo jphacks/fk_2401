@@ -10,13 +10,27 @@ import {
 
 const drawerWidth = 240;
 
-const SideBar = () => {
-  const ListItems: string[] = [
-    "ハウス状態",
-    "デバイス設定",
-    "デバイスプログラム",
-  ];
+interface SidebarItem {
+  title: string;
+  path: string;
+}
 
+const sidebarItems: SidebarItem[] = [
+  {
+    title: "ハウス状態",
+    path: "/",
+  },
+  {
+    title: "デバイス設定",
+    path: "/devices",
+  },
+  {
+    title: "ワークフロー制御",
+    path: "/workflow",
+  },
+];
+
+const SideBar = () => {
   return (
     <Drawer
       variant="permanent"
@@ -33,14 +47,14 @@ const SideBar = () => {
       <Toolbar />
       <Box sx={{ overflow: "auto" }}>
         <List>
-          {ListItems.map((item) => (
-            <ListItem key={item} disablePadding>
+          {sidebarItems.map((item, index) => (
+            <ListItem key={index} disablePadding>
               <ListItemButton>
                 {/* <ListItemIcon>
                   {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
                 </ListItemIcon> */}
                 <Link
-                  href="/"
+                  href={item.path}
                   underline="none"
                   color="inherit"
                   sx={{
@@ -50,7 +64,7 @@ const SideBar = () => {
                     },
                   }}
                 >
-                  {item}
+                  {item.title}
                 </Link>
               </ListItemButton>
             </ListItem>
