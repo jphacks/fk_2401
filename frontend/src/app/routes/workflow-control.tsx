@@ -11,7 +11,7 @@ interface TabPanelProps {
   value: number;
 }
 
-export default function WorkflowControlTabPanel(props: TabPanelProps) {
+function WorkflowControlTabPanel(props: TabPanelProps) {
   const { children, value, index, ...other } = props;
 
   return (
@@ -34,7 +34,7 @@ function a11yProps(index: number) {
   };
 }
 
-export function WorkflowControl() {
+export default function WorkflowControl() {
   const [houses, setHouses] = useState<HouseResponse[]>([]);
   const [selectedTab, setSelectedTab] = useState(0);
 
