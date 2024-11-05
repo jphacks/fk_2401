@@ -35,6 +35,7 @@ export const SelectDeviceNode = ({ id, data }: SelectDeviceNodeProps) => {
         border: "1px solid #000",
         borderRadius: "10px",
         backgroundColor: "#FFF",
+        width: "350px",
       }}
     >
       <Box sx={{ padding: "8px" }}>

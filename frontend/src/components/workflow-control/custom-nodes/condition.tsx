@@ -52,6 +52,7 @@ export const ConditionNode = ({ id, data }: ConditionNodeProps) => {
         border: "1px solid #000",
         borderRadius: "10px",
         backgroundColor: "#FFF",
+        width: "350px",
       }}
     >
       <Handle position={Position.Left} type="target" />

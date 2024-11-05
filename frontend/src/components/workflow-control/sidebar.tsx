@@ -35,7 +35,6 @@ export const Sidebar = () => {
 
   return (
     <Box sx={{ height: "100%", width: "300px", backgroundColor: "#ddd" }}>
-      <Box>You can drag these nodes to the pane on the left.</Box>
       <Box sx={{ display: "flex", flexDirection: "column" }}>
         <Box
           sx={{
@@ -66,12 +65,12 @@ export const Sidebar = () => {
             borderRadius: "10px",
             backgroundColor: "#FFF",
           }}
-          onDragStart={(event) => onDragStart(event, "dndnode", {})}
+          onDragStart={(event) => onDragStart(event, "deviceOperation", {})}
           draggable
         >
-          <Typography variant="subtitle2">Function</Typography>
+          <Typography variant="subtitle2">Operation</Typography>
           <Divider />
-          <Box sx={{ pt: 1, textAlign: "center" }}>ファンクションノード</Box>
+          <Box sx={{ pt: 1, textAlign: "center" }}>オペレーションノード</Box>
         </Box>
       </Box>
     </Box>
