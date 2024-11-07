@@ -6,4 +6,4 @@ CREATE TABLE time_schedules (
     created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (device_condition_id) REFERENCES device_conditions (id) ON DELETE CASCADE
-)
+);
