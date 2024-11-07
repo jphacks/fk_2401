@@ -11,5 +11,5 @@ CREATE TABLE devices (
     FOREIGN KEY (house_id) REFERENCES houses (id) ON DELETE CASCADE,
     FOREIGN KEY (climate_data_id) REFERENCES climate_datas (id) ON DELETE RESTRICT,
     FOREIGN KEY (m304_id) REFERENCES m304 (id) ON DELETE RESTRICT,
-    FOREIGN KEY (uecs_device_id) REFERENCES uecs_devices (id) ON DELETE RESTRICT
+    FOREIGN KEY (sensor_id) REFERENCES sensors (id) ON DELETE RESTRICT
 );
