@@ -19,14 +19,23 @@ type Device struct {
 	ID            int32
 	HouseID       int32
 	ClimateDataID int32
-	UecsDeviceID  int32
+	M304ID        int32
+	SensorID      int32
 	DeviceName    sql.NullString
-	Valid         sql.NullBool
-	SetPoint      sql.NullFloat64
-	Duration      sql.NullInt32
-	Operator      sql.NullInt32
+	Rly           sql.NullInt32
 	CreatedAt     time.Time
 	UpdatedAt     time.Time
+}
+
+type DeviceCondition struct {
+	ID        int32
+	DeviceID  int32
+	Valid     bool
+	SetPoint  sql.NullFloat64
+	Duration  sql.NullInt32
+	Operator  sql.NullInt32
+	CreatedAt time.Time
+	UpdatedAt time.Time
 }
 
 type House struct {
@@ -47,36 +56,46 @@ type M304 struct {
 	Dns        sql.NullString
 	VenderName string
 	NodeName   sql.NullString
-	Rly0       sql.NullInt32
-	Rly1       sql.NullInt32
-	Rly2       sql.NullInt32
-	Rly3       sql.NullInt32
-	Rly4       sql.NullInt32
-	Rly5       sql.NullInt32
-	Rly6       sql.NullInt32
-	Rly7       sql.NullInt32
 	CreatedAt  time.Time
 	UpdatedAt  time.Time
 }
 
 type M304Record struct {
+	ID                int32
+	M304ID            int32
+	DeviceConditionID int32
+	Block             string
+	Valid             bool
+	Position          int32
+	CreatedAt         time.Time
+	UpdatedAt         time.Time
+}
+
+type Operation struct {
 	ID        int32
-	M304ID    int32
 	DeviceID  int32
-	Block     string
-	Valid     bool
-	Position  int32
+	Name      string
+	RlyOn     int32
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }
 
-type UecsDevice struct {
+type Sensor struct {
 	ID        int32
-	Ccmtype   string
+	CcmType   string
 	Room      int32
 	Region    int32
 	Order     int32
 	Priority  int32
 	CreatedAt time.Time
 	UpdatedAt time.Time
+}
+
+type TimeSchedule struct {
+	ID                int32
+	DeviceConditionID int32
+	StartTime         string
+	EndTime           string
+	CreatedAt         time.Time
+	UpdatedAt         time.Time
 }

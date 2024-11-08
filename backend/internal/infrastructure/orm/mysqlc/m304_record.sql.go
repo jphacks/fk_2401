@@ -10,22 +10,22 @@ import (
 )
 
 const createM304Record = `-- name: CreateM304Record :execlastid
-INSERT INTO m304_record (m304_id, device_id, ` + "`" + `block` + "`" + `, valid, position)
+INSERT INTO m304_record (m304_id, device_condition_id, ` + "`" + `block` + "`" + `, valid, position)
 VALUES (?, ?, ?, ?, ?)
 `
 
 type CreateM304RecordParams struct {
-	M304ID   int32
-	DeviceID int32
-	Block    string
-	Valid    bool
-	Position int32
+	M304ID            int32
+	DeviceConditionID int32
+	Block             string
+	Valid             bool
+	Position          int32
 }
 
 func (q *Queries) CreateM304Record(ctx context.Context, arg CreateM304RecordParams) (int64, error) {
 	result, err := q.db.ExecContext(ctx, createM304Record,
 		arg.M304ID,
-		arg.DeviceID,
+		arg.DeviceConditionID,
 		arg.Block,
 		arg.Valid,
 		arg.Position,
@@ -37,18 +37,18 @@ func (q *Queries) CreateM304Record(ctx context.Context, arg CreateM304RecordPara
 }
 
 const getRecordFromM304ID = `-- name: GetRecordFromM304ID :many
-SELECT id, m304_id, device_id, ` + "`" + `block` + "`" + `, valid, position
+SELECT id, m304_id, device_condition_id, ` + "`" + `block` + "`" + `, valid, position
 FROM m304_record
 WHERE m304_id = ?
 `
 
 type GetRecordFromM304IDRow struct {
-	ID       int32
-	M304ID   int32
-	DeviceID int32
-	Block    string
-	Valid    bool
-	Position int32
+	ID                int32
+	M304ID            int32
+	DeviceConditionID int32
+	Block             string
+	Valid             bool
+	Position          int32
 }
 
 func (q *Queries) GetRecordFromM304ID(ctx context.Context, m304ID int32) ([]GetRecordFromM304IDRow, error) {
@@ -63,7 +63,7 @@ func (q *Queries) GetRecordFromM304ID(ctx context.Context, m304ID int32) ([]GetR
 		if err := rows.Scan(
 			&i.ID,
 			&i.M304ID,
-			&i.DeviceID,
+			&i.DeviceConditionID,
 			&i.Block,
 			&i.Valid,
 			&i.Position,

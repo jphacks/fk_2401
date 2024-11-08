@@ -1,0 +1,10 @@
+CREATE TABLE sensors (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    ccm_type VARCHAR(255) NOT NULL,
+    room INT NOT NULL,
+    region INT NOT NULL,
+    `order` INT NOT NULL,
+    `priority` INT NOT NULL,
+    created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);

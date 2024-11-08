@@ -1,0 +1,9 @@
+CREATE TABLE operations (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    device_id INT NOT NULL,
+    `name` VARCHAR(255) NOT NULL,
+    rly_on INT NOT NULL,
+    created_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (device_id) REFERENCES devices (id) ON DELETE CASCADE
+);
