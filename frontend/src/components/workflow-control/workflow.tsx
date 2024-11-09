@@ -2,94 +2,123 @@ import { Box } from "@mui/material";
 import {
   Node,
   Edge,
+  Connection,
+  useNodesState,
+  useEdgesState,
+  addEdge,
   ReactFlow,
   Background,
   BackgroundVariant,
-  applyEdgeChanges,
-  applyNodeChanges,
-  NodeChange,
-  EdgeChange,
   useReactFlow,
   ReactFlowProvider,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
-import { useMemo, useState, useEffect, useCallback } from "react";
-import { ConditionNode } from "./custom-nodes/condition";
-import { DeviceControlNode } from "./custom-nodes/device-control";
-import { SelectDeviceNode } from "./custom-nodes/select-device";
-import { ClimateDataResponse } from "@/types/api";
-import { getClimateDatas } from "@/mocks/setting_device_api";
+import { useMemo, useEffect, useCallback, DragEvent, useState } from "react";
+import {
+  SelectDeviceNode,
+  SelectDeviceNodeData,
+} from "./custom-nodes/select-device";
+import { ConditionNode, ConditionNodeData } from "./custom-nodes/condition";
+import {
+  DeviceOperationNode,
+  DeviceOperationNodeData,
+} from "./custom-nodes/device-operation";
 import { Sidebar } from "./sidebar";
-import { DnDProvider, useDnD } from "./dnd-context";
+import { DnDProvider, useDnD } from "@/hooks/dnd-context";
+import { NodeInfoProvider } from "@/hooks/node-info-context";
+import { DeviceResponse } from "@/types/api";
+import { getDevices } from "@/mocks/workflow_api";
+
+type CustomNodeData =
+  | SelectDeviceNodeData
+  | ConditionNodeData
+  | DeviceOperationNodeData;
 
 export type AddNodeFunction = (parentNodeId: string) => void;
+export type UpdateNodeFunction = (
+  id: string,
+  updatedData: CustomNodeData
+) => void;
 
 let id = 0;
 const getId = () => `dndnode_${id++}`;
 
-function DnDWorkflow() {
-  const [fetchedClimateDatas, setFetchedClimateDatas] = useState<
-    ClimateDataResponse[]
-  >([]);
-  const [nodes, setNodes] = useState<Node[]>([]);
-  const [edges, setEdges] = useState<Edge[]>([]);
+function WorkflowEditor() {
+  const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
   const [type] = useDnD();
+  const [fetchedDevices, setFetchedDevices] = useState<DeviceResponse[]>([]);
 
-  const onNodesChange = useCallback(
-    (changes: NodeChange[]) =>
-      setNodes((nds) => applyNodeChanges(changes, nds)),
-    [setNodes]
-  );
-  const onEdgesChange = useCallback(
-    (changes: EdgeChange[]) =>
-      setEdges((eds) => applyEdgeChanges(changes, eds)),
-    [setEdges]
-  );
+  console.log(nodes);
 
   const nodeTypes = useMemo(
     () => ({
       selectDevice: SelectDeviceNode,
       condition: ConditionNode,
-      deviceControl: DeviceControlNode,
+      deviceOperation: DeviceOperationNode,
     }),
     []
   );
 
   useEffect(() => {
-    const fetchClimateDatas = async () => {
-      const climateDataRes: ClimateDataResponse[] = await getClimateDatas();
-      setFetchedClimateDatas(climateDataRes);
+    const fetchDevices = async () => {
+      const devicesRes: DeviceResponse[] = await getDevices();
+      setFetchedDevices(devicesRes);
     };
 
+    fetchDevices();
+  }, []);
+
+  useEffect(() => {
     const initialNode: Node = {
       id: "1",
       type: "selectDevice",
       position: { x: 0, y: 300 },
-      data: { label: "Begin Workflow" },
-      style: {
-        width: "350px",
-        height: "100px",
-        backgroundColor: "#fff",
-        border: "1px solid #000",
-        borderRadius: "10px",
+      data: {
+        label: "Begin Workflow",
+        devicesList: fetchedDevices,
+        updateNode: updateNodeData,
       },
       connectable: false,
     };
 
     setNodes([initialNode]);
-
-    fetchClimateDatas();
-  }, []);
+  }, [fetchedDevices]);
 
   const { screenToFlowPosition } = useReactFlow();
 
-  const onDragOver = useCallback((event) => {
+  // イベントハンドラー
+  const onConnect = useCallback(
+    (params: Connection) => {
+      const animatedEdge = {
+        ...params,
+        animated: true,
+      };
+      setEdges((eds) => addEdge(animatedEdge, eds));
+    },
+    [setEdges]
+  );
+
+  const onDragOver = useCallback((event: DragEvent) => {
     event.preventDefault();
     event.dataTransfer.dropEffect = "move";
   }, []);
 
+  const updateNodeData = useCallback(
+    (id: string, updatedData: CustomNodeData) => {
+      setNodes((nds) =>
+        nds.map((node) =>
+          node.id === id
+            ? { ...node, data: { ...node.data, ...updatedData } }
+            : node
+        )
+      );
+    },
+    [setNodes]
+  );
+
   const onDrop = useCallback(
-    (event) => {
+    (event: DragEvent) => {
       event.preventDefault();
 
       // check if the dropped element is valid
@@ -111,7 +140,11 @@ function DnDWorkflow() {
         id: getId(),
         type,
         position,
-        data: { label: `${type} node`, ...nodeData },
+        data: {
+          label: `${type} node`,
+          ...nodeData,
+          updateNode: updateNodeData,
+        },
       };
 
       setNodes((nds) => nds.concat(newNode));
@@ -119,6 +152,7 @@ function DnDWorkflow() {
     [screenToFlowPosition, type]
   );
 
+  // 画面の大きさ調節
   interface Viewport {
     x: number;
     y: number;
@@ -143,6 +177,7 @@ function DnDWorkflow() {
             nodeTypes={nodeTypes}
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
+            onConnect={onConnect}
             onDrop={onDrop}
             onDragOver={onDragOver}
           >
@@ -160,8 +195,10 @@ function DnDWorkflow() {
 
 export const Workflow = () => (
   <ReactFlowProvider>
-    <DnDProvider>
-      <DnDWorkflow />
-    </DnDProvider>
+    <NodeInfoProvider>
+      <DnDProvider>
+        <WorkflowEditor />
+      </DnDProvider>
+    </NodeInfoProvider>
   </ReactFlowProvider>
 );
