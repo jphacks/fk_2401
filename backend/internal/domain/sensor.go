@@ -1,6 +1,6 @@
 package domain
 
-type UecsDevice struct {
+type Sensor struct {
 	ID       int
 	Ccmtype  string
 	Room     int
@@ -9,8 +9,8 @@ type UecsDevice struct {
 	Priority int
 }
 
-func NewUecsDevice(ccmtype string, room int, region int, order int, priority int) *UecsDevice {
-	return &UecsDevice{
+func NewSensor(ccmtype string, room int, region int, order int, priority int) *Sensor {
+	return &Sensor{
 		Ccmtype:  ccmtype,
 		Room:     room,
 		Region:   region,
@@ -19,8 +19,8 @@ func NewUecsDevice(ccmtype string, room int, region int, order int, priority int
 	}
 }
 
-func NewUecsDeviceWithID(id int, ccmtype string, room int, region int, order int, priority int) *UecsDevice {
-	return &UecsDevice{
+func NewSensorWithID(id int, ccmtype string, room int, region int, order int, priority int) *Sensor {
+	return &Sensor{
 		ID:       id,
 		Ccmtype:  ccmtype,
 		Room:     room,
