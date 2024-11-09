@@ -7,21 +7,30 @@ import {
   SetStateAction,
 } from "react";
 
-type nodeInfoState = Workflow | null;
+type nodeInfoState = Workflow;
 
 type nodeInfoContextType = [
   nodeInfoState,
   Dispatch<SetStateAction<nodeInfoState>>
 ];
 
-const NodeInfoContext = createContext<nodeInfoContextType>([null, () => {}]);
+const NodeInfoContext = createContext<nodeInfoContextType>([
+  {
+    device_id: 0,
+    condition_operations: [],
+  },
+  () => {},
+]);
 
 export const NodeInfoProvider = ({
   children,
 }: {
   children: React.ReactNode;
 }) => {
-  const [workflowInfo, setWorkflowInfo] = useState<nodeInfoState>(null);
+  const [workflowInfo, setWorkflowInfo] = useState<nodeInfoState>({
+    device_id: 0,
+    condition_operations: [],
+  });
 
   return (
     <NodeInfoContext.Provider value={[workflowInfo, setWorkflowInfo]}>
