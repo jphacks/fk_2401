@@ -11,17 +11,9 @@ type M304 struct {
 	Dns        *string
 	VenderName string
 	NodeName   *string
-	Rly0       *int
-	Rly1       *int
-	Rly2       *int
-	Rly3       *int
-	Rly4       *int
-	Rly5       *int
-	Rly6       *int
-	Rly7       *int
 }
 
-func NewM304(uecsID string, macAddr string, dhcpFlg bool, ipAddr *string, netMask *string, defgw *string, dns *string, venderName string, nodeName *string, rly0 *int, rly1 *int, rly2 *int, rly3 *int, rly4 *int, rly5 *int, rly6 *int, rly7 *int) *M304 {
+func NewM304(uecsID string, macAddr string, dhcpFlg bool, ipAddr *string, netMask *string, defgw *string, dns *string, venderName string, nodeName *string) *M304 {
 	return &M304{
 		UecsID:     uecsID,
 		MacAddr:    macAddr,
@@ -32,18 +24,10 @@ func NewM304(uecsID string, macAddr string, dhcpFlg bool, ipAddr *string, netMas
 		Dns:        dns,
 		VenderName: venderName,
 		NodeName:   nodeName,
-		Rly0:       rly0,
-		Rly1:       rly1,
-		Rly2:       rly2,
-		Rly3:       rly3,
-		Rly4:       rly4,
-		Rly5:       rly5,
-		Rly6:       rly6,
-		Rly7:       rly7,
 	}
 }
 
-func NewM304WithID(id int, uecsID string, macAddr string, dhcpFlg bool, ipAddr *string, netMask *string, defgw *string, dns *string, venderName string, nodeName *string, rly0 *int, rly1 *int, rly2 *int, rly3 *int, rly4 *int, rly5 *int, rly6 *int, rly7 *int) *M304 {
+func NewM304WithID(id int, uecsID string, macAddr string, dhcpFlg bool, ipAddr *string, netMask *string, defgw *string, dns *string, venderName string, nodeName *string) *M304 {
 	return &M304{
 		ID:         id,
 		UecsID:     uecsID,
@@ -55,13 +39,5 @@ func NewM304WithID(id int, uecsID string, macAddr string, dhcpFlg bool, ipAddr *
 		Dns:        dns,
 		VenderName: venderName,
 		NodeName:   nodeName,
-		Rly0:       rly0,
-		Rly1:       rly1,
-		Rly2:       rly2,
-		Rly3:       rly3,
-		Rly4:       rly4,
-		Rly5:       rly5,
-		Rly6:       rly6,
-		Rly7:       rly7,
 	}
 }
