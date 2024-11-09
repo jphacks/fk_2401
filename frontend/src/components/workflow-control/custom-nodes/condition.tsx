@@ -11,14 +11,17 @@ import {
   Typography,
 } from "@mui/material";
 import { Node, Handle, Position, NodeProps } from "@xyflow/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ClimateDataResponse } from "@/types/api";
-import { AddNodeFunction } from "../workflow";
+import { AddNodeFunction, UpdateNodeFunction } from "../workflow";
+import { Condition } from "@/types/node";
 
-interface ConditionNodeData {
+export interface ConditionNodeData {
   [key: string]: unknown;
   climateDataList: ClimateDataResponse[];
   addNode: AddNodeFunction;
+  updateNode: UpdateNodeFunction;
+  condition: Condition;
 }
 
 type ConditionNodePropsType = Node<ConditionNodeData>;
@@ -26,24 +29,38 @@ type ConditionNodePropsType = Node<ConditionNodeData>;
 type ConditionNodeProps = NodeProps<ConditionNodePropsType>;
 
 export const ConditionNode = ({ id, data }: ConditionNodeProps) => {
-  const { climateDataList, addNode } = data as ConditionNodeData;
-
-  const [selectedClimateData, setSelectedClimateData] = useState<string>("");
-  const [selectedClimateDataRec, setSelectedClimateDataRec] =
-    useState<ClimateDataResponse>();
+  const { climateDataList, addNode, updateNode } = data as ConditionNodeData;
+  const [selectedClimateData, setSelectedClimateData] = useState<
+    ClimateDataResponse | undefined
+  >(undefined);
   const [cmpOpe, setCmpOpe] = useState<string>("");
+  const [condition, setCondition] = useState<Condition>({
+    climate_data_id: 0,
+    comp_ope_id: 0,
+    set_point: 0,
+  });
+
+  useEffect(() => {
+    updateNode(id, { ...data, condition: condition });
+  }, [id, updateNode, condition]);
 
   const handleClimateDataChange = (event: SelectChangeEvent) => {
-    const climateData = event.target.value;
+    const climateDataID = parseInt(event.target.value);
     const climateDataRec = climateDataList.find(
-      (data) => data.climate_data === climateData
+      (data) => data.id === climateDataID
     );
-    setSelectedClimateData(climateData);
-    setSelectedClimateDataRec(climateDataRec);
+    condition.climate_data_id = climateDataID;
+
+    setSelectedClimateData(climateDataRec);
+    setCondition(condition);
   };
 
   const handleCmpOpeChange = (event: SelectChangeEvent) => {
+    const compOpeID: number = parseInt(event.target.value);
+    condition.comp_ope_id = compOpeID;
+
     setCmpOpe(event.target.value as string);
+    setCondition(condition);
   };
 
   return (
@@ -71,14 +88,14 @@ export const ConditionNode = ({ id, data }: ConditionNodeProps) => {
               className="nodrag"
               labelId={`climate-data-node-select-label-${id}`}
               id={`climate-data-node-select-${id}`}
-              value={selectedClimateData}
+              value={selectedClimateData ? String(selectedClimateData.id) : ""}
               label="気象データ"
               onChange={handleClimateDataChange}
               size="small"
               inputProps={{ className: "nodrag nopan nowheel" }}
             >
               {climateDataList.map((data) => (
-                <MenuItem key={data.id} value={data.climate_data}>
+                <MenuItem key={data.id} value={data.id}>
                   {data.climate_data}
                 </MenuItem>
               ))}
@@ -104,7 +121,7 @@ export const ConditionNode = ({ id, data }: ConditionNodeProps) => {
               input: {
                 endAdornment: (
                   <InputAdornment position="end">
-                    {selectedClimateDataRec?.unit}
+                    {selectedClimateData?.unit}
                   </InputAdornment>
                 ),
               },

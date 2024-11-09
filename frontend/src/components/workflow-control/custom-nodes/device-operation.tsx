@@ -8,15 +8,49 @@ import {
   InputLabel,
   Typography,
 } from "@mui/material";
-import { Handle, Position } from "@xyflow/react";
-import { useState } from "react";
+import { Handle, Position, Node, NodeProps } from "@xyflow/react";
+import { useEffect, useState } from "react";
+import { UpdateNodeFunction } from "../workflow";
+import { OperationResponse } from "@/types/api";
+import { useNodeInfo } from "@/hooks/node-info-context";
 
-export function DeviceOperationNode() {
-  const [selectedDevice, setSelectedDevice] = useState<number>(0);
+export interface DeviceOperationNodeData {
+  [key: string]: unknown;
+  operationsList: OperationResponse[];
+  updateNode: UpdateNodeFunction;
+  operationID: number;
+}
+
+type DeviceOperationNodePropsType = Node<DeviceOperationNodeData>;
+
+type DeviceOperationNodeProps = NodeProps<DeviceOperationNodePropsType>;
+
+export function DeviceOperationNode({ id, data }: DeviceOperationNodeProps) {
+  const { operationsList, updateNode } = data;
+  const [selectedOperation, setSelectedOperation] = useState<string>("");
   const handleSelectedDeviceChange = (event: SelectChangeEvent) => {
-    const selectedDeviceID: number = parseInt(event.target.value, 10);
-    setSelectedDevice(selectedDeviceID);
+    const selectedOperationID: number = parseInt(event.target.value, 10);
+    setSelectedOperation(event.target.value);
+    updateNode(id, { ...data, operationID: selectedOperationID });
   };
+  const [deviceOperations, setDeviceOperations] = useState<OperationResponse[]>(
+    []
+  );
+  const [workflowInfo] = useNodeInfo();
+
+  useEffect(() => {
+    const selectBoxOperations: OperationResponse[] = operationsList.filter(
+      (data) => data.device_id === workflowInfo?.device_id
+    );
+
+    console.log(selectBoxOperations);
+
+    setDeviceOperations(selectBoxOperations);
+
+    // const climateDataRec = climateDataList.find(
+    //   (data) => data.id === climateDataID
+    // );
+  }, [operationsList, workflowInfo.device_id]);
 
   return (
     <Box
@@ -36,14 +70,18 @@ export function DeviceOperationNode() {
             <FormControl fullWidth>
               <InputLabel id="demo-simple-select-label">操作</InputLabel>
               <Select
-                value={selectedDevice.toString()}
+                value={selectedOperation}
                 size="small"
                 onChange={handleSelectedDeviceChange}
                 label="操作"
                 inputProps={{ className: "nodrag nopan nowheel" }}
+                disabled={deviceOperations.length === 0}
               >
-                <MenuItem value={1}>{"送風"}</MenuItem>
-                <MenuItem value={2}>{"加温"}</MenuItem>
+                {deviceOperations.map((data) => (
+                  <MenuItem key={data.id} value={data.id}>
+                    {data.name}
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
           </Box>
