@@ -2,13 +2,16 @@ import { useDnD } from "@/hooks/dnd-context";
 import { DragEvent } from "react";
 import { Box, Divider, Typography } from "@mui/material";
 import { useState, useEffect } from "react";
-import { ClimateDataResponse } from "@/types/api";
-import { getClimateDatas } from "@/mocks/setting_device_api";
+import { ClimateDataResponse, OperationResponse } from "@/types/api";
+import { getClimateDatas, getOperations } from "@/mocks/workflow_api";
 
 export const Sidebar = () => {
   const [, setType] = useDnD();
   const [fetchedClimateDatas, setFetchedClimateDatas] = useState<
     ClimateDataResponse[]
+  >([]);
+  const [fetchedOperations, setFetchedOperations] = useState<
+    OperationResponse[]
   >([]);
 
   useEffect(() => {
@@ -17,7 +20,13 @@ export const Sidebar = () => {
       setFetchedClimateDatas(climateDataRes);
     };
 
+    const fetchOperations = async () => {
+      const operationsRes: OperationResponse[] = await getOperations();
+      setFetchedOperations(operationsRes);
+    };
+
     fetchClimateDatas();
+    fetchOperations();
   }, []);
 
   const onDragStart = (
@@ -26,6 +35,7 @@ export const Sidebar = () => {
     nodeData: object
   ) => {
     setType(nodeType);
+
     event.dataTransfer.setData(
       "application/reactflow",
       JSON.stringify(nodeData)
@@ -65,7 +75,11 @@ export const Sidebar = () => {
             borderRadius: "10px",
             backgroundColor: "#FFF",
           }}
-          onDragStart={(event) => onDragStart(event, "deviceOperation", {})}
+          onDragStart={(event) =>
+            onDragStart(event, "deviceOperation", {
+              operationsList: fetchedOperations,
+            })
+          }
           draggable
         >
           <Typography variant="subtitle2">Operation</Typography>
