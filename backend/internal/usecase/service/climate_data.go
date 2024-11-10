@@ -20,3 +20,12 @@ func (cds ClimateDataService) GetAllClimateData() ([]*domain.ClimateData, error)
 
 	return climateData, nil
 }
+
+func (cds ClimateDataService) GetClimateDataFromID(ID int) (*domain.ClimateData, error) {
+	climateData, err := cds.climateDataRepository.GetClimateDataFromID(ID)
+	if err != nil {
+		return nil, err
+	}
+
+	return climateData, nil
+}
