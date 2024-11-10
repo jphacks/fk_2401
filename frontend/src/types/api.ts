@@ -3,6 +3,11 @@ export interface HouseResponse {
   name: string;
 }
 
+export interface DeviceResponse {
+  id: number;
+  device_name: string;
+}
+
 export interface JoinedDeviceResponse {
   id: number;
   name: string;
@@ -39,4 +44,11 @@ export interface WorkflowRequest {
   set_point: number;
   duration: number;
   operator: number;
+}
+
+export interface OperationResponse {
+  id: number;
+  device_id: number;
+  name: string;
+  rly_on: number;
 }
