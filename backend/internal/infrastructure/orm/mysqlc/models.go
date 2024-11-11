@@ -28,14 +28,15 @@ type Device struct {
 }
 
 type DeviceCondition struct {
-	ID        int32
-	DeviceID  int32
-	Valid     bool
-	SetPoint  sql.NullFloat64
-	Duration  sql.NullInt32
-	Operator  sql.NullInt32
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	ID          int32
+	DeviceID    int32
+	OperationID int32
+	Valid       bool
+	SetPoint    sql.NullFloat64
+	Duration    sql.NullInt32
+	Operator    sql.NullInt32
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
 }
 
 type House struct {

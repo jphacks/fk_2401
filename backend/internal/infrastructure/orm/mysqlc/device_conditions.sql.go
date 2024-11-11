@@ -11,21 +11,23 @@ import (
 )
 
 const createDeviceCondition = `-- name: CreateDeviceCondition :execlastid
-INSERT INTO device_conditions (device_id, valid, set_point, duration, operator)
-VALUES (?, ?, ?, ?, ?)
+INSERT INTO device_conditions (device_id, operation_id, valid, set_point, duration, operator)
+VALUES (?, ?, ?, ?, ?, ?)
 `
 
 type CreateDeviceConditionParams struct {
-	DeviceID int32
-	Valid    bool
-	SetPoint sql.NullFloat64
-	Duration sql.NullInt32
-	Operator sql.NullInt32
+	DeviceID    int32
+	OperationID int32
+	Valid       bool
+	SetPoint    sql.NullFloat64
+	Duration    sql.NullInt32
+	Operator    sql.NullInt32
 }
 
 func (q *Queries) CreateDeviceCondition(ctx context.Context, arg CreateDeviceConditionParams) (int64, error) {
 	result, err := q.db.ExecContext(ctx, createDeviceCondition,
 		arg.DeviceID,
+		arg.OperationID,
 		arg.Valid,
 		arg.SetPoint,
 		arg.Duration,
@@ -38,18 +40,19 @@ func (q *Queries) CreateDeviceCondition(ctx context.Context, arg CreateDeviceCon
 }
 
 const getDeviceConditionFromID = `-- name: GetDeviceConditionFromID :one
-SELECT id, device_id, valid, set_point, duration, operator
+SELECT id, device_id, operation_id, valid, set_point, duration, operator
 FROM device_conditions
 WHERE id = ?
 `
 
 type GetDeviceConditionFromIDRow struct {
-	ID       int32
-	DeviceID int32
-	Valid    bool
-	SetPoint sql.NullFloat64
-	Duration sql.NullInt32
-	Operator sql.NullInt32
+	ID          int32
+	DeviceID    int32
+	OperationID int32
+	Valid       bool
+	SetPoint    sql.NullFloat64
+	Duration    sql.NullInt32
+	Operator    sql.NullInt32
 }
 
 func (q *Queries) GetDeviceConditionFromID(ctx context.Context, id int32) (GetDeviceConditionFromIDRow, error) {
@@ -58,6 +61,7 @@ func (q *Queries) GetDeviceConditionFromID(ctx context.Context, id int32) (GetDe
 	err := row.Scan(
 		&i.ID,
 		&i.DeviceID,
+		&i.OperationID,
 		&i.Valid,
 		&i.SetPoint,
 		&i.Duration,
@@ -67,18 +71,19 @@ func (q *Queries) GetDeviceConditionFromID(ctx context.Context, id int32) (GetDe
 }
 
 const getDeviceConditionsFromDeviceID = `-- name: GetDeviceConditionsFromDeviceID :many
-SELECT id, device_id, valid, set_point, duration, operator
+SELECT id, device_id, operation_id, valid, set_point, duration, operator
 FROM device_conditions
 WHERE device_id = ?
 `
 
 type GetDeviceConditionsFromDeviceIDRow struct {
-	ID       int32
-	DeviceID int32
-	Valid    bool
-	SetPoint sql.NullFloat64
-	Duration sql.NullInt32
-	Operator sql.NullInt32
+	ID          int32
+	DeviceID    int32
+	OperationID int32
+	Valid       bool
+	SetPoint    sql.NullFloat64
+	Duration    sql.NullInt32
+	Operator    sql.NullInt32
 }
 
 func (q *Queries) GetDeviceConditionsFromDeviceID(ctx context.Context, deviceID int32) ([]GetDeviceConditionsFromDeviceIDRow, error) {
@@ -93,6 +98,7 @@ func (q *Queries) GetDeviceConditionsFromDeviceID(ctx context.Context, deviceID 
 		if err := rows.Scan(
 			&i.ID,
 			&i.DeviceID,
+			&i.OperationID,
 			&i.Valid,
 			&i.SetPoint,
 			&i.Duration,

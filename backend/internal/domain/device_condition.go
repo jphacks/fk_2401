@@ -1,22 +1,24 @@
 package domain
 
 type DeviceCondition struct {
-	ID       int
-	DeviceID int
-	Valid    bool
-	SetPoint *float64
-	Duration *int
-	Operator *int
+	ID          int
+	DeviceID    int
+	OperationID int
+	Valid       bool
+	SetPoint    *float64
+	Duration    *int
+	Operator    *int
 }
 
-func NewDeviceCondition(id int, deviceID int, valid bool, setPoint *float64, duration *int, operator *int) *DeviceCondition {
+func NewDeviceCondition(id int, deviceID int, operationID int, valid bool, setPoint *float64, duration *int, operator *int) *DeviceCondition {
 	return &DeviceCondition{
-		ID:       id,
-		DeviceID: deviceID,
-		Valid:    valid,
-		SetPoint: setPoint,
-		Duration: duration,
-		Operator: operator,
+		ID:          id,
+		DeviceID:    deviceID,
+		OperationID: operationID,
+		Valid:       valid,
+		SetPoint:    setPoint,
+		Duration:    duration,
+		Operator:    operator,
 	}
 }
 
