@@ -2,25 +2,32 @@ package service
 
 import (
 	"fmt"
+	"math"
 	"net/http"
 
 	"github.com/Fumiya-Tahara/uecs-navi.git/internal/domain"
-	m304 "github.com/Fumiya-Tahara/uecs-navi.git/internal/infrastructure/M304"
+	m304_send "github.com/Fumiya-Tahara/uecs-navi.git/internal/infrastructure/M304"
 )
 
 type M304BuildService struct {
-	deviceRepository     DeviceRepositoryInterface
-	uecsDeviceRepository UecsDeviceRepositoryInterface
-	m304Repository       M304RepositoryInterface
-	m304RecordRepository M304RecordRepositoryInterface
+	deviceRepository          DeviceRepositoryInterface
+	sensorRepository          SensorRepositoryInterface
+	m304Repository            M304RepositoryInterface
+	deviceConditionRepository DeviceConditionRepositoryInterface
+	operationRepository       OperationRepositoryInterface
+	timeScheduleRepository    TimeScheduleRepositoryInterface
+	m304RecordRepository      M304RecordRepositoryInterface
 }
 
-func NewM304BuildService(dr DeviceRepositoryInterface, udr UecsDeviceRepositoryInterface, mr M304RepositoryInterface, mrr M304RecordRepositoryInterface) *M304BuildService {
+func NewM304BuildService(dr DeviceRepositoryInterface, sr SensorRepositoryInterface, mr M304RepositoryInterface, dcr DeviceConditionRepositoryInterface, or OperationRepositoryInterface, tsr TimeScheduleRepositoryInterface, mrr M304RecordRepositoryInterface) *M304BuildService {
 	return &M304BuildService{
-		deviceRepository:     dr,
-		uecsDeviceRepository: udr,
-		m304Repository:       mr,
-		m304RecordRepository: mrr,
+		deviceRepository:          dr,
+		sensorRepository:          sr,
+		m304Repository:            mr,
+		deviceConditionRepository: dcr,
+		operationRepository:       or,
+		timeScheduleRepository:    tsr,
+		m304RecordRepository:      mrr,
 	}
 }
 
@@ -125,38 +132,18 @@ type Rly struct {
 	rly_h int
 }
 
-func SettingRly(uecsDeviceID int, m304 domain.M304) *Rly {
-	rly := Rly{
+// rly 0~7, rly_on 00 ~ 11 -> 0 ~ 3
+func SettingRly(rly int, rly_on int) *Rly {
+	rly_struct := Rly{
 		rly_l: 0b00000000,
 		rly_h: 0b00000000,
 	}
-	rly.rly_h = 0b10101010 //allbreak
-	rly.rly_l = 0b10101010 //allbreak
-	if m304.Rly0 == &uecsDeviceID {
-		rly.rly_l += 0b01000000
+	if rly < 4 {
+		rly_struct.rly_l += int(math.Pow(4.0, (3.0-float64(rly))) * float64(rly_on))
+	} else if rly < 8 {
+		rly_struct.rly_h += int(math.Pow(4.0, (7.0-float64(rly))) * float64(rly_on))
 	}
-	if m304.Rly1 == &uecsDeviceID {
-		rly.rly_l += 0b00010000
-	}
-	if m304.Rly2 == &uecsDeviceID {
-		rly.rly_l += 0b00000100
-	}
-	if m304.Rly3 == &uecsDeviceID {
-		rly.rly_l += 0b00000001
-	}
-	if m304.Rly4 == &uecsDeviceID {
-		rly.rly_h += 0b01000000
-	}
-	if m304.Rly5 == &uecsDeviceID {
-		rly.rly_h += 0b00010000
-	}
-	if m304.Rly6 == &uecsDeviceID {
-		rly.rly_h += 0b00000100
-	}
-	if m304.Rly7 == &uecsDeviceID {
-		rly.rly_h += 0b00000001
-	}
-	return &rly
+	return &rly_struct
 }
 
 func findMissingNumbers(arr []int, num int) []int {
@@ -202,25 +189,43 @@ func (mbs M304BuildService) BuildM304(deviceID int) (int, error) {
 	if err != nil {
 		return 0, err
 	}
-	uecsDevice, err := mbs.uecsDeviceRepository.GetUecsDeviceFromID(device.UecsDeviceID)
+	sensor, err := mbs.sensorRepository.GetSensorFromID(device.SensorID)
 	if err != nil {
 		return 0, err
 	}
-	m304s, err := mbs.m304Repository.GetM304FromUecsDevice(uecsDevice.ID)
+	m304, err := mbs.m304Repository.GetM304FromID(device.M304ID)
 	if err != nil {
 		return 0, err
 	}
-	for _, v := range m304s {
+	deviceConditions, err := mbs.deviceConditionRepository.GetDeviceConditionsFromDeviceID(deviceID)
+	if err != nil {
+		return 0, err
+	}
+	operations, err := mbs.operationRepository.GetOperationsFromDeviceID(deviceID)
+	if err != nil {
+		return 0, err
+	}
+	timeSchedules := make([][]*domain.TimeSchedule, len(operations))
+	for i, v := range operations {
+		getTimeSchedules, err := mbs.timeScheduleRepository.GetTimeSchedulesFromDeviceCondition(v.ID)
+		if err != nil {
+			return 0, err
+		}
+		timeSchedules[i] = getTimeSchedules
+	}
+
+	for i, v := range deviceConditions {
 		// データ成型
 		valid := 0
-		if *device.Valid {
+		if v.Valid {
 			valid = 1
 		} else {
 			valid = 255
 		}
-		ccmtype := uecsDevice.Ccmtype
+		ccmtype := sensor.Ccmtype
 		uecsData := SettingUECSData(ccmtype)
-		rly := SettingRly(uecsDevice.ID, *v)
+		// 要変更
+		rly := SettingRly(*device.Rly, operations)
 
 		// 書き込み位置確認
 		m304records, err := mbs.m304RecordRepository.GetM304RecordFromM304ID(v.ID)
@@ -251,64 +256,64 @@ func (mbs M304BuildService) BuildM304(deviceID int) (int, error) {
 		if err != nil {
 			return 0, err
 		}
-		blockBData := m304.BlockB{
-			B_ID:        positionB,
-			IP_ADDR:     *v.IpAddr,
-			LC_VALID:    valid,
-			LC_ROOM:     uecsDevice.Room,
-			LC_REGION:   uecsDevice.Region,
-			LC_ORDER:    uecsDevice.Order,
-			LC_PRIORITY: uecsDevice.Priority,
-			LC_LV:       uecsData.lv,
-			LC_CAST:     uecsData.cast,
-			LC_SR:       reception,
-			LC_CCMTYPE:  ccmtype,
-			LC_UNIT:     uecsData.unit,
-			LC_STHR:     sthr,
-			LC_STMN:     stmn,
-			LC_EDHR:     edhr,
-			LC_EDMN:     edmn,
-			LC_INMN:     inmn,
-			LC_DUMN:     *device.Duration,
-			LC_RLY_L:    rly.rly_l,
-			LC_RLY_H:    rly.rly_h,
+		blockBData := m304_send.BlockB{
+			BID:        positionB,
+			IpAddr:     *m304.IpAddr,
+			LcValid:    valid,
+			LcRoom:     sensor.Room,
+			LcRegion:   sensor.Region,
+			LcOrder:    sensor.Order,
+			LcPriority: sensor.Priority,
+			LcLv:       uecsData.lv,
+			LcCast:     uecsData.cast,
+			LcSr:       reception,
+			LcCcmType:  ccmtype,
+			LcUnit:     uecsData.unit,
+			LcStHr:     sthr,
+			LcStMn:     stmn,
+			LcEdHr:     edhr,
+			LcEdMn:     edmn,
+			LcInMn:     inmn,
+			LcDuMn:     *v.Duration,
+			LcRlyL:     rly.rly_l,
+			LcRlyH:     rly.rly_h,
 		}
-		blockCData := m304.BlockC{
-			C_ID:        positionC,
-			IP_ADDR:     *v.IpAddr,
-			LC_VALID:    valid,
-			LC_ROOM:     uecsDevice.Room,
-			LC_REGION:   uecsDevice.Region,
-			LC_ORDER:    uecsDevice.Order,
-			LC_PRIORITY: uecsDevice.Priority,
-			LC_LV:       uecsData.lv,
-			LC_CAST:     uecsData.cast,
-			LC_SR:       send,
-			LC_CCMTYPE:  ccmtype,
-			LC_UNIT:     uecsData.unit,
-			LC_STHR:     sthr,
-			LC_STMN:     stmn,
-			LC_EDHR:     edhr,
-			LC_EDMN:     edmn,
-			LC_INMN:     inmn,
-			LC_DUMN:     *device.Duration,
-			LC_RLY_L:    rly.rly_l,
-			LC_RLY_H:    rly.rly_h,
+		blockCData := m304_send.BlockC{
+			CID:        positionC,
+			IpAddr:     *m304.IpAddr,
+			LcValid:    valid,
+			LcRoom:     sensor.Room,
+			LcRegion:   sensor.Region,
+			LcOrder:    sensor.Order,
+			LcPriority: sensor.Priority,
+			LcLv:       uecsData.lv,
+			LcCast:     uecsData.cast,
+			LcSr:       send,
+			LcCcmType:  ccmtype,
+			LcUnit:     uecsData.unit,
+			LcStHr:     sthr,
+			LcStMn:     stmn,
+			LcEdHr:     edhr,
+			LcEdMn:     edmn,
+			LcInMn:     inmn,
+			LcDuMn:     *v.Duration,
+			LcRlyL:     rly.rly_l,
+			LcRlyH:     rly.rly_h,
 		}
-		blockDData := m304.BlockD{
-			D_ID:             positionD,
-			IP_ADDR:          *v.IpAddr,
-			LC_COPE_VALID:    valid,
-			LC_COPE_ROOM:     uecsDevice.Room,
-			LC_COPE_REGION:   uecsDevice.Region,
-			LC_COPE_ORDER:    uecsDevice.Order,
-			LC_COPE_PRIORITY: uecsDevice.Priority,
-			LC_COPE_CCMTYPE:  ccmtype,
-			LC_COPE_OPE:      *device.Operator,
-			LC_COPE_FVAL:     float32(*device.SetPoint),
+		blockDData := m304_send.BlockD{
+			DID:            positionD,
+			IpAddr:         *m304.IpAddr,
+			LcCopeValid:    valid,
+			LcCopeRoom:     sensor.Room,
+			LcCopeRegion:   sensor.Region,
+			LcCopeOrder:    sensor.Order,
+			LcCopePriority: sensor.Priority,
+			LcCopeCcmType:  ccmtype,
+			LcCopeOpe:      *v.Operator,
+			LcCopeFval:     float32(*v.SetPoint),
 		}
 		// send_param呼び出し
-		respB, err := m304.SendBlockB(blockBData)
+		respB, err := m304_send.SendBlockB(blockBData)
 		if err != nil {
 			return 0, err
 		}
@@ -317,7 +322,7 @@ func (mbs M304BuildService) BuildM304(deviceID int) (int, error) {
 				return 0, fmt.Errorf("error in response with status code: %d", w.StatusCode)
 			}
 		}
-		respC, err := m304.SendBlockC(blockCData)
+		respC, err := m304_send.SendBlockC(blockCData)
 		if err != nil {
 			return 0, err
 		}
@@ -326,7 +331,7 @@ func (mbs M304BuildService) BuildM304(deviceID int) (int, error) {
 				return 0, fmt.Errorf("error in response with status code: %d", w.StatusCode)
 			}
 		}
-		respD, err := m304.SendBlockD(blockDData)
+		respD, err := m304_send.SendBlockD(blockDData)
 		if err != nil {
 			return 0, err
 		}
