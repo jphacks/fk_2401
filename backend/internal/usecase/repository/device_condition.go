@@ -21,11 +21,12 @@ func (dcr DeviceConditionRepository) CreateDeviceCondition(newDeviceCondition do
 	ctx := context.Background()
 
 	arg := mysqlc.CreateDeviceConditionParams{
-		DeviceID: int32(newDeviceCondition.DeviceID),
-		Valid:    newDeviceCondition.Valid,
-		SetPoint: PointerToNullFloat64(newDeviceCondition.SetPoint),
-		Duration: PointerToNullInt32(newDeviceCondition.Duration),
-		Operator: PointerToNullInt32(newDeviceCondition.Operator),
+		DeviceID:    int32(newDeviceCondition.DeviceID),
+		OperationID: int32(newDeviceCondition.OperationID),
+		Valid:       newDeviceCondition.Valid,
+		SetPoint:    PointerToNullFloat64(newDeviceCondition.SetPoint),
+		Duration:    PointerToNullInt32(newDeviceCondition.Duration),
+		Operator:    PointerToNullInt32(newDeviceCondition.Operator),
 	}
 
 	id, err := dcr.queries.CreateDeviceCondition(ctx, arg)
@@ -46,6 +47,7 @@ func (dcr DeviceConditionRepository) GetDeviceConditionFromID(ID int) (*domain.D
 	getDeviceCondition := domain.NewDeviceCondition(
 		int(deviceCondition.ID),
 		int(deviceCondition.DeviceID),
+		int(deviceCondition.OperationID),
 		deviceCondition.Valid,
 		NullFloat64ToPointer(deviceCondition.SetPoint),
 		NullInt32ToPointer(deviceCondition.Duration),
@@ -68,6 +70,7 @@ func (dcr DeviceConditionRepository) GetDeviceConditionsFromDeviceID(deviceID in
 		deviceConditions[i] = domain.NewDeviceCondition(
 			int(v.ID),
 			int(v.DeviceID),
+			int(v.OperationID),
 			v.Valid,
 			NullFloat64ToPointer(v.SetPoint),
 			NullInt32ToPointer(v.Duration),
