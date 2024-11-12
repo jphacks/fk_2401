@@ -39,6 +39,7 @@ export const ConditionNode = ({ id, data }: ConditionNodeProps) => {
     climate_data_id: 0,
     comp_ope_id: 0,
     set_point: 0,
+    operations_id: 0,
   });
 
   useEffect(() => {
