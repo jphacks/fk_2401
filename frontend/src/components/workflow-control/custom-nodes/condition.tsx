@@ -10,11 +10,12 @@ import {
   InputLabel,
   Typography,
 } from "@mui/material";
+import RuleIcon from "@mui/icons-material/Rule";
 import { Node, Handle, Position, NodeProps } from "@xyflow/react";
 import { useEffect, useState } from "react";
 import { ClimateDataResponse } from "@/types/api";
 import { AddNodeFunction, UpdateNodeFunction } from "../workflow";
-import { Condition } from "@/types/node";
+import { Condition } from "@/types/workflow";
 
 export interface ConditionNodeData {
   [key: string]: unknown;
@@ -72,11 +73,28 @@ export const ConditionNode = ({ id, data }: ConditionNodeProps) => {
         width: "350px",
       }}
     >
-      <Handle position={Position.Left} type="target" />
-      <Box sx={{ padding: "8px" }}>
-        <Typography variant="h6">If</Typography>
+      <Handle
+        position={Position.Left}
+        type="target"
+        style={{ width: 12, height: 12 }}
+      />
+      <Box>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: 1,
+            borderRadius: "10px 10px 0 0",
+            color: "#FFF",
+            backgroundColor: "#F57C00",
+            padding: "4px 8px 4px 8px",
+          }}
+        >
+          <RuleIcon />
+          <Typography variant="h6">If</Typography>
+        </Box>
         <Divider />
-        <Box sx={{ padding: "8px", display: "flex", justifyContent: "center" }}>
+        <Box sx={{ padding: 2, display: "flex", justifyContent: "center" }}>
           <FormControl sx={{ flex: 4 }}>
             <InputLabel
               id={`climate-data-node-select-label-${id}`}
@@ -105,7 +123,7 @@ export const ConditionNode = ({ id, data }: ConditionNodeProps) => {
             value={cmpOpe}
             size="small"
             onChange={handleCmpOpeChange}
-            sx={{ flex: 1, marginX: "8px" }}
+            sx={{ flex: 1, marginX: 1 }}
             inputProps={{ className: "nodrag nopan nowheel" }}
           >
             <MenuItem value={1}>{"="}</MenuItem>
@@ -134,6 +152,7 @@ export const ConditionNode = ({ id, data }: ConditionNodeProps) => {
       <Handle
         position={Position.Right}
         type="source"
+        style={{ width: 12, height: 12 }}
         onClick={(event) => {
           event.stopPropagation();
           addNode(id);

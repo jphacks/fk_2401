@@ -8,6 +8,7 @@ import {
   InputLabel,
   Typography,
 } from "@mui/material";
+import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import { Handle, Position, Node, NodeProps } from "@xyflow/react";
 import { useEffect, useState } from "react";
 import { UpdateNodeFunction } from "../workflow";
@@ -43,8 +44,6 @@ export function DeviceOperationNode({ id, data }: DeviceOperationNodeProps) {
       (data) => data.device_id === workflowInfo?.device_id
     );
 
-    console.log(selectBoxOperations);
-
     setDeviceOperations(selectBoxOperations);
 
     // const climateDataRec = climateDataList.find(
@@ -61,16 +60,40 @@ export function DeviceOperationNode({ id, data }: DeviceOperationNodeProps) {
         width: "350px",
       }}
     >
-      <Handle position={Position.Left} type="target" />
-      <Box sx={{ padding: "8px" }}>
-        <Typography variant="h6">Operation</Typography>
+      <Handle
+        position={Position.Left}
+        type="target"
+        style={{ width: 12, height: 12 }}
+      />
+      <Box>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: 1,
+            borderRadius: "10px 10px 0 0",
+            color: "#FFF",
+            backgroundColor: "#66BB6A",
+            padding: "4px 8px 4px 8px",
+          }}
+        >
+          <PlayCircleIcon />
+          <Typography variant="h6">Operation</Typography>
+        </Box>
         <Divider />
-        <Box sx={{ padding: "8px", display: "flex", justifyContent: "center" }}>
+        <Box sx={{ padding: 2, display: "flex", justifyContent: "center" }}>
           <Box sx={{ flex: 2 }}>
             <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label">操作</InputLabel>
+              <InputLabel
+                id={`device-operation-node-select-label-${id}`}
+                size="small"
+              >
+                操作
+              </InputLabel>
               <Select
                 value={selectedOperation}
+                labelId={`device-operation-node-select-label-${id}`}
+                id={`device-operation-node-select-${id}`}
                 size="small"
                 onChange={handleSelectedDeviceChange}
                 label="操作"

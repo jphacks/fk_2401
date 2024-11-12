@@ -8,6 +8,7 @@ import {
   MenuItem,
   SelectChangeEvent,
 } from "@mui/material";
+import DevicesIcon from "@mui/icons-material/Devices";
 import { Handle, Position, Node, NodeProps } from "@xyflow/react";
 import { AddNodeFunction, UpdateNodeFunction } from "../workflow";
 import { useCallback, useState } from "react";
@@ -51,16 +52,36 @@ export const SelectDeviceNode = ({ id, data }: SelectDeviceNodeProps) => {
         width: "350px",
       }}
     >
-      <Box sx={{ padding: "8px" }}>
-        <Typography variant="h6">Select Device</Typography>
+      <Box>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: 1,
+            borderRadius: "10px 10px 0 0",
+            color: "#FFF",
+            backgroundColor: "#42A5F5",
+            padding: "4px 8px 4px 8px",
+          }}
+        >
+          <DevicesIcon />
+          <Typography variant="h6">Select Device</Typography>
+        </Box>
         <Divider />
-        <Box sx={{ padding: "8px", display: "flex", justifyContent: "center" }}>
+        <Box sx={{ padding: 2, display: "flex", justifyContent: "center" }}>
           <Box sx={{ flex: 2 }}>
             <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label">デバイス</InputLabel>
+              <InputLabel
+                id={`select-device-node-select-label-${id}`}
+                size="small"
+              >
+                デバイス
+              </InputLabel>
               <Select
                 value={selectedDevice}
                 size="small"
+                labelId={`select-device-node-select-label-${id}`}
+                id={`select-device-node-select-${id}`}
                 onChange={handleSelectedDeviceChange}
                 label="デバイス"
                 inputProps={{ className: "nodrag nopan nowheel" }}
@@ -78,6 +99,7 @@ export const SelectDeviceNode = ({ id, data }: SelectDeviceNodeProps) => {
       <Handle
         position={Position.Right}
         type="source"
+        style={{ width: 12, height: 12 }}
         onClick={(event) => {
           event.stopPropagation();
           addNode(id);

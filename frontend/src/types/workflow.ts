@@ -6,10 +6,10 @@ export interface Condition {
 
 export interface ConditionOperation {
   condition: Condition;
-  operations_id: number[];
+  operation_id: number;
 }
 
-export interface Workflow {
+export interface WorkflowData {
   device_id: number;
   condition_operations: ConditionOperation[];
 }
