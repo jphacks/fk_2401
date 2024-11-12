@@ -40,8 +40,12 @@ export type UpdateNodeFunction = (
   updatedData: CustomNodeData
 ) => void;
 
-let id = 0;
-const getId = () => `dndnode_${id++}`;
+const nodeIdMap: Map<string, number> = new Map();
+const getId = (type: string) => {
+  const currentId = nodeIdMap.get(type) || 1;
+  nodeIdMap.set(type, currentId + 1);
+  return `${type}_${currentId}`;
+};
 
 function WorkflowEditor() {
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
@@ -49,13 +53,13 @@ function WorkflowEditor() {
   const [type] = useDnD();
   const [fetchedDevices, setFetchedDevices] = useState<DeviceResponse[]>([]);
 
-  console.log(nodes);
+  console.log(edges);
 
   const nodeTypes = useMemo(
     () => ({
-      selectDevice: SelectDeviceNode,
+      select_device: SelectDeviceNode,
       condition: ConditionNode,
-      deviceOperation: DeviceOperationNode,
+      device_operation: DeviceOperationNode,
     }),
     []
   );
@@ -71,8 +75,8 @@ function WorkflowEditor() {
 
   useEffect(() => {
     const initialNode: Node = {
-      id: "1",
-      type: "selectDevice",
+      id: "select_device_1",
+      type: "select_device",
       position: { x: 0, y: 300 },
       data: {
         label: "Begin Workflow",
@@ -122,7 +126,6 @@ function WorkflowEditor() {
     (event: DragEvent) => {
       event.preventDefault();
 
-      // check if the dropped element is valid
       if (!type) {
         return;
       }
@@ -130,15 +133,12 @@ function WorkflowEditor() {
       const dataString = event.dataTransfer.getData("application/reactflow");
       const nodeData = dataString ? JSON.parse(dataString) : {};
 
-      // project was renamed to screenToFlowPosition
-      // and you don't need to subtract the reactFlowBounds.left/top anymore
-      // details: https://reactflow.dev/whats-new/2023-11-10
       const position = screenToFlowPosition({
         x: event.clientX,
         y: event.clientY,
       });
       const newNode = {
-        id: getId(),
+        id: getId(type),
         type,
         position,
         data: {
