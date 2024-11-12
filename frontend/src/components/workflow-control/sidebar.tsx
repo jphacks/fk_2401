@@ -89,7 +89,7 @@ export const Sidebar = () => {
             backgroundColor: "#FFF",
           }}
           onDragStart={(event) =>
-            onDragStart(event, "deviceOperation", {
+            onDragStart(event, "device_operation", {
               operationsList: fetchedOperations,
             })
           }
