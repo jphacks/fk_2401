@@ -1,4 +1,4 @@
-import { Workflow } from "@/types/node";
+import { WorkflowData } from "@/types/workflow";
 import {
   createContext,
   useContext,
@@ -7,7 +7,7 @@ import {
   SetStateAction,
 } from "react";
 
-type nodeInfoState = Workflow;
+type nodeInfoState = WorkflowData;
 
 type nodeInfoContextType = [
   nodeInfoState,

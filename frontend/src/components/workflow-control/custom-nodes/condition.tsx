@@ -15,7 +15,7 @@ import { Node, Handle, Position, NodeProps } from "@xyflow/react";
 import { useEffect, useState } from "react";
 import { ClimateDataResponse } from "@/types/api";
 import { AddNodeFunction, UpdateNodeFunction } from "../workflow";
-import { Condition } from "@/types/node";
+import { Condition } from "@/types/workflow";
 
 export interface ConditionNodeData {
   [key: string]: unknown;
@@ -39,7 +39,6 @@ export const ConditionNode = ({ id, data }: ConditionNodeProps) => {
     climate_data_id: 0,
     comp_ope_id: 0,
     set_point: 0,
-    operations_id: 0,
   });
 
   useEffect(() => {
