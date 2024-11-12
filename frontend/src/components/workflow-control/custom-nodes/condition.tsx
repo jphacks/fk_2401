@@ -10,6 +10,7 @@ import {
   InputLabel,
   Typography,
 } from "@mui/material";
+import RuleIcon from "@mui/icons-material/Rule";
 import { Node, Handle, Position, NodeProps } from "@xyflow/react";
 import { useEffect, useState } from "react";
 import { ClimateDataResponse } from "@/types/api";
@@ -73,10 +74,23 @@ export const ConditionNode = ({ id, data }: ConditionNodeProps) => {
       }}
     >
       <Handle position={Position.Left} type="target" />
-      <Box sx={{ padding: "8px" }}>
-        <Typography variant="h6">If</Typography>
+      <Box>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: 1,
+            borderRadius: "10px 10px 0 0",
+            color: "#FFF",
+            backgroundColor: "#F57C00",
+            padding: "4px 8px 4px 8px",
+          }}
+        >
+          <RuleIcon />
+          <Typography variant="h6">If</Typography>
+        </Box>
         <Divider />
-        <Box sx={{ padding: "8px", display: "flex", justifyContent: "center" }}>
+        <Box sx={{ padding: 2, display: "flex", justifyContent: "center" }}>
           <FormControl sx={{ flex: 4 }}>
             <InputLabel
               id={`climate-data-node-select-label-${id}`}

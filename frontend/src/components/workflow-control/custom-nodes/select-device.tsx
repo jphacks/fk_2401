@@ -8,6 +8,7 @@ import {
   MenuItem,
   SelectChangeEvent,
 } from "@mui/material";
+import DevicesIcon from "@mui/icons-material/Devices";
 import { Handle, Position, Node, NodeProps } from "@xyflow/react";
 import { AddNodeFunction, UpdateNodeFunction } from "../workflow";
 import { useCallback, useState } from "react";
@@ -51,10 +52,23 @@ export const SelectDeviceNode = ({ id, data }: SelectDeviceNodeProps) => {
         width: "350px",
       }}
     >
-      <Box sx={{ padding: "8px" }}>
-        <Typography variant="h6">Select Device</Typography>
+      <Box>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: 1,
+            borderRadius: "10px 10px 0 0",
+            color: "#FFF",
+            backgroundColor: "#42A5F5",
+            padding: "4px 8px 4px 8px",
+          }}
+        >
+          <DevicesIcon />
+          <Typography variant="h6">Select Device</Typography>
+        </Box>
         <Divider />
-        <Box sx={{ padding: "8px", display: "flex", justifyContent: "center" }}>
+        <Box sx={{ padding: 2, display: "flex", justifyContent: "center" }}>
           <Box sx={{ flex: 2 }}>
             <FormControl fullWidth>
               <InputLabel id="demo-simple-select-label">デバイス</InputLabel>

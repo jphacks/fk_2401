@@ -93,6 +93,7 @@ function WorkflowEditor() {
       const animatedEdge = {
         ...params,
         animated: true,
+        style: { strokeWidth: 5 },
       };
       setEdges((eds) => addEdge(animatedEdge, eds));
     },
@@ -158,11 +159,11 @@ function WorkflowEditor() {
     y: number;
     zoom: number;
   }
-  const defaultViewport: Viewport = { x: 50, y: 15, zoom: 0.8 };
+  const defaultViewport: Viewport = { x: 50, y: 15, zoom: 0 };
 
   return (
     <>
-      <Box sx={{ width: "100%", height: "100vh", backgroundColor: "#eee" }}>
+      <Box sx={{ width: "100%", height: "80vh", backgroundColor: "#eee" }}>
         <Box sx={{ width: "100%", height: "100%", display: "flex" }}>
           <ReactFlow
             nodes={nodes}
