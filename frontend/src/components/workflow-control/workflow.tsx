@@ -53,8 +53,6 @@ function WorkflowEditor() {
   const [type] = useDnD();
   const [fetchedDevices, setFetchedDevices] = useState<DeviceResponse[]>([]);
 
-  console.log(edges);
-
   const nodeTypes = useMemo(
     () => ({
       select_device: SelectDeviceNode,

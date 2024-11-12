@@ -44,8 +44,6 @@ export function DeviceOperationNode({ id, data }: DeviceOperationNodeProps) {
       (data) => data.device_id === workflowInfo?.device_id
     );
 
-    console.log(selectBoxOperations);
-
     setDeviceOperations(selectBoxOperations);
 
     // const climateDataRec = climateDataList.find(
