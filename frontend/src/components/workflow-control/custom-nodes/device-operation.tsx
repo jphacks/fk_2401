@@ -62,7 +62,11 @@ export function DeviceOperationNode({ id, data }: DeviceOperationNodeProps) {
         width: "350px",
       }}
     >
-      <Handle position={Position.Left} type="target" />
+      <Handle
+        position={Position.Left}
+        type="target"
+        style={{ width: 12, height: 12 }}
+      />
       <Box>
         <Box
           sx={{
@@ -82,9 +86,16 @@ export function DeviceOperationNode({ id, data }: DeviceOperationNodeProps) {
         <Box sx={{ padding: 2, display: "flex", justifyContent: "center" }}>
           <Box sx={{ flex: 2 }}>
             <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label">操作</InputLabel>
+              <InputLabel
+                id={`device-operation-node-select-label-${id}`}
+                size="small"
+              >
+                操作
+              </InputLabel>
               <Select
                 value={selectedOperation}
+                labelId={`device-operation-node-select-label-${id}`}
+                id={`device-operation-node-select-${id}`}
                 size="small"
                 onChange={handleSelectedDeviceChange}
                 label="操作"

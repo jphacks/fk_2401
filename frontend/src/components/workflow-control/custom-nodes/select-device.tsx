@@ -71,10 +71,17 @@ export const SelectDeviceNode = ({ id, data }: SelectDeviceNodeProps) => {
         <Box sx={{ padding: 2, display: "flex", justifyContent: "center" }}>
           <Box sx={{ flex: 2 }}>
             <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label">デバイス</InputLabel>
+              <InputLabel
+                id={`select-device-node-select-label-${id}`}
+                size="small"
+              >
+                デバイス
+              </InputLabel>
               <Select
                 value={selectedDevice}
                 size="small"
+                labelId={`select-device-node-select-label-${id}`}
+                id={`select-device-node-select-${id}`}
                 onChange={handleSelectedDeviceChange}
                 label="デバイス"
                 inputProps={{ className: "nodrag nopan nowheel" }}
@@ -92,6 +99,7 @@ export const SelectDeviceNode = ({ id, data }: SelectDeviceNodeProps) => {
       <Handle
         position={Position.Right}
         type="source"
+        style={{ width: 12, height: 12 }}
         onClick={(event) => {
           event.stopPropagation();
           addNode(id);

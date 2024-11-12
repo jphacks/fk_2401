@@ -74,7 +74,11 @@ export const ConditionNode = ({ id, data }: ConditionNodeProps) => {
         width: "350px",
       }}
     >
-      <Handle position={Position.Left} type="target" />
+      <Handle
+        position={Position.Left}
+        type="target"
+        style={{ width: 12, height: 12 }}
+      />
       <Box>
         <Box
           sx={{
@@ -120,7 +124,7 @@ export const ConditionNode = ({ id, data }: ConditionNodeProps) => {
             value={cmpOpe}
             size="small"
             onChange={handleCmpOpeChange}
-            sx={{ flex: 1, marginX: "8px" }}
+            sx={{ flex: 1, marginX: 1 }}
             inputProps={{ className: "nodrag nopan nowheel" }}
           >
             <MenuItem value={1}>{"="}</MenuItem>
@@ -149,6 +153,7 @@ export const ConditionNode = ({ id, data }: ConditionNodeProps) => {
       <Handle
         position={Position.Right}
         type="source"
+        style={{ width: 12, height: 12 }}
         onClick={(event) => {
           event.stopPropagation();
           addNode(id);
