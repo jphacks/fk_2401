@@ -11,7 +11,7 @@ import {
 import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import { Handle, Position, Node, NodeProps } from "@xyflow/react";
 import { useEffect, useState } from "react";
-import { UpdateNodeFunction } from "../workflow";
+import { UpdateNodeFunction } from "../workflow-editor";
 import { OperationResponse } from "@/types/api";
 import { useNodeInfo } from "@/hooks/node-info-context";
 
