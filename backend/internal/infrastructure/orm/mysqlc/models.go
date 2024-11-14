@@ -6,6 +6,7 @@ package mysqlc
 
 import (
 	"database/sql"
+	"encoding/json"
 	"time"
 )
 
@@ -37,6 +38,15 @@ type DeviceCondition struct {
 	Operator    sql.NullInt32
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
+}
+
+type Edge struct {
+	ID           int32
+	WorkflowID   int32
+	SourceNodeID string
+	TargetNodeID string
+	CreatedAt    time.Time
+	UpdatedAt    time.Time
 }
 
 type House struct {
@@ -72,6 +82,18 @@ type M304Record struct {
 	UpdatedAt         time.Time
 }
 
+type Node struct {
+	ID             int32
+	WorkflowID     int32
+	WorkflowNodeID string
+	Type           string
+	Data           json.RawMessage
+	PositionX      float64
+	PositionY      float64
+	CreatedAt      time.Time
+	UpdatedAt      time.Time
+}
+
 type Operation struct {
 	ID        int32
 	DeviceID  int32
@@ -99,4 +121,19 @@ type TimeSchedule struct {
 	EndTime           string
 	CreatedAt         time.Time
 	UpdatedAt         time.Time
+}
+
+type TimeScheduleWorkflow struct {
+	ID             int32
+	WorkflowID     int32
+	TimeScheduleID int32
+	CreatedAt      time.Time
+	UpdatedAt      time.Time
+}
+
+type Workflow struct {
+	ID        int32
+	Name      string
+	CreatedAt time.Time
+	UpdatedAt time.Time
 }
