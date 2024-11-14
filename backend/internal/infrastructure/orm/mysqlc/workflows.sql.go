@@ -9,6 +9,19 @@ import (
 	"context"
 )
 
+const createWorkflow = `-- name: CreateWorkflow :execlastid
+INSERT INTO workflows (name) 
+VALUES (?)
+`
+
+func (q *Queries) CreateWorkflow(ctx context.Context, name string) (int64, error) {
+	result, err := q.db.ExecContext(ctx, createWorkflow, name)
+	if err != nil {
+		return 0, err
+	}
+	return result.LastInsertId()
+}
+
 const getAllWorkflows = `-- name: GetAllWorkflows :many
 SELECT id, name
 FROM workflows

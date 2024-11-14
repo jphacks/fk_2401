@@ -9,6 +9,25 @@ import (
 	"context"
 )
 
+const createEdge = `-- name: CreateEdge :execlastid
+INSERT INTO edges (workflow_id, source_node_id, target_node_id) 
+VALUES (?, ?, ?)
+`
+
+type CreateEdgeParams struct {
+	WorkflowID   int32
+	SourceNodeID string
+	TargetNodeID string
+}
+
+func (q *Queries) CreateEdge(ctx context.Context, arg CreateEdgeParams) (int64, error) {
+	result, err := q.db.ExecContext(ctx, createEdge, arg.WorkflowID, arg.SourceNodeID, arg.TargetNodeID)
+	if err != nil {
+		return 0, err
+	}
+	return result.LastInsertId()
+}
+
 const getEdgesFromWorkflow = `-- name: GetEdgesFromWorkflow :many
 SELECT 
     id, workflow_id, source_node_id, target_node_id

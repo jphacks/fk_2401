@@ -10,6 +10,33 @@ import (
 	"encoding/json"
 )
 
+const createNode = `-- name: CreateNode :execlastid
+INSERT INTO nodes (workflow_id, type, data, position_x, position_y) 
+VALUES (?, ?, ?, ?, ?)
+`
+
+type CreateNodeParams struct {
+	WorkflowID int32
+	Type       string
+	Data       json.RawMessage
+	PositionX  float64
+	PositionY  float64
+}
+
+func (q *Queries) CreateNode(ctx context.Context, arg CreateNodeParams) (int64, error) {
+	result, err := q.db.ExecContext(ctx, createNode,
+		arg.WorkflowID,
+		arg.Type,
+		arg.Data,
+		arg.PositionX,
+		arg.PositionY,
+	)
+	if err != nil {
+		return 0, err
+	}
+	return result.LastInsertId()
+}
+
 const getNodesFromWorkflow = `-- name: GetNodesFromWorkflow :many
 SELECT 
     id, workflow_id, type, data, position_x, position_y
