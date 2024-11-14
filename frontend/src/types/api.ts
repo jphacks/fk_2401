@@ -52,3 +52,27 @@ export interface OperationResponse {
   name: string;
   rly_on: number;
 }
+
+export interface Node {
+  id: number;
+  workflow_id: number;
+  workflow_node_id: string;
+  type: string;
+  data: object;
+  position_x: number;
+  position_y: number;
+}
+
+export interface Edge {
+  id: number;
+  workflow_id: number;
+  source_node_id: string;
+  target_node_id: string;
+}
+
+export interface WorkflowResponse {
+  id: number;
+  name: string;
+  nodes: Node[];
+  edges: Edge[];
+}
