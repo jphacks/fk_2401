@@ -1,5 +1,5 @@
 -- name: GetNodesFromWorkflow :many
 SELECT 
-    id, workflows_id, type, data, position_x, position_y
+    id, workflow_id, type, data, position_x, position_y
 FROM nodes
-WHERE workflows_id = ?;
+WHERE workflow_id = ?;
