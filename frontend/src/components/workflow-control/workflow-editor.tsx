@@ -13,7 +13,7 @@ import {
   ReactFlowProvider,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
-import { useMemo, useEffect, useCallback, DragEvent, useState } from "react";
+import { useMemo, useEffect, useCallback, DragEvent } from "react";
 import {
   SelectDeviceNode,
   SelectDeviceNodeData,
@@ -26,18 +26,9 @@ import {
 import { Sidebar } from "./sidebar";
 import { DnDProvider, useDnD } from "@/hooks/dnd-context";
 import { NodeInfoProvider } from "@/hooks/node-info-context";
-import {
-  ClimateDataResponse,
-  DeviceResponse,
-  WorkflowResponse,
-  OperationResponse,
-} from "@/types/api";
-import {
-  getClimateDatas,
-  getDevices,
-  getOperations,
-  getWorkflows,
-} from "@/mocks/workflow_api";
+import { WorkflowResponse } from "@/types/api";
+import { getWorkflows } from "@/mocks/workflow_api";
+import { useWorkflowInfo } from "@/hooks/workflow-info-context";
 
 type CustomNodeData =
   | SelectDeviceNodeData
@@ -65,13 +56,7 @@ function WorkflowEditor({ workflowID }: WorkflowEditorProps) {
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
   const [type] = useDnD();
-  const [fetchedDevices, setFetchedDevices] = useState<DeviceResponse[]>([]);
-  const [fetchedClimateData, setFetchedClimateData] = useState<
-    ClimateDataResponse[]
-  >([]);
-  const [fetchedOperations, setFetchedOperations] = useState<
-    OperationResponse[]
-  >([]);
+  const [workflowInfo] = useWorkflowInfo();
 
   const nodeTypes = useMemo(
     () => ({
@@ -86,6 +71,11 @@ function WorkflowEditor({ workflowID }: WorkflowEditorProps) {
     if (workflowID) {
       const workflow: WorkflowResponse = getWorkflows();
 
+      workflow.nodes.forEach((node) => {
+        const currentId = nodeIdMap.get(node.type) || 1;
+        nodeIdMap.set(node.type, currentId + 1);
+      });
+
       const nodes = workflow.nodes
         .map((node): Node | undefined => {
           if (node.type === "select_device") {
@@ -95,7 +85,7 @@ function WorkflowEditor({ workflowID }: WorkflowEditorProps) {
               position: { x: node.position_x, y: node.position_y },
               data: {
                 ...(node.data as Record<string, unknown>),
-                devicesList: fetchedDevices,
+                devicesList: workflowInfo.devices,
                 updateNode: updateNodeData,
               },
             };
@@ -106,7 +96,7 @@ function WorkflowEditor({ workflowID }: WorkflowEditorProps) {
               position: { x: node.position_x, y: node.position_y },
               data: {
                 ...(node.data as Record<string, unknown>),
-                climateDataList: fetchedClimateData,
+                climateDataList: workflowInfo.climate_data,
                 updateNode: updateNodeData,
               },
             };
@@ -117,7 +107,7 @@ function WorkflowEditor({ workflowID }: WorkflowEditorProps) {
               position: { x: node.position_x, y: node.position_y },
               data: {
                 ...(node.data as Record<string, unknown>),
-                operationsList: fetchedOperations,
+                operationsList: workflowInfo.operations,
                 updateNode: updateNodeData,
               },
             };
@@ -144,33 +134,12 @@ function WorkflowEditor({ workflowID }: WorkflowEditorProps) {
       type: "select_device",
       position: { x: 0, y: 300 },
       data: {
-        devicesList: fetchedDevices,
+        devicesList: workflowInfo.devices,
         updateNode: updateNodeData,
       },
     };
 
     setNodes([initialNode]);
-  }, []);
-
-  useEffect(() => {
-    const fetchDevices = async () => {
-      const devicesRes: DeviceResponse[] = await getDevices();
-      setFetchedDevices(devicesRes);
-    };
-
-    const fetchClimateData = async () => {
-      const climateDataRes: ClimateDataResponse[] = await getClimateDatas();
-      setFetchedClimateData(climateDataRes);
-    };
-
-    const fetchOperations = async () => {
-      const operationsRes: OperationResponse[] = await getOperations();
-      setFetchedOperations(operationsRes);
-    };
-
-    fetchDevices();
-    fetchClimateData();
-    fetchOperations();
   }, []);
 
   const { screenToFlowPosition } = useReactFlow();
