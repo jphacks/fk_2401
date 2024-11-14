@@ -14,7 +14,7 @@ import RuleIcon from "@mui/icons-material/Rule";
 import { Node, Handle, Position, NodeProps } from "@xyflow/react";
 import { useEffect, useState } from "react";
 import { ClimateDataResponse } from "@/types/api";
-import { AddNodeFunction, UpdateNodeFunction } from "../workflow";
+import { AddNodeFunction, UpdateNodeFunction } from "../workflow-editor";
 import { Condition } from "@/types/workflow";
 
 export interface ConditionNodeData {

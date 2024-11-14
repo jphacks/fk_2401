@@ -27,13 +27,13 @@ export const NodeInfoProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const [workflowInfo, setWorkflowInfo] = useState<nodeInfoState>({
+  const [nodeInfo, setNodeInfo] = useState<nodeInfoState>({
     device_id: 0,
     condition_operations: [],
   });
 
   return (
-    <NodeInfoContext.Provider value={[workflowInfo, setWorkflowInfo]}>
+    <NodeInfoContext.Provider value={[nodeInfo, setNodeInfo]}>
       {children}
     </NodeInfoContext.Provider>
   );
