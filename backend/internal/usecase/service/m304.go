@@ -21,8 +21,8 @@ func (ms M304Service) CreateM304(newM304 domain.M304) (int64, error) {
 	return id, nil
 }
 
-func (ms M304Service) GetM304FromUecsDevice(uecsDeviceID int) ([]*domain.M304, error) {
-	m304s, err := ms.m304Repository.GetM304FromUecsDevice(uecsDeviceID)
+func (ms M304Service) GetM304FromID(ID int) (*domain.M304, error) {
+	m304s, err := ms.m304Repository.GetM304FromID(ID)
 	if err != nil {
 		return nil, err
 	}
