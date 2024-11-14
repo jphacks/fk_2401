@@ -37,11 +37,11 @@ export function DeviceOperationNode({ id, data }: DeviceOperationNodeProps) {
   const [deviceOperations, setDeviceOperations] = useState<OperationResponse[]>(
     []
   );
-  const [workflowInfo] = useNodeInfo();
+  const [nodeInfo] = useNodeInfo();
 
   useEffect(() => {
     const selectBoxOperations: OperationResponse[] = operationsList.filter(
-      (data) => data.device_id === workflowInfo?.device_id
+      (data) => data.device_id === nodeInfo?.device_id
     );
 
     setDeviceOperations(selectBoxOperations);
@@ -49,7 +49,7 @@ export function DeviceOperationNode({ id, data }: DeviceOperationNodeProps) {
     // const climateDataRec = climateDataList.find(
     //   (data) => data.id === climateDataID
     // );
-  }, [operationsList, workflowInfo.device_id]);
+  }, [operationsList, nodeInfo.device_id]);
 
   return (
     <Box

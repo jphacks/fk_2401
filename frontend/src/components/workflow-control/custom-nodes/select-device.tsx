@@ -30,14 +30,14 @@ type SelectDeviceNodeProps = NodeProps<SelectDeviceNodePropsType>;
 export const SelectDeviceNode = ({ id, data }: SelectDeviceNodeProps) => {
   const { devicesList, addNode, updateNode } = data;
   const [selectedDevice, setSelectedDevice] = useState<string>("");
-  const [workflowInfo, setWorkflowInfo] = useNodeInfo();
+  const [nodeInfo, setNodeInfo] = useNodeInfo();
   const handleSelectedDeviceChange = useCallback(
     (event: SelectChangeEvent) => {
       const selectedDeviceID: number = parseInt(event.target.value, 10);
-      workflowInfo.device_id = selectedDeviceID;
+      nodeInfo.device_id = selectedDeviceID;
 
       setSelectedDevice(event.target.value);
-      setWorkflowInfo(workflowInfo);
+      setNodeInfo(nodeInfo);
       updateNode(id, { ...data, device_id: selectedDeviceID });
     },
     [id, updateNode, data, setSelectedDevice]
