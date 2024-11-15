@@ -49,7 +49,7 @@ export interface CreateHouseRequest {
 
 export interface NodeRequest {
   workflow_node_id: string;
-  type: string;
+  node_type: string;
   data: object;
   position_x: number;
   position_y: number;
@@ -84,7 +84,7 @@ export interface NodeResponse {
   id: number;
   workflow_id: number;
   workflow_node_id: string;
-  type: string;
+  node_type: string;
   data: object;
   position_x: number;
   position_y: number;
