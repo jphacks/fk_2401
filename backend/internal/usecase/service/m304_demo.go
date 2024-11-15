@@ -26,6 +26,11 @@ type DemoData struct {
 	Rly    []int //onにするrlyのリスト(0~7), handler.goでonじゃないものは除外
 }
 
+const (
+	inMn = 1
+	duMn = 1
+)
+
 func SettingRlyDemo(rly []int) []int {
 	rly_l := 0
 	rly_h := 0
@@ -48,8 +53,8 @@ func BuildDemoM304(demoData *DemoData) (int, error) {
 	stmn := demoData.StMn
 	edhr := demoData.EdHr
 	edmn := demoData.EdMn
-	inmn := demoData.InMn
-	dumn := demoData.DuMn
+	inmn := inMn
+	dumn := duMn
 	rly := SettingRlyDemo(demoData.Rly)
 	rly_l := rly[0]
 	rly_h := rly[1]
