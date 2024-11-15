@@ -37,3 +37,7 @@ func NewMockClimateDataRepository() *MockClimateDataRepository {
 func (cdr MockClimateDataRepository) GetAllClimateData() ([]*domain.ClimateData, error) {
 	return cdr.ClimateDataList, nil
 }
+
+func (cdr MockClimateDataRepository) GetClimateDataFromID(ID int) (*domain.ClimateData, error) {
+	return cdr.ClimateDataList[ID], nil
+}
