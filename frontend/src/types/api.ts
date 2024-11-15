@@ -111,3 +111,14 @@ export interface WorkflowWithUIResponse {
   workflow: WorkflowResponse;
   workflow_ui: WorkflowUIResponse;
 }
+
+export interface WorkflowSettingResponse {
+  id: number;
+  name: string;
+}
+
+export interface TimeScheduleResponse {
+  start_time: string;
+  end_time: string;
+  workflows: WorkflowSettingResponse[];
+}
