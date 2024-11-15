@@ -41,7 +41,6 @@ type DeviceResponse struct {
 type EdgeRequest struct {
 	SourceNodeId *string `json:"source_node_id,omitempty"`
 	TargetNodeId *string `json:"target_node_id,omitempty"`
-	WorkflowId   *int    `json:"workflow_id,omitempty"`
 }
 
 // EdgeResponse defines model for EdgeResponse.
@@ -67,7 +66,6 @@ type NodeRequest struct {
 	PositionX      *float32                `json:"position_x,omitempty"`
 	PositionY      *float32                `json:"position_y,omitempty"`
 	Type           *string                 `json:"type,omitempty"`
-	WorkflowId     *int                    `json:"workflow_id,omitempty"`
 	WorkflowNodeId *string                 `json:"workflow_node_id,omitempty"`
 }
 
@@ -93,10 +91,16 @@ type TimeSchedule struct {
 }
 
 // TimeScheduleRequest defines model for TimeScheduleRequest.
-type TimeScheduleRequest = []TimeSchedule
+type TimeScheduleRequest struct {
+	IpAddress    *string         `json:"ip_address,omitempty"`
+	TimeSchedule *[]TimeSchedule `json:"time_schedule,omitempty"`
+}
 
 // WorkflowRequest defines model for WorkflowRequest.
-type WorkflowRequest = string
+type WorkflowRequest struct {
+	DeviceId *int    `json:"device_id,omitempty"`
+	Name     *string `json:"name,omitempty"`
+}
 
 // WorkflowResponse defines model for WorkflowResponse.
 type WorkflowResponse struct {
