@@ -153,6 +153,9 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/TimeScheduleRequest"
+      responses:
+        "200":
+          description: OK
 
 components:
   parameters:
@@ -193,8 +196,6 @@ components:
     NodeRequest: 
       type: object
       properties:
-        workflow_id:
-          type: integer
         workflow_node_id:
           type: string
         type: 
@@ -212,8 +213,6 @@ components:
     EdgeRequest:
       type: object
       properties:
-        workflow_id:
-          type: integer
         source_node_id:
           type: string
         target_node_id:
@@ -232,7 +231,13 @@ components:
                 $ref: "#/components/schemas/EdgeRequest"
 
     WorkflowRequest:
-      type: string
+      type: object
+      properties:
+        name:
+          type: string
+        device_id:
+          type: integer
+
 
     WorkflowWithUIRequest:
       type: object
@@ -259,9 +264,14 @@ components:
             $ref: "#/components/schemas/WorkflowRequest"
 
     TimeScheduleRequest:
-      type: array
-      items: 
-        $ref: "#/components/schemas/TimeSchedule"
+      type: object
+      properties:
+        time_schedule:
+          type: array
+          items: 
+            $ref: "#/components/schemas/TimeSchedule"
+        ip_address:
+          type: string
 
     # Responses
     ClimateDatasResponse:
