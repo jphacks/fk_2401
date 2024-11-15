@@ -81,24 +81,6 @@ paths:
       responses:
         "200":
           description: OK
-  /houses/{house-id}/m304/{m304-id}/controls:
-    parameters:
-      - $ref: "#/components/parameters/house-id"
-      - $ref: "#/components/parameters/m304-id"
-    get:
-      operationId: getM304
-      tags: 
-        - private
-      summary: Get M304 control information
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/M304ControlResponse"
 
   /workflows-with-ui:
     get:
