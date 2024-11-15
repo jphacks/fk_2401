@@ -10,6 +10,7 @@ import {
 import HomeIcon from "@mui/icons-material/Home";
 import SettingsRemoteIcon from "@mui/icons-material/SettingsRemote";
 import TimelineIcon from "@mui/icons-material/Timeline";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
 
 const drawerWidth = 240;
 
@@ -34,6 +35,11 @@ const sidebarItems: SidebarItem[] = [
     title: "ワークフロー制御",
     path: "/workflow",
     icon: <TimelineIcon />,
+  },
+  {
+    title: "スケジュール設定",
+    path: "/schedule",
+    icon: <AccessTimeIcon />,
   },
 ];
 

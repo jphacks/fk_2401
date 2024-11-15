@@ -13,7 +13,7 @@ import {
   getClimateDatas,
   getDevices,
   getOperations,
-} from "@/mocks/workflow_api";
+} from "@/mocks/workflow-api";
 
 export default function Workflow() {
   const [workflowInfo, setWorkflowInfo] = useWorkflowInfo();

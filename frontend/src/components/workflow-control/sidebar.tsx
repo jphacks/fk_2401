@@ -5,7 +5,7 @@ import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import RuleIcon from "@mui/icons-material/Rule";
 import { useState, useEffect } from "react";
 import { ClimateDataResponse, OperationResponse } from "@/types/api";
-import { getClimateDatas, getOperations } from "@/mocks/workflow_api";
+import { getClimateDatas, getOperations } from "@/mocks/workflow-api";
 
 export const Sidebar = () => {
   const [, setType] = useDnD();
