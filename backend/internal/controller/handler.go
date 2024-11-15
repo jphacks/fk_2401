@@ -4,7 +4,6 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/Fumiya-Tahara/uecs-navi.git/internal/domain"
 	"github.com/Fumiya-Tahara/uecs-navi.git/internal/usecase/service"
 	"github.com/gin-gonic/gin"
 )
@@ -60,53 +59,60 @@ func (h Handler) CreateHouse(c *gin.Context) {
 }
 
 func (h Handler) GetDevice(c *gin.Context, houseId int) {
-	devices, err := h.deviceService.GetJoinedDevices(houseId)
-	if err != nil {
-		log.Println(err)
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
 
-	devicesRes := make([]*DeviceResponse, len(devices))
-	for i, v := range devices {
-		devicesRes[i] = NewDeviceResponse(
-			v.ID,
-			v.HouseID,
-			*v.DeviceName,
-			*v.SetPoint,
-			*v.Duration,
-			v.ClimateData,
-			v.Unit,
-		)
-	}
-
-	c.JSON(http.StatusOK, devicesRes)
 }
+
+// func (h Handler) GetDevice(c *gin.Context, houseId int) {
+// 	devices, err := h.deviceService.GetJoinedDevices(houseId)
+// 	if err != nil {
+// 		log.Println(err)
+// 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+// 		return
+// 	}
+
+// 	devicesRes := make([]*DeviceResponse, len(devices))
+// 	for i, v := range devices {
+// 		devicesRes[i] = NewDeviceResponse(
+// 			v.ID,
+// 			v.HouseID,
+// 			*v.DeviceName,
+// 			*v.SetPoint,
+// 			*v.Duration,
+// 			v.ClimateData,
+// 			v.Unit,
+// 		)
+// 	}
+
+// 	c.JSON(http.StatusOK, devicesRes)
+// }
 
 func (h Handler) CreateDevice(c *gin.Context, houseId int) {
-	var json CreateDeviceController
-	if err := c.BindJSON(&json); err != nil {
-		log.Println(err)
-		c.JSON(http.StatusBadRequest, gin.H{"status": "BadRequest"})
-		return
-	}
-	device := domain.Device{
-		HouseID:       houseId,
-		ClimateDataID: json.ClimateDataID,
-		DeviceName:    &json.DeviceName,
-		SetPoint:      &json.SetPoint,
-		Duration:      &json.Duration,
-	}
-	id, err := h.deviceService.CreateDevice(device)
-
-	if err != nil {
-		log.Println(err)
-		c.JSON(http.StatusBadRequest, gin.H{"status": "BadRequest"})
-		return
-	}
-
-	c.JSON(http.StatusOK, id)
 }
+
+// func (h Handler) CreateDevice(c *gin.Context, houseId int) {
+// 	var json CreateDeviceController
+// 	if err := c.BindJSON(&json); err != nil {
+// 		log.Println(err)
+// 		c.JSON(http.StatusBadRequest, gin.H{"status": "BadRequest"})
+// 		return
+// 	}
+// 	device := domain.Device{
+// 		HouseID:       houseId,
+// 		ClimateDataID: json.ClimateDataID,
+// 		DeviceName:    &json.DeviceName,
+// 		SetPoint:      &json.SetPoint,
+// 		Duration:      &json.Duration,
+// 	}
+// 	id, err := h.deviceService.CreateDevice(device)
+
+// 	if err != nil {
+// 		log.Println(err)
+// 		c.JSON(http.StatusBadRequest, gin.H{"status": "BadRequest"})
+// 		return
+// 	}
+
+// 	c.JSON(http.StatusOK, id)
+// }
 
 func (h Handler) GetClimateData(c *gin.Context) {
 	climateData, err := h.climateDataService.GetAllClimateData()
