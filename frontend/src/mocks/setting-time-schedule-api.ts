@@ -1,4 +1,4 @@
-import { TimeScheduleResponse } from "@/types/api";
+import { TimeScheduleResponse, WorkflowResponse } from "@/types/api";
 
 export function getTimeSchedules(houseID: number): TimeScheduleResponse[] {
   const nasuTimeSchedules: TimeScheduleResponse[] = [
@@ -169,4 +169,31 @@ export function getTimeSchedules(houseID: number): TimeScheduleResponse[] {
   const result: TimeScheduleResponse[] = timeScheduleMap.get(houseID) || [];
 
   return result;
+}
+
+export function getWorkflows(): WorkflowResponse[] {
+  const workflows: WorkflowResponse[] = [
+    {
+      id: 1,
+      name: "加温",
+    },
+    {
+      id: 2,
+      name: "加湿",
+    },
+    {
+      id: 3,
+      name: "CO2供給",
+    },
+    {
+      id: 4,
+      name: "換気",
+    },
+    {
+      id: 5,
+      name: "照明",
+    },
+  ];
+
+  return workflows;
 }

@@ -27,7 +27,7 @@ import { Sidebar } from "./sidebar";
 import { DnDProvider, useDnD } from "@/hooks/dnd-context";
 import { NodeInfoProvider } from "@/hooks/node-info-context";
 import { WorkflowResponse } from "@/types/api";
-import { getWorkflows } from "@/mocks/workflow_api";
+import { getWorkflows } from "@/mocks/workflow-api";
 import { useWorkflowInfo } from "@/hooks/workflow-info-context";
 
 type CustomNodeData =

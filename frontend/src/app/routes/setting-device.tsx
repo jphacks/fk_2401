@@ -5,7 +5,7 @@ import { Box, Tabs, Tab } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import { useState, useEffect } from "react";
 import { HouseResponse, JoinedDeviceResponse } from "@/types/api";
-import { getDevices, getHouses } from "@/mocks/setting_device_api";
+import { getDevices, getHouses } from "@/mocks/setting-device-api";
 // import { getDevices } from "@/features/api/device/get-device";
 // import { getHouses } from "@/features/api/house/get-house";
 
