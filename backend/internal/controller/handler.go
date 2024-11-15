@@ -320,3 +320,5 @@ func (h Handler) CreateWorkflowWithUI(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, workFlowID)
 }
+
+func (h Handler) CreateWorkflow(c *gin.Context)
