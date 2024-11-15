@@ -103,8 +103,8 @@ export interface WorkflowResponse {
 }
 
 export interface WorkflowUIResponse {
-  nodes: NodeResponse;
-  edges: EdgeResponse;
+  nodes: NodeResponse[];
+  edges: EdgeResponse[];
 }
 
 export interface WorkflowWithUIResponse {

@@ -2,7 +2,7 @@ import {
   ClimateDataResponse,
   DeviceResponse,
   OperationResponse,
-  WorkflowResponse,
+  WorkflowWithUIResponse,
 } from "@/types/api";
 
 export function getDevices(): DeviceResponse[] {
@@ -44,57 +44,61 @@ export function getOperations(): OperationResponse[] {
   return operations;
 }
 
-export function getWorkflows(): WorkflowResponse {
-  const workflowRes: WorkflowResponse = {
-    id: 1,
-    name: "Mock Workflow",
-    nodes: [
-      {
-        id: 1,
-        workflow_id: 1,
-        workflow_node_id: "select_device_1",
-        type: "select_device",
-        data: { device_id: 1 },
-        position_x: 100,
-        position_y: 200,
-      },
-      {
-        id: 2,
-        workflow_id: 1,
-        workflow_node_id: "condition_1",
-        type: "condition",
-        data: {
-          condition: { climate_data_id: 1, comp_ope_id: 1, set_point: 20 },
+export function getWorkflows(): WorkflowWithUIResponse {
+  const workflowRes: WorkflowWithUIResponse = {
+    workflow: {
+      id: 1,
+      name: "Mock Workflow",
+    },
+    workflow_ui: {
+      nodes: [
+        {
+          id: 1,
+          workflow_id: 1,
+          workflow_node_id: "select_device_1",
+          node_type: "select_device",
+          data: { device_id: 1 },
+          position_x: 100,
+          position_y: 200,
         },
-        position_x: 300,
-        position_y: 400,
-      },
-      {
-        id: 3,
-        workflow_id: 1,
-        workflow_node_id: "device_operation_1",
-        type: "device_operation",
-        data: {
-          operation_id: 1,
+        {
+          id: 2,
+          workflow_id: 1,
+          workflow_node_id: "condition_1",
+          node_type: "condition",
+          data: {
+            condition: { climate_data_id: 1, comp_ope_id: 1, set_point: 20 },
+          },
+          position_x: 300,
+          position_y: 400,
         },
-        position_x: 500,
-        position_y: 600,
-      },
-    ],
-    edges: [
-      {
-        id: 1,
-        workflow_id: 1,
-        source_node_id: "select_device_1",
-        target_node_id: "condition_1",
-      },
-      {
-        id: 2,
-        workflow_id: 1,
-        source_node_id: "condition_1",
-        target_node_id: "device_operation_1",
-      },
-    ],
+        {
+          id: 3,
+          workflow_id: 1,
+          workflow_node_id: "device_operation_1",
+          node_type: "device_operation",
+          data: {
+            operation_id: 1,
+          },
+          position_x: 500,
+          position_y: 600,
+        },
+      ],
+      edges: [
+        {
+          id: 1,
+          workflow_id: 1,
+          source_node_id: "select_device_1",
+          target_node_id: "condition_1",
+        },
+        {
+          id: 2,
+          workflow_id: 1,
+          source_node_id: "condition_1",
+          target_node_id: "device_operation_1",
+        },
+      ],
+    },
   };
 
   return workflowRes;

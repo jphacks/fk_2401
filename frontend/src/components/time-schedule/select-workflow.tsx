@@ -15,7 +15,7 @@ export const WorkflowSelect = (props: WorkflowSelectProps) => {
 
   const [options, setOption] = useState<WorkflowResponse[]>(workflows);
   const [selectedWorkflow, setSelectedWorkflow] =
-    useState<WorkflowSettingResponse | null>(initialWorkflow);
+    useState<WorkflowResponse | null>(initialWorkflow);
 
   const handleWorkflowChange = (event: SelectChangeEvent) => {
     const workflowID = parseInt(event.target.value);

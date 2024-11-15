@@ -26,7 +26,7 @@ import {
 import { Sidebar } from "./sidebar";
 import { DnDProvider, useDnD } from "@/hooks/dnd-context";
 import { NodeInfoProvider } from "@/hooks/node-info-context";
-import { WorkflowResponse } from "@/types/api";
+import { WorkflowWithUIResponse } from "@/types/api";
 import { getWorkflows } from "@/mocks/workflow-api";
 import { useWorkflowInfo } from "@/hooks/workflow-info-context";
 
@@ -49,7 +49,7 @@ const getId = (type: string) => {
 };
 
 interface WorkflowEditorProps {
-  workflowID: number;
+  workflowID: number | null;
 }
 
 function WorkflowEditor({ workflowID }: WorkflowEditorProps) {
@@ -69,19 +69,19 @@ function WorkflowEditor({ workflowID }: WorkflowEditorProps) {
 
   useEffect(() => {
     if (workflowID) {
-      const workflow: WorkflowResponse = getWorkflows();
+      const workflow: WorkflowWithUIResponse = getWorkflows();
 
-      workflow.nodes.forEach((node) => {
-        const currentId = nodeIdMap.get(node.type) || 1;
-        nodeIdMap.set(node.type, currentId + 1);
+      workflow.workflow_ui.nodes.forEach((node) => {
+        const currentId = nodeIdMap.get(node.node_type) || 1;
+        nodeIdMap.set(node.node_type, currentId + 1);
       });
 
-      const nodes = workflow.nodes
+      const nodes = workflow.workflow_ui.nodes
         .map((node): Node | undefined => {
-          if (node.type === "select_device") {
+          if (node.node_type === "select_device") {
             return {
               id: node.workflow_node_id,
-              type: node.type,
+              type: node.node_type,
               position: { x: node.position_x, y: node.position_y },
               data: {
                 ...(node.data as Record<string, unknown>),
@@ -89,10 +89,10 @@ function WorkflowEditor({ workflowID }: WorkflowEditorProps) {
                 updateNode: updateNodeData,
               },
             };
-          } else if (node.type === "condition") {
+          } else if (node.node_type === "condition") {
             return {
               id: node.workflow_node_id,
-              type: node.type,
+              type: node.node_type,
               position: { x: node.position_x, y: node.position_y },
               data: {
                 ...(node.data as Record<string, unknown>),
@@ -100,10 +100,10 @@ function WorkflowEditor({ workflowID }: WorkflowEditorProps) {
                 updateNode: updateNodeData,
               },
             };
-          } else if (node.type === "device_operation") {
+          } else if (node.node_type === "device_operation") {
             return {
               id: node.workflow_node_id,
-              type: node.type,
+              type: node.node_type,
               position: { x: node.position_x, y: node.position_y },
               data: {
                 ...(node.data as Record<string, unknown>),
@@ -117,10 +117,11 @@ function WorkflowEditor({ workflowID }: WorkflowEditorProps) {
         })
         .filter((node): node is Node => node !== undefined);
 
-      const edges = workflow.edges.map((edge) => ({
+      const edges = workflow.workflow_ui.edges.map((edge) => ({
         id: edge.id.toString(),
         source: edge.source_node_id,
         target: edge.target_node_id,
+        style: { strokeWidth: 4 },
       }));
 
       setNodes(nodes);
@@ -149,8 +150,7 @@ function WorkflowEditor({ workflowID }: WorkflowEditorProps) {
     (params: Connection) => {
       const animatedEdge = {
         ...params,
-        animated: true,
-        style: { strokeWidth: 5 },
+        style: { strokeWidth: 4 },
       };
       setEdges((eds) => addEdge(animatedEdge, eds));
     },
