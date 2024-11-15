@@ -37,6 +37,21 @@ type DeviceResponse struct {
 	Unit        *string  `json:"unit,omitempty"`
 }
 
+// EdgeRequest defines model for EdgeRequest.
+type EdgeRequest struct {
+	SourceNodeId *string `json:"source_node_id,omitempty"`
+	TargetNodeId *string `json:"target_node_id,omitempty"`
+	WorkflowId   *int    `json:"workflow_id,omitempty"`
+}
+
+// EdgeResponse defines model for EdgeResponse.
+type EdgeResponse struct {
+	Id           *int    `json:"id,omitempty"`
+	SourceNodeId *string `json:"source_node_id,omitempty"`
+	TargetNodeId *string `json:"target_node_id,omitempty"`
+	WorkflowId   *int    `json:"workflow_id,omitempty"`
+}
+
 // HousesRequest defines model for HousesRequest.
 type HousesRequest = string
 
@@ -44,6 +59,73 @@ type HousesRequest = string
 type HousesResponse struct {
 	Id   *int    `json:"id,omitempty"`
 	Name *string `json:"name,omitempty"`
+}
+
+// NodeRequest defines model for NodeRequest.
+type NodeRequest struct {
+	Data           *map[string]interface{} `json:"data,omitempty"`
+	PositionX      *float32                `json:"position_x,omitempty"`
+	PositionY      *float32                `json:"position_y,omitempty"`
+	Type           *string                 `json:"type,omitempty"`
+	WorkflowId     *int                    `json:"workflow_id,omitempty"`
+	WorkflowNodeId *string                 `json:"workflow_node_id,omitempty"`
+}
+
+// NodeResponse defines model for NodeResponse.
+type NodeResponse struct {
+	Data           *map[string]interface{} `json:"data,omitempty"`
+	Id             *int                    `json:"id,omitempty"`
+	PositionX      *float32                `json:"position_x,omitempty"`
+	PositionY      *float32                `json:"position_y,omitempty"`
+	Type           *string                 `json:"type,omitempty"`
+	WorkflowId     *int                    `json:"workflow_id,omitempty"`
+	WorkflowNodeId *string                 `json:"workflow_node_id,omitempty"`
+}
+
+// TimeSchedule defines model for TimeSchedule.
+type TimeSchedule struct {
+	// EndTime 終了時刻（HH:mm形式）
+	EndTime *string `json:"end_time,omitempty"`
+
+	// StartTime 開始時刻（HH:mm形式）
+	StartTime *string            `json:"start_time,omitempty"`
+	Workflows *[]WorkflowRequest `json:"workflows,omitempty"`
+}
+
+// TimeScheduleRequest defines model for TimeScheduleRequest.
+type TimeScheduleRequest = []TimeSchedule
+
+// WorkflowRequest defines model for WorkflowRequest.
+type WorkflowRequest = string
+
+// WorkflowResponse defines model for WorkflowResponse.
+type WorkflowResponse struct {
+	Id   *int    `json:"id,omitempty"`
+	Name *string `json:"name,omitempty"`
+}
+
+// WorkflowUIRequest defines model for WorkflowUIRequest.
+type WorkflowUIRequest struct {
+	Edges *[]EdgeRequest `json:"edges,omitempty"`
+	Nodes *[]NodeRequest `json:"nodes,omitempty"`
+}
+
+// WorkflowUIResponse defines model for WorkflowUIResponse.
+type WorkflowUIResponse struct {
+	Edges *[]EdgeResponse `json:"edges,omitempty"`
+	Nodes *[]NodeResponse `json:"nodes,omitempty"`
+}
+
+// WorkflowWithUIRequest defines model for WorkflowWithUIRequest.
+type WorkflowWithUIRequest struct {
+	Workflow   *WorkflowRequest   `json:"workflow,omitempty"`
+	WorkflowUI *WorkflowUIRequest `json:"workflowUI,omitempty"`
+}
+
+// WorkflowWithUIResponse defines model for WorkflowWithUIResponse.
+type WorkflowWithUIResponse struct {
+	Workflow   *WorkflowResponse   `json:"workflow,omitempty"`
+	WorkflowUI *WorkflowUIResponse `json:"workflowUI,omitempty"`
 }
 
 // HouseId defines model for house-id.
@@ -54,6 +136,15 @@ type CreateHouseJSONRequestBody = HousesRequest
 
 // CreateDeviceJSONRequestBody defines body for CreateDevice for application/json ContentType.
 type CreateDeviceJSONRequestBody = DeviceRequest
+
+// CreateAndBuildTimeScheduleJSONRequestBody defines body for CreateAndBuildTimeSchedule for application/json ContentType.
+type CreateAndBuildTimeScheduleJSONRequestBody = TimeScheduleRequest
+
+// CreateWorkflowJSONRequestBody defines body for CreateWorkflow for application/json ContentType.
+type CreateWorkflowJSONRequestBody = WorkflowRequest
+
+// CreateWorkflowWithUIJSONRequestBody defines body for CreateWorkflowWithUI for application/json ContentType.
+type CreateWorkflowWithUIJSONRequestBody = WorkflowWithUIRequest
 
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
@@ -72,6 +163,21 @@ type ServerInterface interface {
 	// Create device
 	// (POST /houses/{house-id}/devices)
 	CreateDevice(c *gin.Context, houseId HouseId)
+	// Create and build time schedule
+	// (POST /time-schedule)
+	CreateAndBuildTimeSchedule(c *gin.Context)
+	// Get workflows list
+	// (GET /workflows)
+	GetWorkflows(c *gin.Context)
+	// Create a workflow
+	// (POST /workflows)
+	CreateWorkflow(c *gin.Context)
+	// Get workflows with ui
+	// (GET /workflows-with-ui)
+	GetWorkflowsWithUI(c *gin.Context)
+	// Create a workflow with UI
+	// (POST /workflows-with-ui)
+	CreateWorkflowWithUI(c *gin.Context)
 }
 
 // ServerInterfaceWrapper converts contexts to parameters.
@@ -170,6 +276,71 @@ func (siw *ServerInterfaceWrapper) CreateDevice(c *gin.Context) {
 	siw.Handler.CreateDevice(c, houseId)
 }
 
+// CreateAndBuildTimeSchedule operation middleware
+func (siw *ServerInterfaceWrapper) CreateAndBuildTimeSchedule(c *gin.Context) {
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		middleware(c)
+		if c.IsAborted() {
+			return
+		}
+	}
+
+	siw.Handler.CreateAndBuildTimeSchedule(c)
+}
+
+// GetWorkflows operation middleware
+func (siw *ServerInterfaceWrapper) GetWorkflows(c *gin.Context) {
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		middleware(c)
+		if c.IsAborted() {
+			return
+		}
+	}
+
+	siw.Handler.GetWorkflows(c)
+}
+
+// CreateWorkflow operation middleware
+func (siw *ServerInterfaceWrapper) CreateWorkflow(c *gin.Context) {
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		middleware(c)
+		if c.IsAborted() {
+			return
+		}
+	}
+
+	siw.Handler.CreateWorkflow(c)
+}
+
+// GetWorkflowsWithUI operation middleware
+func (siw *ServerInterfaceWrapper) GetWorkflowsWithUI(c *gin.Context) {
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		middleware(c)
+		if c.IsAborted() {
+			return
+		}
+	}
+
+	siw.Handler.GetWorkflowsWithUI(c)
+}
+
+// CreateWorkflowWithUI operation middleware
+func (siw *ServerInterfaceWrapper) CreateWorkflowWithUI(c *gin.Context) {
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		middleware(c)
+		if c.IsAborted() {
+			return
+		}
+	}
+
+	siw.Handler.CreateWorkflowWithUI(c)
+}
+
 // GinServerOptions provides options for the Gin server.
 type GinServerOptions struct {
 	BaseURL      string
@@ -202,4 +373,9 @@ func RegisterHandlersWithOptions(router gin.IRouter, si ServerInterface, options
 	router.POST(options.BaseURL+"/houses", wrapper.CreateHouse)
 	router.GET(options.BaseURL+"/houses/:house-id", wrapper.GetDevice)
 	router.POST(options.BaseURL+"/houses/:house-id/devices", wrapper.CreateDevice)
+	router.POST(options.BaseURL+"/time-schedule", wrapper.CreateAndBuildTimeSchedule)
+	router.GET(options.BaseURL+"/workflows", wrapper.GetWorkflows)
+	router.POST(options.BaseURL+"/workflows", wrapper.CreateWorkflow)
+	router.GET(options.BaseURL+"/workflows-with-ui", wrapper.GetWorkflowsWithUI)
+	router.POST(options.BaseURL+"/workflows-with-ui", wrapper.CreateWorkflowWithUI)
 }

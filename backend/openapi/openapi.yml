@@ -64,6 +64,7 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/DeviceResponse"
+
   /houses/{house-id}/devices:
     parameters:
       - $ref: "#/components/parameters/house-id"
@@ -81,6 +82,78 @@ paths:
         "200":
           description: OK
 
+  /workflows-with-ui:
+    get:
+      operationId: getWorkflowsWithUI
+      tags:
+        - private
+      summary: Get workflows with ui
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/WorkflowWithUIResponse"
+
+    post:
+      operationId: createWorkflowWithUI
+      tags:
+        - private
+      summary: Create a workflow with UI
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WorkflowWithUIRequest"
+      responses:
+        "200":
+          description: OK
+
+
+  /workflows:
+    get:
+        operationId: getWorkflows
+        tags:
+          - private
+        summary: Get workflows list
+        responses:
+          "200":
+            description: OK
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: "#/components/schemas/WorkflowResponse"
+    post:
+      operationId: createWorkflow
+      tags:
+        - private
+      summary: Create a workflow
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WorkflowRequest"
+      responses:
+        "200":
+          description: OK
+
+  /time-schedule:
+    post:
+      operationId: createAndBuildTimeSchedule
+      tags:
+      - private
+      summary: Create and build time schedule
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TimeScheduleRequest"
+
 components:
   parameters:
     house-id:
@@ -89,10 +162,18 @@ components:
       required: true
       schema:
         type: integer
+    m304-id:
+      name: m304-id
+      in: path
+      required: true
+      schema:
+        type: integer
 
   schemas:
+    # Requests
     HousesRequest:
       type: string
+
     DeviceRequest:
       type: object
       properties:
@@ -109,6 +190,80 @@ components:
           type: integer
           nullable: true
 
+    NodeRequest: 
+      type: object
+      properties:
+        workflow_id:
+          type: integer
+        workflow_node_id:
+          type: string
+        type: 
+          type: string
+        data: 
+          type: object
+          additionalProperties: true
+        position_x:
+          type: number
+          format: float
+        position_y:
+          type: number
+          format: float
+
+    EdgeRequest:
+      type: object
+      properties:
+        workflow_id:
+          type: integer
+        source_node_id:
+          type: string
+        target_node_id:
+          type: string
+
+    WorkflowUIRequest:
+          type: object
+          properties:
+            nodes: 
+              type: array
+              items:
+                $ref: "#/components/schemas/NodeRequest"
+            edges:
+              type: array
+              items:
+                $ref: "#/components/schemas/EdgeRequest"
+
+    WorkflowRequest:
+      type: string
+
+    WorkflowWithUIRequest:
+      type: object
+      properties:
+        workflow:
+          $ref: "#/components/schemas/WorkflowRequest"
+        workflowUI:
+          $ref: "#/components/schemas/WorkflowUIRequest"
+
+    TimeSchedule:
+      type: object
+      properties:
+        start_time:
+          type: string
+          pattern: "^([01]?[0-9]|2[0-3]):[0-5][0-9]$"
+          description: "開始時刻（HH:mm形式）"
+        end_time:
+          type: string
+          pattern: "^([01]?[0-9]|2[0-3]):[0-5][0-9]$"
+          description: "終了時刻（HH:mm形式）"
+        workflows:
+          type: array
+          items: 
+            $ref: "#/components/schemas/WorkflowRequest"
+
+    TimeScheduleRequest:
+      type: array
+      items: 
+        $ref: "#/components/schemas/TimeSchedule"
+
+    # Responses
     ClimateDatasResponse:
       type: object
       properties:
@@ -141,3 +296,65 @@ components:
           format: double
         duration:
           type: integer
+
+    WorkflowResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+
+    NodeResponse: 
+      type: object
+      properties:
+        id:
+          type: integer
+        workflow_id:
+          type: integer
+        workflow_node_id:
+          type: string
+        type: 
+          type: string
+        data: 
+          type: object
+          additionalProperties: true
+        position_x:
+          type: number
+          format: float
+        position_y:
+          type: number
+          format: float
+
+    EdgeResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        workflow_id:
+          type: integer
+        source_node_id:
+          type: string
+        target_node_id:
+          type: string
+          
+    WorkflowUIResponse:
+          type: object
+          properties:
+            nodes: 
+              type: array
+              items:
+                $ref: "#/components/schemas/NodeResponse"
+            edges:
+              type: array
+              items:
+                $ref: "#/components/schemas/EdgeResponse"
+
+    WorkflowWithUIResponse:
+      type: object
+      properties:
+        workflow:
+          $ref: "#/components/schemas/WorkflowResponse"
+        workflowUI:
+          $ref: "#/components/schemas/WorkflowUIResponse"
+
