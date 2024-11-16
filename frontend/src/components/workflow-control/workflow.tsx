@@ -1,6 +1,5 @@
-import { Box, Button, Select, FormControl, InputLabel } from "@mui/material";
+import { Box } from "@mui/material";
 import { Navigation } from "@/layouts/navigation";
-import { WorkflowWrapper } from "./workflow-editor";
 import { WorkflowInfoProvider } from "@/hooks/workflow-info-context";
 import { useWorkflowInfo } from "@/hooks/workflow-info-context";
 import { useEffect } from "react";
@@ -14,9 +13,14 @@ import {
   getDevices,
   getOperations,
 } from "@/mocks/workflow-api";
+import { WorkflowEditor } from "./workflow-editor";
+import { ReactFlowProvider } from "@xyflow/react";
+import { NodeInfoProvider } from "@/hooks/node-info-context";
+import { DnDProvider } from "@/hooks/dnd-context";
+import { SaveWorkflowButton } from "./save-button";
 
-export default function Workflow() {
-  const [workflowInfo, setWorkflowInfo] = useWorkflowInfo();
+function Workflow() {
+  const [, setWorkflowInfo] = useWorkflowInfo();
 
   useEffect(() => {
     const fetchWorkflowData = async () => {
@@ -24,49 +28,38 @@ export default function Workflow() {
       const climateDataRes: ClimateDataResponse[] = await getClimateDatas();
       const operationsRes: OperationResponse[] = await getOperations();
 
-      workflowInfo.devices = devicesRes;
-      workflowInfo.climate_data = climateDataRes;
-      workflowInfo.operations = operationsRes;
-
-      setWorkflowInfo(workflowInfo);
+      setWorkflowInfo({
+        devices: devicesRes,
+        climate_data: climateDataRes,
+        operations: operationsRes,
+      });
     };
 
     fetchWorkflowData();
-  }, [workflowInfo, setWorkflowInfo]);
+  }, []);
 
   return (
-    <WorkflowInfoProvider>
-      <Navigation>
-        <Box sx={{ padding: "16px" }}>
-          <Box sx={{ display: "flex" }}>
-            <Box sx={{ width: "150px" }}>
-              <FormControl fullWidth>
-                <InputLabel id={`workflow-select-label`} size="small">
-                  ワークフローを選択
-                </InputLabel>
-                <Select
-                  value={"test"}
-                  labelId={"workflow-select-label"}
-                  id={"workflow-select"}
-                  size="small"
-                  // onChange={}
-                  label="ワークフロー選択"
-                  // disabled={deviceOperations.length === 0}
-                >
-                  {/* {deviceOperations.map((data) => (
-                  <MenuItem key={data.id} value={data.id}>
-                  {data.name}
-                  </MenuItem>
-                  ))} */}
-                </Select>
-              </FormControl>
-            </Box>
-            <Button>新規作成</Button>
-            <Button>保存する</Button>
-          </Box>
-          <WorkflowWrapper workflowID={1} />
+    <Navigation>
+      <Box sx={{ padding: "16px" }}>
+        <WorkflowEditor />
+        <Box sx={{ pt: 1 }}>
+          <SaveWorkflowButton />
         </Box>
-      </Navigation>
+      </Box>
+    </Navigation>
+  );
+}
+
+export default function WorkflowWrapper() {
+  return (
+    <WorkflowInfoProvider>
+      <ReactFlowProvider>
+        <NodeInfoProvider>
+          <DnDProvider>
+            <Workflow />
+          </DnDProvider>
+        </NodeInfoProvider>
+      </ReactFlowProvider>
     </WorkflowInfoProvider>
   );
 }
