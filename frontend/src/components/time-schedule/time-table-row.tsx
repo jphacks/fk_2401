@@ -20,7 +20,7 @@ export function TimeTableRow(props: TimeTableRowProps) {
   const { timeSchedule, workflows, index, onRowChange } = props;
   const [selectedWorkflows, setSelectedWorkflows] = useState<
     WorkflowResponse[]
-  >(timeSchedule?.workflows || []);
+  >(timeSchedule?.workflows || [{ id: 0, name: "" }]);
 
   const handleStartTimeChange = (value: string) => {
     if (value !== undefined) {
@@ -50,8 +50,41 @@ export function TimeTableRow(props: TimeTableRowProps) {
     }
   };
 
+  const handleAddWorkflow = () => {
+    if (selectedWorkflows.length >= 4) {
+      return;
+    }
+    const newWorkflows = [...selectedWorkflows, { id: 0, name: "" }];
+    setSelectedWorkflows(newWorkflows);
+
+    if (timeSchedule) {
+      timeSchedule.workflows = newWorkflows;
+      onRowChange(index, timeSchedule);
+    }
+  };
+
+  const handleRemoveWorkflow = () => {
+    if (selectedWorkflows.length <= 1) {
+      return;
+    }
+
+    const newWorkflows: WorkflowResponse[] = selectedWorkflows.slice(0, -1);
+    setSelectedWorkflows(newWorkflows);
+
+    if (timeSchedule) {
+      timeSchedule.workflows = newWorkflows;
+      onRowChange(index, timeSchedule);
+    }
+  };
+
   return (
-    <TableRow>
+    <TableRow
+      sx={{
+        "&:hover": {
+          backgroundColor: "rgb(245, 245, 245)",
+        },
+      }}
+    >
       <TableCell>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <TimePicker
@@ -116,9 +149,8 @@ export function TimeTableRow(props: TimeTableRowProps) {
         <Grid container spacing={2}>
           <Grid size={9} container spacing={2}>
             {selectedWorkflows.length == 0 ? (
-              <Grid size={3}>
+              <Grid key={0} size={3}>
                 <WorkflowSelect
-                  key={0}
                   initialWorkflow={null}
                   index={0}
                   workflows={workflows}
@@ -127,9 +159,8 @@ export function TimeTableRow(props: TimeTableRowProps) {
               </Grid>
             ) : (
               selectedWorkflows.map((workflow, index) => (
-                <Grid size={3}>
+                <Grid key={index} size={3}>
                   <WorkflowSelect
-                    key={index}
                     initialWorkflow={workflow}
                     index={index}
                     workflows={workflows}
@@ -143,23 +174,28 @@ export function TimeTableRow(props: TimeTableRowProps) {
             <IconButton
               size="small"
               sx={{
-                borderRadius: 2,
-                color: "#F44336",
-                border: "2px solid #F04134",
+                width: 24,
+                height: 24,
+                borderRadius: 1,
+                color: "#4CAF50",
+                border: "2px solid #4CAF50",
                 "&:hover": {
-                  backgroundColor: "#E57373",
+                  backgroundColor: "#70CC70",
                   color: "#FFF",
-                  border: "2px solid #E57373",
+                  border: "2px solid #70CC70",
                 },
               }}
+              onClick={handleRemoveWorkflow}
             >
               <RemoveIcon />
             </IconButton>
             <IconButton
               size="small"
               sx={{
+                width: 24,
+                height: 24,
                 ml: 1,
-                borderRadius: 2,
+                borderRadius: 1,
                 color: "#FFF",
                 backgroundColor: "#4CAF50",
                 "&:hover": {
@@ -167,6 +203,7 @@ export function TimeTableRow(props: TimeTableRowProps) {
                   color: "#FFF",
                 },
               }}
+              onClick={handleAddWorkflow}
             >
               <AddIcon />
             </IconButton>

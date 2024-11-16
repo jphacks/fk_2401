@@ -15,7 +15,7 @@ export const WorkflowSelect = (props: WorkflowSelectProps) => {
 
   const [options, setOption] = useState<WorkflowResponse[]>(workflows);
   const [selectedWorkflow, setSelectedWorkflow] =
-    useState<WorkflowSettingResponse | null>(initialWorkflow);
+    useState<WorkflowResponse | null>(initialWorkflow);
 
   const handleWorkflowChange = (event: SelectChangeEvent) => {
     const workflowID = parseInt(event.target.value);
@@ -32,13 +32,13 @@ export const WorkflowSelect = (props: WorkflowSelectProps) => {
       <Select
         labelId="workflow-select-label"
         id="workflow-select"
-        value={String(selectedWorkflow?.id)}
+        value={selectedWorkflow ? String(selectedWorkflow.id) : ""}
         label="ワークフロー"
         size="small"
         onChange={handleWorkflowChange}
       >
-        {options.map((data) => (
-          <MenuItem key={data.id} value={data.id}>
+        {options.map((data, index) => (
+          <MenuItem key={index} value={data.id}>
             {data.name}
           </MenuItem>
         ))}

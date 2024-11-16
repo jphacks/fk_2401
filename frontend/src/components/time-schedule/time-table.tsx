@@ -36,7 +36,7 @@ export function TimeTable(props: TimeTableProps) {
     if (timeSchedules.length < 8) {
       setTimeSchedules([
         ...timeSchedules,
-        { start_time: "", end_time: "", workflows: [] },
+        { start_time: "", end_time: "", workflows: [{ id: 0, name: "" }] },
       ]);
     }
   };
@@ -55,12 +55,13 @@ export function TimeTable(props: TimeTableProps) {
             <TableRow>
               <TableCell sx={{ width: "20%" }}>開始時間</TableCell>
               <TableCell sx={{ width: "20%" }}>終了時間</TableCell>
-              <TableCell sx={{ width: "60%" }}>デバイス設定</TableCell>
+              <TableCell sx={{ width: "60%" }}>ワークフロー操作</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {timeSchedules.length == 0 ? (
               <TimeTableRow
+                key={0}
                 timeSchedule={null}
                 workflows={workflows}
                 index={0}
