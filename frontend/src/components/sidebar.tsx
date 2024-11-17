@@ -7,16 +7,43 @@ import {
   ListItemButton,
   Toolbar,
 } from "@mui/material";
+import HomeIcon from "@mui/icons-material/Home";
+import SettingsRemoteIcon from "@mui/icons-material/SettingsRemote";
+import TimelineIcon from "@mui/icons-material/Timeline";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
 
 const drawerWidth = 240;
 
-const SideBar = () => {
-  const ListItems: string[] = [
-    "ハウス状態",
-    "デバイス設定",
-    "デバイスプログラム",
-  ];
+interface SidebarItem {
+  title: string;
+  path: string;
+  icon: JSX.Element;
+}
 
+const sidebarItems: SidebarItem[] = [
+  {
+    title: "ハウス状態",
+    path: "/",
+    icon: <HomeIcon />,
+  },
+  {
+    title: "デバイス設定",
+    path: "/devices",
+    icon: <SettingsRemoteIcon />,
+  },
+  {
+    title: "ワークフロー制御",
+    path: "/workflow",
+    icon: <TimelineIcon />,
+  },
+  {
+    title: "スケジュール設定",
+    path: "/schedule",
+    icon: <AccessTimeIcon />,
+  },
+];
+
+const SideBar = () => {
   return (
     <Drawer
       variant="permanent"
@@ -26,31 +53,31 @@ const SideBar = () => {
         [`& .MuiDrawer-paper`]: {
           width: drawerWidth,
           boxSizing: "border-box",
-          backgroundColor: "primary.light",
+          backgroundColor: "#E0E0E0",
         },
       }}
     >
       <Toolbar />
       <Box sx={{ overflow: "auto" }}>
         <List>
-          {ListItems.map((item) => (
-            <ListItem key={item} disablePadding>
-              <ListItemButton>
+          {sidebarItems.map((item, index) => (
+            <ListItem key={index} disablePadding>
+              <ListItemButton sx={{ display: "flex", gap: 1 }}>
                 {/* <ListItemIcon>
                   {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
                 </ListItemIcon> */}
+                {item.icon}
                 <Link
-                  href="/"
+                  href={item.path}
                   underline="none"
                   color="inherit"
                   sx={{
-                    color: "#000",
                     "&:hover": {
                       color: "#000",
                     },
                   }}
                 >
-                  {item}
+                  {item.title}
                 </Link>
               </ListItemButton>
             </ListItem>

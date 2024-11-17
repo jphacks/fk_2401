@@ -10,15 +10,19 @@ import {
   InputLabel,
   Typography,
 } from "@mui/material";
+import RuleIcon from "@mui/icons-material/Rule";
 import { Node, Handle, Position, NodeProps } from "@xyflow/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ClimateDataResponse } from "@/types/api";
-import { AddNodeFunction } from "../workflow";
+import { AddNodeFunction, UpdateNodeFunction } from "../workflow-editor";
+import { Condition } from "@/types/workflow";
 
-interface ConditionNodeData {
+export interface ConditionNodeData {
   [key: string]: unknown;
   climateDataList: ClimateDataResponse[];
   addNode: AddNodeFunction;
+  updateNode: UpdateNodeFunction;
+  condition: Condition;
 }
 
 type ConditionNodePropsType = Node<ConditionNodeData>;
@@ -26,24 +30,38 @@ type ConditionNodePropsType = Node<ConditionNodeData>;
 type ConditionNodeProps = NodeProps<ConditionNodePropsType>;
 
 export const ConditionNode = ({ id, data }: ConditionNodeProps) => {
-  const { climateDataList, addNode } = data as ConditionNodeData;
-
-  const [selectedClimateData, setSelectedClimateData] = useState<string>("");
-  const [selectedClimateDataRec, setSelectedClimateDataRec] =
-    useState<ClimateDataResponse>();
+  const { climateDataList, addNode, updateNode } = data as ConditionNodeData;
+  const [selectedClimateData, setSelectedClimateData] = useState<
+    ClimateDataResponse | undefined
+  >(undefined);
   const [cmpOpe, setCmpOpe] = useState<string>("");
+  const [condition, setCondition] = useState<Condition>({
+    climate_data_id: 0,
+    comp_ope_id: 0,
+    set_point: 0,
+  });
+
+  useEffect(() => {
+    updateNode(id, { ...data, condition: condition });
+  }, [id, updateNode, condition]);
 
   const handleClimateDataChange = (event: SelectChangeEvent) => {
-    const climateData = event.target.value;
+    const climateDataID = parseInt(event.target.value);
     const climateDataRec = climateDataList.find(
-      (data) => data.climate_data === climateData
+      (data) => data.id === climateDataID
     );
-    setSelectedClimateData(climateData);
-    setSelectedClimateDataRec(climateDataRec);
+    condition.climate_data_id = climateDataID;
+
+    setSelectedClimateData(climateDataRec);
+    setCondition(condition);
   };
 
   const handleCmpOpeChange = (event: SelectChangeEvent) => {
+    const compOpeID: number = parseInt(event.target.value);
+    condition.comp_ope_id = compOpeID;
+
     setCmpOpe(event.target.value as string);
+    setCondition(condition);
   };
 
   return (
@@ -52,13 +70,31 @@ export const ConditionNode = ({ id, data }: ConditionNodeProps) => {
         border: "1px solid #000",
         borderRadius: "10px",
         backgroundColor: "#FFF",
+        width: "350px",
       }}
     >
-      <Handle position={Position.Left} type="target" />
-      <Box sx={{ padding: "8px" }}>
-        <Typography variant="h6">If</Typography>
+      <Handle
+        position={Position.Left}
+        type="target"
+        style={{ width: 12, height: 12 }}
+      />
+      <Box>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: 1,
+            borderRadius: "10px 10px 0 0",
+            color: "#FFF",
+            backgroundColor: "#F57C00",
+            padding: "4px 8px 4px 8px",
+          }}
+        >
+          <RuleIcon />
+          <Typography variant="h6">If</Typography>
+        </Box>
         <Divider />
-        <Box sx={{ padding: "8px", display: "flex", justifyContent: "center" }}>
+        <Box sx={{ padding: 2, display: "flex", justifyContent: "center" }}>
           <FormControl sx={{ flex: 4 }}>
             <InputLabel
               id={`climate-data-node-select-label-${id}`}
@@ -70,14 +106,14 @@ export const ConditionNode = ({ id, data }: ConditionNodeProps) => {
               className="nodrag"
               labelId={`climate-data-node-select-label-${id}`}
               id={`climate-data-node-select-${id}`}
-              value={selectedClimateData}
+              value={selectedClimateData ? String(selectedClimateData.id) : ""}
               label="気象データ"
               onChange={handleClimateDataChange}
               size="small"
               inputProps={{ className: "nodrag nopan nowheel" }}
             >
               {climateDataList.map((data) => (
-                <MenuItem key={data.id} value={data.climate_data}>
+                <MenuItem key={data.id} value={data.id}>
                   {data.climate_data}
                 </MenuItem>
               ))}
@@ -87,7 +123,7 @@ export const ConditionNode = ({ id, data }: ConditionNodeProps) => {
             value={cmpOpe}
             size="small"
             onChange={handleCmpOpeChange}
-            sx={{ flex: 1, marginX: "8px" }}
+            sx={{ flex: 1, marginX: 1 }}
             inputProps={{ className: "nodrag nopan nowheel" }}
           >
             <MenuItem value={1}>{"="}</MenuItem>
@@ -103,7 +139,7 @@ export const ConditionNode = ({ id, data }: ConditionNodeProps) => {
               input: {
                 endAdornment: (
                   <InputAdornment position="end">
-                    {selectedClimateDataRec?.unit}
+                    {selectedClimateData?.unit}
                   </InputAdornment>
                 ),
               },
@@ -116,6 +152,7 @@ export const ConditionNode = ({ id, data }: ConditionNodeProps) => {
       <Handle
         position={Position.Right}
         type="source"
+        style={{ width: 12, height: 12 }}
         onClick={(event) => {
           event.stopPropagation();
           addNode(id);

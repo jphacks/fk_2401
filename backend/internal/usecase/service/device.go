@@ -43,3 +43,12 @@ func (ds DeviceService) GetJoinedDevices(houseID int) ([]*repository.JoinedDevic
 
 	return joinedDevices, nil
 }
+
+func (ds DeviceService) GetDeviceFromID(ID int) (*domain.Device, error) {
+	device, err := ds.deviceRepository.GetDeviceFromID(ID)
+	if err != nil {
+		return nil, err
+	}
+
+	return device, nil
+}

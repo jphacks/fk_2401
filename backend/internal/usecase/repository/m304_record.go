@@ -21,11 +21,11 @@ func (mrr M304RecordRepository) CreateM304Record(NewM304Record domain.M304Record
 	ctx := context.Background()
 
 	arg := mysqlc.CreateM304RecordParams{
-		M304ID:   int32(NewM304Record.M304ID),
-		DeviceID: int32(NewM304Record.DeviceID),
-		Block:    NewM304Record.Block,
-		Valid:    NewM304Record.Valid,
-		Position: int32(NewM304Record.Position),
+		M304ID:            int32(NewM304Record.M304ID),
+		DeviceConditionID: int32(NewM304Record.DeviceConditionID),
+		Block:             NewM304Record.Block,
+		Valid:             NewM304Record.Valid,
+		Position:          int32(NewM304Record.Position),
 	}
 
 	id, err := mrr.queries.CreateM304Record(ctx, arg)
@@ -48,7 +48,7 @@ func (mrr M304RecordRepository) GetM304RecordFromM304ID(m304ID int) ([]*domain.M
 		m304Records[i] = domain.NewM304Record(
 			int(v.ID),
 			int(v.M304ID),
-			int(v.DeviceID),
+			int(v.DeviceConditionID),
 			v.Block,
 			v.Valid,
 			int(v.Position),

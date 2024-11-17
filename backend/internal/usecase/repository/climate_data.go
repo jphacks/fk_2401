@@ -36,3 +36,19 @@ func (cdr *ClimateDataRepository) GetAllClimateData() ([]*domain.ClimateData, er
 
 	return climateData, nil
 }
+
+func (cdr *ClimateDataRepository) GetClimateDataFromID(ID int) (*domain.ClimateData, error) {
+	ctx := context.Background()
+
+	climateData, err := cdr.queries.GetClimateDataFromID(ctx, int32(ID))
+	if err != nil {
+		return nil, err
+	}
+	getClimateData := domain.NewClimateData(
+		int(climateData.ID),
+		climateData.Name,
+		climateData.Unit,
+	)
+
+	return getClimateData, nil
+}
